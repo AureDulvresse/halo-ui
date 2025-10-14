@@ -1,0 +1,20 @@
+{
+  "name": "flux/ui",
+  "description": "A modular UI component library for Laravel, powered by Blade, Tailwind, and Alpine.js.",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Flux\\UI\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Flux\\UI\\Providers\\FluxUIServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
