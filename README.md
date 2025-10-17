@@ -5,7 +5,7 @@
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue?logo=php)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-12%2B-red?logo=laravel)](https://laravel.com/)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](#testing)
-[![GitHub issues](https://img.shields.io/github/issues/auredulvresse/fluxui)](https://github.com/auredulvresse/fluxui/issues)
+[![GitHub issues](https://img.shields.io/github/issues/AureDulvresse/flux-ui)](https://github.com/AureDulvresse/flux-ui/issues)
 
 ---
 
