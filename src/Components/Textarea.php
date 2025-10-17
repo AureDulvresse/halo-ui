@@ -6,7 +6,7 @@ namespace Flux\UI\Components;
 
 use Illuminate\View\Component;
 
-class Input extends Component
+class Textarea extends Component
 {
     public string $size;
     public string $placeholder;
@@ -18,6 +18,6 @@ class Input extends Component
     }
     public function render()
     {
-        return view('components.flux.input');
+        return view('components.flux.textarea');
     }
 }

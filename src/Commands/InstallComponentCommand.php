@@ -7,52 +7,60 @@ use Illuminate\Support\Facades\File;
 
 class InstallComponentCommand extends Command
 {
-    protected $signature = 'flux:install {component : Component name}
-                            {--force : Overwrite existing module}';
+    protected $signature = 'flux:install {component : Component name} {--force : Overwrite existing component}';
     protected $description = 'Install one or more FluxUI components into your Laravel project.';
 
     public function handle(): void
     {
         $component = $this->argument('component');
-        $sourceDir = __DIR__ . '/../../stubs/components';
-        $targetDir = resource_path('views/components/flux');
+        $sourceBase = __DIR__ . '/../../stubs/components';
+        $targetBase = resource_path('views/components/flux');
 
-        if (!File::exists($targetDir)) {
-            File::makeDirectory($targetDir, 0755, true);
+        if (!File::exists($targetBase)) {
+            File::makeDirectory($targetBase, 0755, true);
         }
 
         if ($component) {
-            $this->installSingle($component, $sourceDir, $targetDir);
-        } else {
-            $this->installAll($sourceDir, $targetDir);
-        }
-    }
+            $componentLower = strtolower($component);
+            $sourceDir = $sourceBase . '/' . $componentLower;
+            $files = [];
 
-    private function installSingle(string $component, string $sourceDir, string $targetDir): void
-    {
-        $stub = "{$sourceDir}/{$component}.blade.php";
-        $target = "{$targetDir}/{$component}.blade.php";
-
-        if (!File::exists($stub)) {
-            $this->error("❌ Component [{$component}] not found.");
-            return;
-        }
-
-        if (File::exists($target)) {
-            if (!$this->output->confirm("⚠️ Component [{$component}] already exists. Overwrite?")) {
-                return self::FAILURE;
+            // Case 1: folder exists
+            if (File::exists($sourceDir) && File::isDirectory($sourceDir)) {
+                $files = File::allFiles($sourceDir);
             }
-        }
+            // Case 2: file exists directly in stubs/components
+            elseif (File::exists($sourceBase . '/' . $componentLower . '.blade.php')) {
+                $files[] = new \SplFileInfo($sourceBase . '/' . $componentLower . '.blade.php');
+            } else {
+                $this->error("❌ Component [{$component}] not found in stubs.");
+                return;
+            }
 
-        File::copy($stub, $target);
-        $this->info("✅ Installed [{$component}] component!");
-    }
+            $targetDir = $targetBase . '/' . $componentLower;
+            File::ensureDirectoryExists($targetDir);
 
-    private function installAll(string $sourceDir, string $targetDir): void
-    {
-        foreach (File::files($sourceDir) as $file) {
-            $name = pathinfo($file, PATHINFO_FILENAME);
-            $this->installSingle($name, $sourceDir, $targetDir);
+            foreach ($files as $file) {
+                $targetFile = $targetDir . '/' . $file->getFilename();
+                if (File::exists($targetFile) && !$this->option('force')) {
+                    if (!$this->output->confirm("⚠️ {$file->getFilename()} already exists. Overwrite?")) {
+                        continue;
+                    }
+                }
+                File::copy($file->getPathname(), $targetFile);
+                $this->info("✅ Installed [{$file->getFilename()}] for component [{$component}]!");
+            }
+        } else {
+            // Install all components
+            foreach (File::directories($sourceBase) as $dir) {
+                $name = basename($dir);
+                $this->call('flux:install', ['component' => $name, '--force' => $this->option('force')]);
+            }
+
+            foreach (File::files($sourceBase) as $file) {
+                $name = pathinfo($file, PATHINFO_FILENAME);
+                $this->call('flux:install', ['component' => $name, '--force' => $this->option('force')]);
+            }
         }
     }
 }
