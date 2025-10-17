@@ -120,3 +120,7 @@ For major changes, please open an issue first to discuss your proposal.
 ## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+<p align="center">
+  <strong>FluxUI - Build with ❤️ by Aure Dulvresse</strong>
+</p>
