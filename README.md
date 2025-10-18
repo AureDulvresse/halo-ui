@@ -1,4 +1,4 @@
-# FluxUI v1.0.0
+# HaloUI v1.0.0
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/your-username/fluxui/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -11,8 +11,8 @@
 
 ## Project Overview
 
-**FluxUI** is a **professional, modular UI component library** for **Laravel 12+**, designed to accelerate development of modern web applications.  
-Built with **Blade**, **TailwindCSS**, and **Alpine.js**, FluxUI offers **reusable, composable, and customizable components** following a consistent design language.
+**HaloUI** is a **professional, modular UI component library** for **Laravel 12+**, designed to accelerate development of modern web applications.  
+Built with **Blade**, **TailwindCSS**, and **Alpine.js**, HaloUI offers **reusable, composable, and customizable components** following a consistent design language.
 
 Key Features:
 
@@ -31,7 +31,7 @@ composer require flux/ui
 
 php artisan vendor:publish --tag=flux-ui-components
 php artisan vendor:publish --tag=flux-ui-assets
-````
+```
 
 ### Installing Components
 
@@ -90,7 +90,7 @@ All components can be customized using CSS variables:
 
 ## Testing
 
-FluxUI includes:
+HaloUI includes:
 
 - Unit tests for component rendering and props
 - Snapshot tests for Alpine.js interactions
@@ -108,7 +108,7 @@ php artisan test
 We welcome contributions!
 
 1. Fork the repository
-2. Add new components under `Flux\UI\Components`
+2. Add new components under `Halo\UI\Components`
 3. Add Blade stubs in `stubs/components`
 4. Write unit tests for each component
 5. Submit a pull request
@@ -122,5 +122,5 @@ For major changes, please open an issue first to discuss your proposal.
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 <p align="center">
-  <strong>FluxUI - Build with ❤️ by Aure Dulvresse</strong>
+  <strong>HaloUI - Build with ❤️ by Aure Dulvresse</strong>
 </p>

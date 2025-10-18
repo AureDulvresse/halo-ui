@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flux\UI\Components\Dropdown;
+namespace Halo\UI\Components\Dropdown;
 
 use Illuminate\View\Component;
 

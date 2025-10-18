@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "ironflow/flux-ui",
+    "name": "halo/ui",
     "version": "1.0.0",
     "description": "A modular UI component library for Laravel, powered by Blade, Tailwind, and Alpine.js.",
     "type": "library",
@@ -11,10 +11,10 @@
         "tailwind",
         "alpinejs",
         "components",
-        "fluxui",
+        "haloui",
         "design",
         "framework",
-        "flux",
+        "halo",
         "template",
         "modular"
     ],
@@ -40,13 +40,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Flux\\UI\\": "src/"
+            "Halo\\UI\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Flux\\UI\\Providers\\FluxUIServiceProvider"
+                "Halo\\UI\\Providers\\HaloUIServiceProvider"
             ]
         }
     },
