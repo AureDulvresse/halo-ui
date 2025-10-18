@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Halo\UI\Components;
+namespace Prism\UI\Components;
 
 use Illuminate\View\Component;
 
@@ -10,6 +10,6 @@ class Spinner extends Component
 {
     public function render()
     {
-        return view('components.halo.spinner');
+        return view('components.prism.spinner');
     }
 }

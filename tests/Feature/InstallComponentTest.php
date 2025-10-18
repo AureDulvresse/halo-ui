@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Halo\UI\Tests\Feature;
+namespace Prism\UI\Tests\Feature;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
@@ -12,18 +12,18 @@ class InstallComponentTest extends TestCase
 {
     protected function getPackageProviders($app)
     {
-        return [\Halo\UI\Providers\HaloUIServiceProvider::class];
+        return [\Prism\UI\Providers\PrismUIServiceProvider::class];
     }
 
     public function test_button_component_installation()
     {
-        $target = resource_path('views/components/halo/button.blade.php');
+        $target = resource_path('views/components/prism/button.blade.php');
 
         if (File::exists($target)) {
             File::delete($target);
         }
 
-        Artisan::call('halo:install', ['components' => ['button'], '--force' => true]);
+        Artisan::call('prism:install', ['components' => ['button'], '--force' => true]);
         $this->assertFileExists($target);
     }
 }

@@ -1,20 +1,20 @@
 <?php
 
-namespace Halo\UI\Commands;
+namespace Prism\UI\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
 class InstallComponentCommand extends Command
 {
-    protected $signature = 'halo:install {components* : One or more component names} {--force : Overwrite existing component}';
-    protected $description = 'Install one or more HaloUI components into your Laravel project.';
+    protected $signature = 'prism:install {components* : One or more component names} {--force : Overwrite existing component}';
+    protected $description = 'Install one or more PrismUI components into your Laravel project.';
 
     public function handle(): void
     {
         $components = $this->argument('components');
         $sourceBase = __DIR__ . '/../../stubs/components';
-        $targetBase = resource_path('views/components/halo');
+        $targetBase = resource_path('views/components/prism');
 
         if (!File::exists($targetBase)) {
             File::makeDirectory($targetBase, 0755, true);

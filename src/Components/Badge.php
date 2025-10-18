@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Halo\UI\Components;
+namespace Prism\UI\Components;
 
 use Illuminate\View\Component;
 
@@ -16,6 +16,6 @@ class Badge extends Component
     }
     public function render()
     {
-        return view('components.halo.badge');
+        return view('components.prism.badge');
     }
 }

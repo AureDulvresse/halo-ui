@@ -11,9 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial v1.0.0 scaffolding for HaloUI
-- Service provider HaloUIServiceProvider for publishing components and assets
-- CLI command halo:install supporting both stub folders and single stub files
+- Initial v1.0.0 scaffolding for PrismUI
+- Service provider PrismUIServiceProvider for publishing components and assets
+- CLI command prism:install supporting both stub folders and single stub files
 - Base components implemented:
   - Button, Input, Textarea
   - Select + SelectItem
