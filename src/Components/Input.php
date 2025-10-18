@@ -18,6 +18,6 @@ class Input extends Component
     }
     public function render()
     {
-        return view('components.flux.input');
+        return view('components.halo.input');
     }
 }

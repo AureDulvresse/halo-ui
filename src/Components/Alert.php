@@ -16,6 +16,6 @@ class Alert extends Component
     }
     public function render()
     {
-        return view('components.flux.alert');
+        return view('components.halo.alert');
     }
 }

@@ -19,6 +19,6 @@ class Dropdown extends Component
 
     public function render()
     {
-        return view('components.flux.dropdown.dropdown');
+        return view('components.halo.dropdown.dropdown');
     }
 }

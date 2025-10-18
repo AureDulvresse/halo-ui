@@ -14,7 +14,7 @@ class Toast extends Component
     public function __construct()
     {
         // Pull toast messages from session flash data
-        $this->toasts = Session::get('flux_toasts', []);
+        $this->toasts = Session::get('halo_toasts', []);
 
         // Optionally, listen for a custom Laravel event `ToastEvent`
         // This requires broadcasting or event firing elsewhere in the app
@@ -24,6 +24,6 @@ class Toast extends Component
 
     public function render()
     {
-        return view('components.flux.toast');
+        return view('components.halo.toast');
     }
 }

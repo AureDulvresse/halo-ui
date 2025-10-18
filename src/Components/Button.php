@@ -17,6 +17,6 @@ class Button extends Component
 
     public function render()
     {
-        return view('components.flux.button');
+        return view('components.halo.button');
     }
 }

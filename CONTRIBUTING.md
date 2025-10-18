@@ -8,8 +8,8 @@ Thank you for your interest in contributing to HaloUI! Your contributions help m
 2. **Clone your fork locally**
 
    ```bash
-   git clone https://github.com/AureDulvresse/flux-ui
-   cd flux-ui
+   git clone https://github.com/AureDulvresse/halo-ui
+   cd halo-ui
    ```
 
 3. **Install dependencies**

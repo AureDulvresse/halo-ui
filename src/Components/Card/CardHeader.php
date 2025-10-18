@@ -10,6 +10,6 @@ class CardHeader extends Component
 {
     public function render()
     {
-        return view('components.flux.card.card-header');
+        return view('components.halo.card.card-header');
     }
 }

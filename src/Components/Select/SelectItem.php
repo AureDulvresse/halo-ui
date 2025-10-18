@@ -15,6 +15,6 @@ class SelectItem extends Component
 
     public function render()
     {
-        return view('components.flux.select.select-item');
+        return view('components.halo.select.select-item');
     }
 }

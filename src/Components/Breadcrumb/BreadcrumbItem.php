@@ -16,6 +16,6 @@ class BreadcrumbItem extends Component
     }
     public function render()
     {
-        return view('components.flux.breadcrumb-item');
+        return view('components.halo.breadcrumb-item');
     }
 }
