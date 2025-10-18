@@ -1,6 +1,6 @@
 <?php
 
-namespace Flux\UI\Commands;
+namespace Halo\UI\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 class InstallComponentCommand extends Command
 {
     protected $signature = 'flux:install {components* : One or more component names} {--force : Overwrite existing component}';
-    protected $description = 'Install one or more FluxUI components into your Laravel project.';
+    protected $description = 'Install one or more HaloUI components into your Laravel project.';
 
     public function handle(): void
     {

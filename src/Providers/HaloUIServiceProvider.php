@@ -1,12 +1,12 @@
 <?php
 
-namespace Flux\UI\Providers;
+namespace Halo\UI\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Flux\UI\Commands\InstallComponentCommand;
+use Halo\UI\Commands\InstallComponentCommand;
 use Illuminate\Support\Facades\Blade;
 
-class FluxUIServiceProvider extends ServiceProvider
+class HaloUIServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
@@ -24,7 +24,7 @@ class FluxUIServiceProvider extends ServiceProvider
         ], 'flux-ui-assets');
 
         // Register Blade components alias
-        Blade::componentNamespace('Flux\\UI\\Components', 'flux');
+        Blade::componentNamespace('Halo\\UI\\Components', 'flux');
 
         // Register commands
         if ($this->app->runningInConsole()) {
