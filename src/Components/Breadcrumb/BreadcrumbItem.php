@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prism\UI\Components\Breadcrumb;
+namespace Flux\UI\Components\Breadcrumb;
 
 use Illuminate\View\Component;
 
@@ -16,6 +16,6 @@ class BreadcrumbItem extends Component
     }
     public function render()
     {
-        return view('components.prism.breadcrumb-item');
+        return view('components.flux.breadcrumb-item');
     }
 }

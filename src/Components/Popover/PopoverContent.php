@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prism\UI\Components\Popover;
+namespace Flux\UI\Components\Popover;
 
 use Illuminate\View\Component;
 
@@ -15,6 +15,6 @@ class PopoverContent extends Component
     }
     public function render()
     {
-        return view('components.prism.popover-content');
+        return view('components.flux.popover-content');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Prism\UI\Components\Select;
+namespace Flux\UI\Components\Select;
 
 use Illuminate\View\Component;
 
@@ -15,6 +15,6 @@ class Select extends Component
 
     public function render()
     {
-        return view('components.prism.select.select');
+        return view('components.flux.select.select');
     }
 }

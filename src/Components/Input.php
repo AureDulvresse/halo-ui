@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prism\UI\Components;
+namespace Flux\UI\Components;
 
 use Illuminate\View\Component;
 
@@ -18,6 +18,6 @@ class Input extends Component
     }
     public function render()
     {
-        return view('components.prism.input');
+        return view('components.flux.input');
     }
 }

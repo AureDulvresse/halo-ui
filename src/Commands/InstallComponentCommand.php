@@ -1,20 +1,20 @@
 <?php
 
-namespace Prism\UI\Commands;
+namespace Flux\UI\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
 class InstallComponentCommand extends Command
 {
-    protected $signature = 'prism:install {components* : One or more component names} {--force : Overwrite existing component}';
-    protected $description = 'Install one or more PrismUI components into your Laravel project.';
+    protected $signature = 'flux:install {components* : One or more component names} {--force : Overwrite existing component}';
+    protected $description = 'Install one or more FluxUI components into your Laravel project.';
 
     public function handle(): void
     {
         $components = $this->argument('components');
         $sourceBase = __DIR__ . '/../../stubs/components';
-        $targetBase = resource_path('views/components/prism');
+        $targetBase = resource_path('views/components/flux');
 
         if (!File::exists($targetBase)) {
             File::makeDirectory($targetBase, 0755, true);
