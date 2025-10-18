@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flux\UI\Components;
+namespace Halo\UI\Components;
 
 use Illuminate\View\Component;
 use Illuminate\Support\Facades\Session;

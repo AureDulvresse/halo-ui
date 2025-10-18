@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial v1.0.0 scaffolding for FluxUI
-- Service provider FluxUIServiceProvider for publishing components and assets
+- Initial v1.0.0 scaffolding for HaloUI
+- Service provider HaloUIServiceProvider for publishing components and assets
 - CLI command flux:install supporting both stub folders and single stub files
 - Base components implemented:
   - Button, Input, Textarea
