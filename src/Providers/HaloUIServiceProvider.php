@@ -36,6 +36,6 @@ class HaloUIServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../../config/haloui.php', 'haloui');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/halo.php', 'haloui');
     }
 }
