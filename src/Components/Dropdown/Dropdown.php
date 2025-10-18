@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Halo\UI\Components\Dropdown;
+namespace Prism\UI\Components\Dropdown;
 
 use Illuminate\View\Component;
 
@@ -19,6 +19,6 @@ class Dropdown extends Component
 
     public function render()
     {
-        return view('components.halo.dropdown.dropdown');
+        return view('components.prism.dropdown.dropdown');
     }
 }

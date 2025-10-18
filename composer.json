@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "halo/ui",
+    "name": "prism/ui",
     "version": "1.0.0",
     "description": "A modular UI component library for Laravel, powered by Blade, Tailwind, and Alpine.js.",
     "type": "library",
@@ -11,10 +11,10 @@
         "tailwind",
         "alpinejs",
         "components",
-        "haloui",
+        "prismui",
         "design",
         "framework",
-        "halo",
+        "prism",
         "template",
         "modular"
     ],
@@ -40,13 +40,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Halo\\UI\\": "src/"
+            "Prism\\UI\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Halo\\UI\\Providers\\HaloUIServiceProvider"
+                "Prism\\UI\\Providers\\PrismUIServiceProvider"
             ]
         }
     },

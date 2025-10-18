@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Halo\UI\Components;
+namespace Prism\UI\Components;
 
 use Illuminate\View\Component;
 use Illuminate\Support\Facades\Session;
@@ -14,7 +14,7 @@ class Toast extends Component
     public function __construct()
     {
         // Pull toast messages from session flash data
-        $this->toasts = Session::get('halo_toasts', []);
+        $this->toasts = Session::get('prism_toasts', []);
 
         // Optionally, listen for a custom Laravel event `ToastEvent`
         // This requires broadcasting or event firing elsewhere in the app
@@ -24,6 +24,6 @@ class Toast extends Component
 
     public function render()
     {
-        return view('components.halo.toast');
+        return view('components.prism.toast');
     }
 }

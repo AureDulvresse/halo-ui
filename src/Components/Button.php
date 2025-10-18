@@ -1,6 +1,6 @@
 <?php
 
-namespace Halo\UI\Components;
+namespace Prism\UI\Components;
 
 use Illuminate\View\Component;
 
@@ -17,6 +17,6 @@ class Button extends Component
 
     public function render()
     {
-        return view('components.halo.button');
+        return view('components.prism.button');
     }
 }

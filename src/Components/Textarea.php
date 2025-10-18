@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Halo\UI\Components;
+namespace Prism\UI\Components;
 
 use Illuminate\View\Component;
 
@@ -18,6 +18,6 @@ class Textarea extends Component
     }
     public function render()
     {
-        return view('components.halo.textarea');
+        return view('components.prism.textarea');
     }
 }

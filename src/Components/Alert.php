@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Halo\UI\Components;
+namespace Prism\UI\Components;
 
 use Illuminate\View\Component;
 
@@ -16,6 +16,6 @@ class Alert extends Component
     }
     public function render()
     {
-        return view('components.halo.alert');
+        return view('components.prism.alert');
     }
 }

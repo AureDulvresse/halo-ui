@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Halo\UI\Components\Card;
+namespace Prism\UI\Components\Card;
 
 use Illuminate\View\Component;
 
@@ -19,6 +19,6 @@ class Card extends Component
 
     public function render()
     {
-        return view('components.halo.card.card');
+        return view('components.prism.card.card');
     }
 }

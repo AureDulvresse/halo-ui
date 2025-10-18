@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Halo\UI\Components\Modal;
+namespace Prism\UI\Components\Modal;
 
 use Illuminate\View\Component;
 
@@ -11,6 +11,6 @@ class ModalHeader extends Component
 
     public function render()
     {
-        return view('components.halo.modal.modal-header');
+        return view('components.prism.modal.modal-header');
     }
 }

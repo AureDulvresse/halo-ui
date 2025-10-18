@@ -1,18 +1,18 @@
-# HaloUI v1.0.0
+# PrismUI v1.0.0
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/your-username/haloui/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/your-username/prismui/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue?logo=php)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-12%2B-red?logo=laravel)](https://laravel.com/)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](#testing)
-[![GitHub issues](https://img.shields.io/github/issues/AureDulvresse/halo-ui)](https://github.com/AureDulvresse/halo-ui/issues)
+[![GitHub issues](https://img.shields.io/github/issues/AureDulvresse/prism-ui)](https://github.com/AureDulvresse/prism-ui/issues)
 
 ---
 
 ## Project Overview
 
-**HaloUI** is a **professional, modular UI component library** for **Laravel 12+**, designed to accelerate development of modern web applications.  
-Built with **Blade**, **TailwindCSS**, and **Alpine.js**, HaloUI offers **reusable, composable, and customizable components** following a consistent design language.
+**PrismUI** is a **professional, modular UI component library** for **Laravel 12+**, designed to accelerate development of modern web applications.  
+Built with **Blade**, **TailwindCSS**, and **Alpine.js**, PrismUI offers **reusable, composable, and customizable components** following a consistent design language.
 
 Key Features:
 
@@ -27,23 +27,23 @@ Key Features:
 ## Installation
 
 ```bash
-composer require halo/ui
+composer require prism/ui
 
-php artisan vendor:publish --tag=halo-ui-components
-php artisan vendor:publish --tag=halo-ui-assets
+php artisan vendor:publish --tag=prism-ui-components
+php artisan vendor:publish --tag=prism-ui-assets
 ```
 
 ### Installing Components
 
 ```bash
 # Install a single component
-php artisan halo:install button
+php artisan prism:install button
 
 # Force reinstall a component
-php artisan halo:install modal --force
+php artisan prism:install modal --force
 
 # Install all components
-php artisan halo:install
+php artisan prism:install
 ```
 
 ---
@@ -51,20 +51,20 @@ php artisan halo:install
 ## 🛠 Usage Examples
 
 ```blade
-<x-halo:button variant="primary" size="lg">Click Me</x-halo:button>
+<x-prism:button variant="primary" size="lg">Click Me</x-prism:button>
 
-<x-halo:modal x-data="{ open: true }" x-show="open">
-    <x-halo:modal-header>Title</x-halo:modal-header>
-    <x-halo:modal-body>Content</x-halo:modal-body>
-    <x-halo:modal-footer>
-        <x-halo:button @click="$el.closest('[x-data]').__x.$data.open = false">Close</x-halo:button>
-    </x-halo:modal-footer>
-</x-halo:modal>
+<x-prism:modal x-data="{ open: true }" x-show="open">
+    <x-prism:modal-header>Title</x-prism:modal-header>
+    <x-prism:modal-body>Content</x-prism:modal-body>
+    <x-prism:modal-footer>
+        <x-prism:button @click="$el.closest('[x-data]').__x.$data.open = false">Close</x-prism:button>
+    </x-prism:modal-footer>
+</x-prism:modal>
 
-<x-halo:select placeholder="Choose an option">
-    <x-halo:select-item value="option1">Option 1</x-halo:select-item>
-    <x-halo:select-item value="option2">Option 2</x-halo:select-item>
-</x-halo:select>
+<x-prism:select placeholder="Choose an option">
+    <x-prism:select-item value="option1">Option 1</x-prism:select-item>
+    <x-prism:select-item value="option2">Option 2</x-prism:select-item>
+</x-prism:select>
 ```
 
 ## Theme & Customization
@@ -90,7 +90,7 @@ All components can be customized using CSS variables:
 
 ## Testing
 
-HaloUI includes:
+PrismUI includes:
 
 - Unit tests for component rendering and props
 - Snapshot tests for Alpine.js interactions
@@ -108,7 +108,7 @@ php artisan test
 We welcome contributions!
 
 1. Fork the repository
-2. Add new components under `Halo\UI\Components`
+2. Add new components under `Prism\UI\Components`
 3. Add Blade stubs in `stubs/components`
 4. Write unit tests for each component
 5. Submit a pull request
@@ -122,5 +122,5 @@ For major changes, please open an issue first to discuss your proposal.
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 <p align="center">
-  <strong>HaloUI - Build with ❤️ by Aure Dulvresse</strong>
+  <strong>PrismUI - Build with ❤️ by Aure Dulvresse</strong>
 </p>
