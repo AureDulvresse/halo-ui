@@ -17,6 +17,6 @@ class Modal extends Component
 
     public function render()
     {
-        return view('components.flux.modal.modal');
+        return view('components.halo.modal.modal');
     }
 }

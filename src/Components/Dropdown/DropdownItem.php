@@ -10,6 +10,6 @@ class DropdownItem extends Component
 {
     public function render()
     {
-        return view('components.flux.dropdown.dropdown-item');
+        return view('components.halo.dropdown.dropdown-item');
     }
 }

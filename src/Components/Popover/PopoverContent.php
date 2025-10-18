@@ -15,6 +15,6 @@ class PopoverContent extends Component
     }
     public function render()
     {
-        return view('components.flux.popover-content');
+        return view('components.halo.popover-content');
     }
 }

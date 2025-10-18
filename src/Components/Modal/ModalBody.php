@@ -11,6 +11,6 @@ class ModalBody extends Component
 
     public function render()
     {
-        return view('components.flux.modal.modal-body');
+        return view('components.halo.modal.modal-body');
     }
 }

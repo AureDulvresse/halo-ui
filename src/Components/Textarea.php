@@ -18,6 +18,6 @@ class Textarea extends Component
     }
     public function render()
     {
-        return view('components.flux.textarea');
+        return view('components.halo.textarea');
     }
 }

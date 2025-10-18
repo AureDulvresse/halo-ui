@@ -16,6 +16,6 @@ class Badge extends Component
     }
     public function render()
     {
-        return view('components.flux.badge');
+        return view('components.halo.badge');
     }
 }

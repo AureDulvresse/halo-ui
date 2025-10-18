@@ -11,6 +11,6 @@ class Popover extends Component
     public function __construct(public $trigger = null) {}
     public function render()
     {
-        return view('components.flux.popover');
+        return view('components.halo.popover');
     }
 }
