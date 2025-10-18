@@ -41,23 +41,21 @@ class InstallComponentCommand extends Command
     private function installSingleComponent(string $component, string $sourceBase, string $targetBase): void
     {
         $componentLower = strtolower($component);
-        $sourceDir = $sourceBase . '/' . $componentLower;
-        $files = [];
+        $folderPath = $sourceBase . '/' . $componentLower;
+        $singleFilePath = $sourceBase . '/' . $componentLower . '.blade.php';
 
-        // Case 1: folder exists
-        if (File::exists($sourceDir) && File::isDirectory($sourceDir)) {
-            $files = File::allFiles($sourceDir);
-        }
-        // Case 2: file exists directly in stubs/components
-        elseif (File::exists($sourceBase . '/' . $componentLower . '.blade.php')) {
-            $files[] = new \SplFileInfo($sourceBase . '/' . $componentLower . '.blade.php');
+        // Détecter si c'est un dossier (composant modulaire) ou un fichier simple
+        if (File::exists($folderPath) && File::isDirectory($folderPath)) {
+            $files = File::allFiles($folderPath);
+            $targetDir = $targetBase . '/' . $componentLower;
+            File::ensureDirectoryExists($targetDir);
+        } elseif (File::exists($singleFilePath)) {
+            $files = [new \SplFileInfo($singleFilePath)];
+            $targetDir = $targetBase; // pas de sous-dossier pour fichier simple
         } else {
             $this->error("❌ Component [{$component}] not found in stubs.");
             return;
         }
-
-        $targetDir = $targetBase . '/' . $componentLower;
-        File::ensureDirectoryExists($targetDir);
 
         foreach ($files as $file) {
             $targetFile = $targetDir . '/' . $file->getFilename();
