@@ -11,6 +11,6 @@ class ModalHeader extends Component
 
     public function render()
     {
-        return view('components.flux.modal.modal-header');
+        return view('components.halo.modal.modal-header');
     }
 }

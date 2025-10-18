@@ -1,11 +1,11 @@
 # HaloUI v1.0.0
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/your-username/fluxui/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/your-username/haloui/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue?logo=php)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-12%2B-red?logo=laravel)](https://laravel.com/)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](#testing)
-[![GitHub issues](https://img.shields.io/github/issues/AureDulvresse/flux-ui)](https://github.com/AureDulvresse/flux-ui/issues)
+[![GitHub issues](https://img.shields.io/github/issues/AureDulvresse/halo-ui)](https://github.com/AureDulvresse/halo-ui/issues)
 
 ---
 
@@ -27,23 +27,23 @@ Key Features:
 ## Installation
 
 ```bash
-composer require flux/ui
+composer require halo/ui
 
-php artisan vendor:publish --tag=flux-ui-components
-php artisan vendor:publish --tag=flux-ui-assets
+php artisan vendor:publish --tag=halo-ui-components
+php artisan vendor:publish --tag=halo-ui-assets
 ```
 
 ### Installing Components
 
 ```bash
 # Install a single component
-php artisan flux:install button
+php artisan halo:install button
 
 # Force reinstall a component
-php artisan flux:install modal --force
+php artisan halo:install modal --force
 
 # Install all components
-php artisan flux:install
+php artisan halo:install
 ```
 
 ---
@@ -51,20 +51,20 @@ php artisan flux:install
 ## 🛠 Usage Examples
 
 ```blade
-<x-flux:button variant="primary" size="lg">Click Me</x-flux:button>
+<x-halo:button variant="primary" size="lg">Click Me</x-halo:button>
 
-<x-flux:modal x-data="{ open: true }" x-show="open">
-    <x-flux:modal-header>Title</x-flux:modal-header>
-    <x-flux:modal-body>Content</x-flux:modal-body>
-    <x-flux:modal-footer>
-        <x-flux:button @click="$el.closest('[x-data]').__x.$data.open = false">Close</x-flux:button>
-    </x-flux:modal-footer>
-</x-flux:modal>
+<x-halo:modal x-data="{ open: true }" x-show="open">
+    <x-halo:modal-header>Title</x-halo:modal-header>
+    <x-halo:modal-body>Content</x-halo:modal-body>
+    <x-halo:modal-footer>
+        <x-halo:button @click="$el.closest('[x-data]').__x.$data.open = false">Close</x-halo:button>
+    </x-halo:modal-footer>
+</x-halo:modal>
 
-<x-flux:select placeholder="Choose an option">
-    <x-flux:select-item value="option1">Option 1</x-flux:select-item>
-    <x-flux:select-item value="option2">Option 2</x-flux:select-item>
-</x-flux:select>
+<x-halo:select placeholder="Choose an option">
+    <x-halo:select-item value="option1">Option 1</x-halo:select-item>
+    <x-halo:select-item value="option2">Option 2</x-halo:select-item>
+</x-halo:select>
 ```
 
 ## Theme & Customization

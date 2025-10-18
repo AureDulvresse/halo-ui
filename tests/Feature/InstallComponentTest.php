@@ -17,13 +17,13 @@ class InstallComponentTest extends TestCase
 
     public function test_button_component_installation()
     {
-        $target = resource_path('views/components/flux/button.blade.php');
+        $target = resource_path('views/components/halo/button.blade.php');
 
         if (File::exists($target)) {
             File::delete($target);
         }
 
-        Artisan::call('flux:install', ['components' => ['button'], '--force' => true]);
+        Artisan::call('halo:install', ['components' => ['button'], '--force' => true]);
         $this->assertFileExists($target);
     }
 }
