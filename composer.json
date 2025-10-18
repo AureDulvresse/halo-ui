@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "prism/ui",
+    "name": "ironflow/flux-ui",
     "version": "1.0.0",
     "description": "A modular UI component library for Laravel, powered by Blade, Tailwind, and Alpine.js.",
     "type": "library",
@@ -11,10 +11,10 @@
         "tailwind",
         "alpinejs",
         "components",
-        "prismui",
+        "fluxui",
         "design",
         "framework",
-        "prism",
+        "flux",
         "template",
         "modular"
     ],
@@ -40,13 +40,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Prism\\UI\\": "src/"
+            "Flux\\UI\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Prism\\UI\\Providers\\PrismUIServiceProvider"
+                "Flux\\UI\\Providers\\FluxUIServiceProvider"
             ]
         }
     },

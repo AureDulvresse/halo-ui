@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prism\UI\Tests\Feature;
+namespace Flux\UI\Tests\Feature;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
@@ -12,18 +12,18 @@ class InstallComponentTest extends TestCase
 {
     protected function getPackageProviders($app)
     {
-        return [\Prism\UI\Providers\PrismUIServiceProvider::class];
+        return [\Flux\UI\Providers\FluxUIServiceProvider::class];
     }
 
     public function test_button_component_installation()
     {
-        $target = resource_path('views/components/prism/button.blade.php');
+        $target = resource_path('views/components/flux/button.blade.php');
 
         if (File::exists($target)) {
             File::delete($target);
         }
 
-        Artisan::call('prism:install', ['components' => ['button'], '--force' => true]);
+        Artisan::call('flux:install', ['components' => ['button'], '--force' => true]);
         $this->assertFileExists($target);
     }
 }

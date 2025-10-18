@@ -1,5 +1,5 @@
 {
-  "name": "prism-ui",
+  "name": "flux-ui",
   "version": "1.0.0",
   "description": "A modular UI component library for Laravel, powered by Blade, Tailwind, and Alpine.js.",
   "dependencies": {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prism\UI\Components;
+namespace Flux\UI\Components;
 
 use Illuminate\View\Component;
 
@@ -18,6 +18,6 @@ class Textarea extends Component
     }
     public function render()
     {
-        return view('components.prism.textarea');
+        return view('components.flux.textarea');
     }
 }

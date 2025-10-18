@@ -1,18 +1,18 @@
-# PrismUI v1.0.0
+# FluxUI v1.0.0
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/your-username/prismui/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/your-username/fluxui/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue?logo=php)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-12%2B-red?logo=laravel)](https://laravel.com/)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](#testing)
-[![GitHub issues](https://img.shields.io/github/issues/AureDulvresse/prism-ui)](https://github.com/AureDulvresse/prism-ui/issues)
+[![GitHub issues](https://img.shields.io/github/issues/AureDulvresse/flux-ui)](https://github.com/AureDulvresse/flux-ui/issues)
 
 ---
 
 ## Project Overview
 
-**PrismUI** is a **professional, modular UI component library** for **Laravel 12+**, designed to accelerate development of modern web applications.  
-Built with **Blade**, **TailwindCSS**, and **Alpine.js**, PrismUI offers **reusable, composable, and customizable components** following a consistent design language.
+**FluxUI** is a **professional, modular UI component library** for **Laravel 12+**, designed to accelerate development of modern web applications.  
+Built with **Blade**, **TailwindCSS**, and **Alpine.js**, FluxUI offers **reusable, composable, and customizable components** following a consistent design language.
 
 Key Features:
 
@@ -27,23 +27,23 @@ Key Features:
 ## Installation
 
 ```bash
-composer require prism/ui
+composer require flux/ui
 
-php artisan vendor:publish --tag=prism-ui-components
-php artisan vendor:publish --tag=prism-ui-assets
+php artisan vendor:publish --tag=flux-ui-components
+php artisan vendor:publish --tag=flux-ui-assets
 ```
 
 ### Installing Components
 
 ```bash
 # Install a single component
-php artisan prism:install button
+php artisan flux:install button
 
 # Force reinstall a component
-php artisan prism:install modal --force
+php artisan flux:install modal --force
 
 # Install all components
-php artisan prism:install
+php artisan flux:install
 ```
 
 ---
@@ -51,20 +51,20 @@ php artisan prism:install
 ## 🛠 Usage Examples
 
 ```blade
-<x-prism:button variant="primary" size="lg">Click Me</x-prism:button>
+<x-flux:button variant="primary" size="lg">Click Me</x-flux:button>
 
-<x-prism:modal x-data="{ open: true }" x-show="open">
-    <x-prism:modal-header>Title</x-prism:modal-header>
-    <x-prism:modal-body>Content</x-prism:modal-body>
-    <x-prism:modal-footer>
-        <x-prism:button @click="$el.closest('[x-data]').__x.$data.open = false">Close</x-prism:button>
-    </x-prism:modal-footer>
-</x-prism:modal>
+<x-flux:modal x-data="{ open: true }" x-show="open">
+    <x-flux:modal-header>Title</x-flux:modal-header>
+    <x-flux:modal-body>Content</x-flux:modal-body>
+    <x-flux:modal-footer>
+        <x-flux:button @click="$el.closest('[x-data]').__x.$data.open = false">Close</x-flux:button>
+    </x-flux:modal-footer>
+</x-flux:modal>
 
-<x-prism:select placeholder="Choose an option">
-    <x-prism:select-item value="option1">Option 1</x-prism:select-item>
-    <x-prism:select-item value="option2">Option 2</x-prism:select-item>
-</x-prism:select>
+<x-flux:select placeholder="Choose an option">
+    <x-flux:select-item value="option1">Option 1</x-flux:select-item>
+    <x-flux:select-item value="option2">Option 2</x-flux:select-item>
+</x-flux:select>
 ```
 
 ## Theme & Customization
@@ -90,7 +90,7 @@ All components can be customized using CSS variables:
 
 ## Testing
 
-PrismUI includes:
+FluxUI includes:
 
 - Unit tests for component rendering and props
 - Snapshot tests for Alpine.js interactions
@@ -108,7 +108,7 @@ php artisan test
 We welcome contributions!
 
 1. Fork the repository
-2. Add new components under `Prism\UI\Components`
+2. Add new components under `Flux\UI\Components`
 3. Add Blade stubs in `stubs/components`
 4. Write unit tests for each component
 5. Submit a pull request
@@ -122,5 +122,5 @@ For major changes, please open an issue first to discuss your proposal.
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 <p align="center">
-  <strong>PrismUI - Build with ❤️ by Aure Dulvresse</strong>
+  <strong>FluxUI - Build with ❤️ by Aure Dulvresse</strong>
 </p>

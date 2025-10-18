@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prism\UI\Components;
+namespace Flux\UI\Components;
 
 use Illuminate\View\Component;
 
@@ -16,6 +16,6 @@ class Badge extends Component
     }
     public function render()
     {
-        return view('components.prism.badge');
+        return view('components.flux.badge');
     }
 }

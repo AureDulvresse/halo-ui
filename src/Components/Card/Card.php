@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prism\UI\Components\Card;
+namespace Flux\UI\Components\Card;
 
 use Illuminate\View\Component;
 
@@ -19,6 +19,6 @@ class Card extends Component
 
     public function render()
     {
-        return view('components.prism.card.card');
+        return view('components.flux.card.card');
     }
 }

@@ -1,6 +1,6 @@
-# Contributing to PrismUI
+# Contributing to FluxUI
 
-Thank you for your interest in contributing to PrismUI! Your contributions help make this library better and more robust.
+Thank you for your interest in contributing to FluxUI! Your contributions help make this library better and more robust.
 
 ## Getting Started
 
@@ -8,8 +8,8 @@ Thank you for your interest in contributing to PrismUI! Your contributions help 
 2. **Clone your fork locally**
 
    ```bash
-   git clone https://github.com/AureDulvresse/prism-ui
-   cd prism-ui
+   git clone https://github.com/AureDulvresse/flux-ui
+   cd flux-ui
    ```
 
 3. **Install dependencies**
@@ -57,8 +57,8 @@ Thank you for your interest in contributing to PrismUI! Your contributions help 
 
 ## Code of Conduct
 
-By contributing to PrismUI, you agree to follow the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/).
+By contributing to FluxUI, you agree to follow the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/).
 
 ---
 
-Thank you for helping make PrismUI better! Your contributions are appreciated ❤️.
+Thank you for helping make FluxUI better! Your contributions are appreciated ❤️.

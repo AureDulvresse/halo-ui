@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prism\UI\Components\Dropdown;
+namespace Flux\UI\Components\Dropdown;
 
 use Illuminate\View\Component;
 
@@ -19,6 +19,6 @@ class Dropdown extends Component
 
     public function render()
     {
-        return view('components.prism.dropdown.dropdown');
+        return view('components.flux.dropdown.dropdown');
     }
 }
