@@ -1,6 +1,6 @@
 <?php
 
-namespace Flux\UI\Components;
+namespace Halo\UI\Components;
 
 use Illuminate\View\Component;
 

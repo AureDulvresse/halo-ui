@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flux\UI\Components\Modal;
+namespace Halo\UI\Components\Modal;
 
 use Illuminate\View\Component;
 

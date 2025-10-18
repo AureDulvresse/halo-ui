@@ -1,6 +1,6 @@
 <?php
 
-namespace Flux\UI\Components\Select;
+namespace Halo\UI\Components\Select;
 
 use Illuminate\View\Component;
 

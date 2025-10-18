@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flux\UI\Components\Popover;
+namespace Halo\UI\Components\Popover;
 
 use Illuminate\View\Component;
 

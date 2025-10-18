@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flux\UI\Components;
+namespace Halo\UI\Components;
 
 use Illuminate\View\Component;
 
@@ -10,7 +10,7 @@ class Input extends Component
 {
     public string $size;
     public string $placeholder;
-    
+
     public function __construct(string $size = 'md', string $placeholder = '')
     {
         $this->size = $size;

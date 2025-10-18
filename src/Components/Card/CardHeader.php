@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flux\UI\Components\Card;
+namespace Halo\UI\Components\Card;
 
 use Illuminate\View\Component;
 
