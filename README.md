@@ -1,6 +1,6 @@
-# HaloUI v1.1.1
+# HaloUI v1.2.0
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/your-username/haloui/releases)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue)](https://github.com/your-username/haloui/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue?logo=php)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-12%2B-red?logo=laravel)](https://laravel.com/)
