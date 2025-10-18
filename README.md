@@ -1,4 +1,4 @@
-# HaloUI v1.0.0
+# HaloUI v1.1.1
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/your-username/haloui/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
