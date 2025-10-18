@@ -10,6 +10,6 @@ class Spinner extends Component
 {
     public function render()
     {
-        return view('components.flux.spinner');
+        return view('components.halo.spinner');
     }
 }

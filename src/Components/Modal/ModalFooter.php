@@ -10,6 +10,6 @@ class ModalFooter extends Component
 {
     public function render()
     {
-        return view('components.flux.modal.modal-footer');
+        return view('components.halo.modal.modal-footer');
     }
 }

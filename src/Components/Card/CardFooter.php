@@ -10,6 +10,6 @@ class CardFooter extends Component
 {
     public function render()
     {
-        return view('components.flux.card.card-footer');
+        return view('components.halo.card.card-footer');
     }
 }
