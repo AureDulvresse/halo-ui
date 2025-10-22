@@ -9,13 +9,19 @@ use Illuminate\View\Component;
 class Alert extends Component
 {
     public string $variant;
-
-    public function __construct(string $variant = 'primary')
-    {
+    public bool $dismissible;
+    public ?string $title;
+    public function __construct(
+        string $variant = 'info',
+        bool $dismissible = false,
+        ?string $title = null
+    ) {
         $this->variant = $variant;
+        $this->dismissible = $dismissible;
+        $this->title = $title;
     }
     public function render()
     {
-        return view('components.halo.alert');
+        return view('halo::alert');
     }
 }
