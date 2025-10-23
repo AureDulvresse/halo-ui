@@ -5,25 +5,20 @@ declare(strict_types=1);
 namespace Halo\UI\Components;
 
 use Illuminate\View\Component;
-use Illuminate\Support\Facades\Session;
 
 class Toast extends Component
 {
-    public array $toasts = [];
-
-    public function __construct()
-    {
-        // Pull toast messages from session flash data
-        $this->toasts = Session::get('halo_toasts', []);
-
-        // Optionally, listen for a custom Laravel event `ToastEvent`
-        // This requires broadcasting or event firing elsewhere in the app
-        // Example usage: event(new \App\Events\ToastEvent('Message', 'success'));
-        // The component will receive these messages via session or event listener in your JS
+    public string $position;
+    public int $duration;
+    public function __construct(
+        ?string $position = null,
+        ?int $duration = null
+    ) {
+        $this->position = $position ?? config('halo.toast.position', 'top-right');
+        $this->duration = $duration ?? config('halo.toast.duration', 3000);
     }
-
     public function render()
     {
-        return view('components.halo.toast');
+        return view('halo::toast');
     }
 }

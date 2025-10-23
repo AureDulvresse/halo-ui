@@ -9,13 +9,19 @@ use Illuminate\View\Component;
 class Badge extends Component
 {
     public string $variant;
-
-    public function __construct(string $variant = 'primary')
-    {
+    public string $size;
+    public bool $dot;
+    public function __construct(
+        string $variant = 'primary',
+        string $size = 'md',
+        bool $dot = false
+    ) {
         $this->variant = $variant;
+        $this->size = $size;
+        $this->dot = $dot;
     }
     public function render()
     {
-        return view('components.halo.badge');
+        return view('halo::badge');
     }
 }
