@@ -72,7 +72,7 @@ class InstallCommand extends Command
         $this->line('  1. Make sure Alpine.js is installed: npm install alpinejs');
         $this->line('  2. Import HaloUI JS: <script src="{{ asset(\'vendor/halo-ui/halo.js\') }}"></script>');
         $this->line('  3. Customize components in: resources/views/components/halo/');
-        $this->line('  4. Read docs: https://github.com/your-repo/halo-ui');
+        $this->line('  4. Read docs: https://github.com/AureDulvresse/halo-ui');
 
         return self::SUCCESS;
     }
