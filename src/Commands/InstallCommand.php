@@ -16,8 +16,8 @@ class InstallCommand extends Command
 
     protected array $availableComponents = [
         'alert', 'badge', 'breadcrumb', 'breadcrumb-item', 'button',
-        'card', 'checkbox', 'dropdown', 'input', 'modal',
-        'navbar', 'pagination', 'radio', 'select', 'sidebar',
+        'card', 'checkbox', 'icon', 'dropdown', 'input', 'modal',
+        'navbar', 'pagination', 'popover', 'radio', 'select', 'sidebar',
         'spinner', 'tab', 'table', 'textarea', 'toast', 'tooltip'
     ];
 
@@ -25,6 +25,7 @@ class InstallCommand extends Command
         'card' => ['index', 'header', 'body', 'footer'],
         'dropdown' => ['index', 'item'],
         'modal' => ['index', 'header', 'body', 'footer'],
+        'popover' => ['index', 'content'],
         'select' => ['index', 'item'],
         'tab' => ['index', 'item'],
         'table' => ['index', 'row', 'cell'],
@@ -32,7 +33,7 @@ class InstallCommand extends Command
 
     public function handle(): int
     {
-        $this->info('🎨 HaloUI Component Installer');
+        $this->output->title('🎨 HaloUI Component Installer');
         $this->newLine();
 
         // Determine which components to install
@@ -61,14 +62,14 @@ class InstallCommand extends Command
         }
 
         $this->newLine();
-        $this->info("✅ Installed: {$installed} component(s)");
+        $this->output->info("Installed: {$installed} component(s)");
 
         if ($skipped > 0) {
-            $this->warn("⏭️  Skipped: {$skipped} component(s) (already exists, use --force to overwrite)");
+            $this->warn("Skipped: {$skipped} component(s) (already exists, use --force to overwrite)");
         }
 
         $this->newLine();
-        $this->info('📚 Next steps:');
+        $this->info('Next steps:');
         $this->line('  1. Make sure Alpine.js is installed: npm install alpinejs');
         $this->line('  2. Import HaloUI JS: <script src="{{ asset(\'vendor/halo-ui/halo.js\') }}"></script>');
         $this->line('  3. Customize components in: resources/views/components/halo/');
