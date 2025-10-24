@@ -25,6 +25,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "driesvints/blade-icons": "^1.8",
         "illuminate/console": "^12.0",
         "illuminate/filesystem": "^12.0",
         "illuminate/support": "^11.0|^12.0",
