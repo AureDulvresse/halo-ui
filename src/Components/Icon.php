@@ -33,14 +33,18 @@ class Icon extends Component
         /** @var IconFactory $factory */
         $factory = app(IconFactory::class);
 
+        $name = $this->name;
+        $set = null;
+
+        // Permet "lucide.camera" → set=lucide, icon=camera
+        if (Str::contains($name, '.')) {
+            [$set, $name] = explode('.', $name, 2);
+        }
+
         try {
-            $svg = $factory->svg($this->name);
-            if ($this->class) {
-                $svg->addClass($this->class);
-            }
-            if ($this->defer) {
-                $svg->defer();
-            }
+            $svg = $factory->svg($name, $set ? ['set' => $set] : []);
+            if ($this->class) $svg->addClass($this->class);
+            if ($this->defer) $svg->defer();
             return (string) $svg;
         } catch (\Throwable $e) {
             return null;
