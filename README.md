@@ -1,6 +1,6 @@
 # HaloUI
 
-<p align="center">
+<p align="start">
   <a href="https://packagist.org/packages/ironflow/ironflow">
     <img src="https://img.shields.io/packagist/v/ironflow/halo-ui" alt="Latest Version" />
   </a>
