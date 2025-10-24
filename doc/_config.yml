@@ -1,0 +1,87 @@
+# GitHub Pages Configuration for HaloUI Documentation
+
+title: HaloUI Documentation
+description: A beautiful, modular UI component library for Laravel
+baseurl: "/halo-ui"
+url: "https://AureDulvresse.github.io"
+
+theme: jekyll-theme-cayman
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - README.md
+
+collections:
+  components:
+    output: true
+    permalink: /components/:name
+
+defaults:
+  - scope:
+      path: ""
+      type: "components"
+    values:
+      layout: "component"
+
+navigation:
+  - title: Home
+    url: /
+  - title: Installation
+    url: /installation
+  - title: Configuration
+    url: /configuration
+  - title: Components
+    url: /components/
+    children:
+      - title: Alert
+        url: /components/alert
+      - title: Badge
+        url: /components/badge
+      - title: Breadcrumb
+        url: /components/breadcrumb
+      - title: Button
+        url: /components/button
+      - title: Card
+        url: /components/card
+      - title: Checkbox
+        url: /components/checkbox
+      - title: Dropdown
+        url: /components/dropdown
+      - title: Input
+        url: /components/input
+      - title: Modal
+        url: /components/modal
+      - title: Navbar
+        url: /components/navbar
+      - title: Pagination
+        url: /components/pagination
+      - title: Radio
+        url: /components/radio
+      - title: Select
+        url: /components/select
+      - title: Sidebar
+        url: /components/sidebar
+      - title: Spinner
+        url: /components/spinner
+      - title: Tab
+        url: /components/tab
+      - title: Table
+        url: /components/table
+      - title: Textarea
+        url: /components/textarea
+      - title: Toast
+        url: /components/toast
+      - title: Tooltip
+        url: /components/tooltip
