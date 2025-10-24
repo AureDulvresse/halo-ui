@@ -1,11 +1,19 @@
-# HaloUI v2.0.0
+# HaloUI
 
-[![Version](https://img.shields.io/badge/version-2.0.1-blue)](https://github.com/AureDulvresse/haloui/releases)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue?logo=php)](https://www.php.net/)
-[![Laravel](https://img.shields.io/badge/Laravel-12%2B-red?logo=laravel)](https://laravel.com/)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](#testing)
-[![GitHub issues](https://img.shields.io/github/issues/AureDulvresse/halo-ui)](https://github.com/AureDulvresse/halo-ui/issues)
+<p align="center">
+  <a href="https://packagist.org/packages/ironflow/ironflow">
+    <img src="https://img.shields.io/packagist/v/ironflow/halo-ui" alt="Latest Version" />
+  </a>
+  <a href="https://packagist.org/packages/ironflow/halo-ui">
+    <img src="https://img.shields.io/packagist/dt/ironflow/halo-ui" alt="Total Downloads" />
+  </a>
+  <a href="https://packagist.org/packages/ironflow/halo-ui">
+    <img src="https://img.shields.io/packagist/l/ironflow/halo-ui" alt="License" />
+  </a>
+  <a href="https://github.com/AureDulvresse/halo-ui/issues">
+  <img src="https://img.shields.io/github/issues/AureDulvresse/halo-ui" alt="GitHub issues" />
+  </a>
+</p>
 
 ---
 
