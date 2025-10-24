@@ -15,24 +15,93 @@
   </a>
 </p>
 
+<p align="center">
+  <strong>A beautiful, modular UI component library for Laravel</strong>
+</p>
+
+<p align="center">
+  Built with Blade, TailwindCSS, and Alpine.js
+</p>
+
+<p align="center">
+  <a href="#installation">Installation</a> •
+  <!-- <a href="#documentation">Documentation</a> • -->
+  <a href="#components">Components</a> •
+  <a href="#configuration">Configuration</a>
+</p>
+
 ---
 
-## Project Overview
+## Features
 
-**HaloUI** is a **professional, modular UI component library** for **Laravel 12+**, designed to accelerate development of modern web applications.  
-Built with **Blade**, **TailwindCSS**, and **Alpine.js**, HaloUI offers **reusable, composable, and customizable components** following a consistent design language.
-
-Key Features:
-
-- Fully modular components, install individually or all at once
-- Themeable via CSS variables for full customization
-- Alpine.js-ready for interactive UI
-- Snapshots and unit testing included for reliability
-- Perfect for admin panels, dashboards, and SaaS applications
-
----
+- **20+ Production-Ready Components** - From buttons to modals, everything you need  
+- **Fully Customizable** - TailwindCSS-based styling, easy to override  
+- **Copy & Own** - Install components into your project and customize freely  
+- **Alpine.js Powered** - Lightweight, reactive interactions  
+- **Laravel Native** - Built for Laravel 12+ with Blade components  
+- **Zero Dependencies** - Only requires Laravel, TailwindCSS, and Alpine.js  
+- **Accessible** - ARIA-compliant and keyboard navigable  
+- **Responsive** - Mobile-first design approach  
 
 ## Installation
+
+### Requirements
+
+- PHP 8.2+
+- Laravel 11.0+ or 12.0+
+- TailwindCSS 3.0+
+- Alpine.js 3.0+
+
+### Step 1: Install the Package
+
+```bash
+composer require ironflow/halo-ui
+```
+
+### Step 2: Install Alpine.js
+
+```bash
+npm install alpinejs
+```
+
+Add Alpine.js to your `resources/js/app.js`:
+
+```javascript
+import Alpine from 'alpinejs';
+window.Alpine = Alpine;
+Alpine.start();
+```
+
+### Step 3: Configure Tailwind
+
+Update your `tailwind.config.js` to include HaloUI paths:
+
+```javascript
+export default {
+  content: [
+    './resources/**/*.blade.php',
+    './resources/**/*.js',
+    './resources/views/components/halo/**/*.blade.php', // Add this
+  ],
+  // ... rest of config
+}
+```
+
+### Step 4: Publish Configuration (Optional)
+
+```bash
+php artisan vendor:publish --tag=halo-config
+```
+
+### Step 5: Install Components
+
+Install all components:
+
+```bash
+php artisan halo:install --all
+```
+
+Or install specific components:
 
 ```bash
 composer require ironflow/halo-ui
@@ -59,76 +128,174 @@ php artisan halo:install
 ## Usage Examples
 
 ```blade
-<x-halo:button variant="primary" size="lg">Click Me</x-halo:button>
+{{-- Trigger --}}
+<x-halo.button @click="$dispatch('open-modal', { name: 'example' })">
+    Open Modal
+</x-halo.button>
 
-<x-halo:modal x-data="{ open: true }" x-show="open">
-    <x-halo:modal-header>Title</x-halo:modal-header>
-    <x-halo:modal-body>Content</x-halo:modal-body>
-    <x-halo:modal-footer>
-        <x-halo:button @click="$el.closest('[x-data]').__x.$data.open = false">Close</x-halo:button>
-    </x-halo:modal-footer>
-</x-halo:modal>
-
-<x-halo:select placeholder="Choose an option">
-    <x-halo:select-item value="option1">Option 1</x-halo:select-item>
-    <x-halo:select-item value="option2">Option 2</x-halo:select-item>
-</x-halo:select>
+{{-- Modal --}}
+<x-halo.modal name="example">
+    <x-halo.modal.header>
+        Modal Title
+    </x-halo.modal.header>
+    
+    <x-halo.modal.body>
+        Modal content goes here.
+    </x-halo.modal.body>
+    
+    <x-halo.modal.footer>
+        <x-halo.button @click="show = false" variant="secondary">
+            Cancel
+        </x-halo.button>
+        <x-halo.button variant="primary">
+            Confirm
+        </x-halo.button>
+    </x-halo.modal.footer>
+</x-halo.modal>
 ```
 
-## Theme & Customization
+### Card
 
-All components can be customized using CSS variables:
-
-```css
-:root {
-  --color-primary: #3b82f6;
-  --color-primary-hover: #2563eb;
-  --color-secondary: #6b7280;
-  --color-secondary-hover: #4b5563;
-  --color-danger: #ef4444;
-  --color-danger-hover: #dc2626;
-  --color-background: #ffffff;
-  --color-text: #111827;
-  --color-border: #d1d5db;
-  --color-hover: #f3f4f6;
-}
+```blade
+<x-halo.card>
+    <x-halo.card.header>
+        <h3 class="text-lg font-semibold">Card Title</h3>
+    </x-halo.card.header>
+    
+    <x-halo.card.body>
+        Card content goes here.
+    </x-halo.card.body>
+    
+    <x-halo.card.footer>
+        <x-halo.button variant="primary">Action</x-halo.button>
+    </x-halo.card.footer>
+</x-halo.card>
 ```
 
----
+### Toast Notifications
+
+```blade
+{{-- Include in your layout --}}
+<x-halo.toast />
+
+{{-- Trigger from JavaScript --}}
+<script>
+    HaloUI.success('Success!', 'Your action was completed.');
+    HaloUI.error('Error!', 'Something went wrong.');
+    HaloUI.warning('Warning!', 'Please be careful.');
+    HaloUI.info('Info', 'Here is some information.');
+</script>
+
+{{-- Or from Laravel controller --}}
+return redirect()->back()->with('toast', [
+    'type' => 'success',
+    'title' => 'Success!',
+    'message' => 'Action completed successfully.'
+]);
+```
+
+### Dropdown
+
+```blade
+<x-halo.dropdown>
+    <x-slot name="trigger">
+        <x-halo.button>Options</x-halo.button>
+    </x-slot>
+    
+    <x-halo.dropdown.item href="/profile">Profile</x-halo.dropdown.item>
+    <x-halo.dropdown.item href="/settings">Settings</x-halo.dropdown.item>
+    <x-halo.dropdown.item @click="logout()">Logout</x-halo.dropdown.item>
+</x-halo.dropdown>
+```
+
+## Configuration
+
+Customize HaloUI by editing `config/halo.php`:
+
+```php
+return [
+    'theme' => [
+        'colors' => [
+            'primary' => 'blue',
+            'secondary' => 'gray',
+            // ...
+        ],
+        'default_radius' => 'md',
+    ],
+    'defaults' => [
+        'button' => [
+            'variant' => 'primary',
+            'size' => 'md',
+        ],
+    ],
+];
+```
+
+## Customization
+
+Since HaloUI follows the "copy and own" philosophy, you can freely modify any installed component:
+
+1. Install the component: `php artisan halo:install button`
+2. Edit the file: `resources/views/components/halo/button.blade.php`
+3. Customize to your needs
+
+Your changes will be preserved during package updates.
+
+## JavaScript API
+
+### Modal Methods
+
+```javascript
+// Open a modal
+HaloUI.openModal('modal-name');
+
+// Close all modals
+HaloUI.closeModal();
+```
+
+### Toast Methods
+
+```javascript
+// Show success toast
+HaloUI.success('Title', 'Message');
+
+// Show error toast
+HaloUI.error('Title', 'Message');
+
+// Show warning toast
+HaloUI.warning('Title', 'Message');
+
+// Show info toast
+HaloUI.info('Title', 'Message');
+
+// Custom toast
+HaloUI.toast('success', 'Title', 'Message');
+```
 
 ## Testing
 
-HaloUI includes:
-
-- Unit tests for component rendering and props
-- Snapshot tests for Alpine.js interactions
-
-Run tests with:
+Run the test suite:
 
 ```bash
-php artisan test
+composer test
 ```
 
----
+## Contributing
 
-## Contribution
-
-We welcome contributions!
-
-1. Fork the repository
-2. Add new components under `Halo\UI\Components`
-3. Add Blade stubs in `stubs/components`
-4. Write unit tests for each component
-5. Submit a pull request
-
-For major changes, please open an issue first to discuss your proposal.
-
----
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+HaloUI is open-sourced software licensed under the [MIT license](LICENSE.md).
+
+## Credits
+
+- Inspired by [shadcn/ui](https://ui.shadcn.com/)
+- Built with [Laravel](https://laravel.com/)
+- Styled with [TailwindCSS](https://tailwindcss.com/)
+- Powered by [Alpine.js](https://alpinejs.dev/)
 
 <p align="center">
   <strong>HaloUI - Build with ❤️ by Aure Dulvresse</strong>
 </p>
+co
