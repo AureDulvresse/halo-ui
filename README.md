@@ -35,7 +35,7 @@ Key Features:
 ## Installation
 
 ```bash
-composer require halo/ui
+composer require ironflow/halo-ui
 
 php artisan vendor:publish --tag=halo-ui-components
 php artisan vendor:publish --tag=halo-ui-assets
@@ -56,7 +56,7 @@ php artisan halo:install
 
 ---
 
-## 🛠 Usage Examples
+## Usage Examples
 
 ```blade
 <x-halo:button variant="primary" size="lg">Click Me</x-halo:button>
