@@ -20,9 +20,11 @@ window.HaloUI = {
 
     // Show a toast notification
     toast(type, title, message = '') {
+        const acceptedTypes = ['success', 'error', 'warning', 'info'];
+        const toastType = acceptedTypes.includes(type) ? type : 'info';
         window.dispatchEvent(new CustomEvent('toast', {
             detail: {
-                type,
+                type: toastType,
                 title,
                 message
             }
