@@ -2,13 +2,13 @@
 
 <p align="start">
   <a href="https://packagist.org/packages/ironflow/ironflow">
-    <img src="https://img.shields.io/packagist/v/ironflow/halo-ui" alt="Latest Version" />
+    <img src="https://img.shields.io/packagist/v/ironflow/halo-ui" alt="Latest Version">
   </a>
   <a href="https://packagist.org/packages/ironflow/halo-ui">
-    <img src="https://img.shields.io/packagist/dt/ironflow/halo-ui" alt="Total Downloads" />
+    <img src="https://img.shields.io/packagist/dt/ironflow/halo-ui" alt="Total Downloads">
   </a>
   <a href="https://packagist.org/packages/ironflow/halo-ui">
-    <img src="https://img.shields.io/packagist/l/ironflow/halo-ui" alt="License" />
+    <img src="https://img.shields.io/packagist/l/ironflow/halo-ui" alt="License">
   </a>
   <a href="https://github.com/AureDulvresse/halo-ui/issues">
   <img src="https://img.shields.io/github/issues/AureDulvresse/halo-ui" alt="GitHub issues">
