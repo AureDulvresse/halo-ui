@@ -11,7 +11,7 @@
     <img src="https://img.shields.io/packagist/l/ironflow/halo-ui" alt="License" />
   </a>
   <a href="https://github.com/AureDulvresse/halo-ui/issues">
-  <img src="https://img.shields.io/github/issues/AureDulvresse/halo-ui" alt="GitHub issues" />
+  <img src="https://img.shields.io/github/issues/AureDulvresse/halo-ui" alt="GitHub issues">
   </a>
 </p>
 
