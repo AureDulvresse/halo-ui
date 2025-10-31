@@ -298,4 +298,3 @@ HaloUI is open-sourced software licensed under the [MIT license](LICENSE.md).
 <p align="center">
   <strong>HaloUI - Build with ❤️ by Aure Dulvresse</strong>
 </p>
-co
