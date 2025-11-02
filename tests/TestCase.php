@@ -32,11 +32,6 @@ abstract class TestCase extends Orchestra
             }
         }
 
-        /* The commented code `// ->artisan('vendor:publish', ['--tag' => 'halo-components',
-        '--force' => true, ]);` is attempting to publish vendor assets for the 'halo-components' tag
-        with the force option set to true. This command is typically used in Laravel applications to
-        publish assets from packages to the application's public directory or other relevant
-        locations. */
         $this->artisan('vendor:publish', [
             '--tag' => 'halo-components',
             '--force' => true,
