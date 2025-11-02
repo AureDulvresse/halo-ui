@@ -57,6 +57,11 @@
 - **TypeScript-ready** with full type definitions
 - **Hot reload** support for development
 - **Comprehensive testing** with PHPUnit/Pest
+- **Theme System**
+  - CSS variables for dynamic theming
+  - Gradient & Glass morphism effects
+  - Dark mode with system detection
+  - Component-level theme overrides
 
 ### Performance
 
@@ -112,10 +117,10 @@ php artisan vendor:publish --tag=halo-templates
 
 ```javascript
 // resources/js/app.js
-import Alpine from 'alpinejs';
+import Alpine from "alpinejs";
 
 // Import HaloUI
-import '../../../vendor/halo/ui/resources/js/halo.js';
+import "../../../vendor/halo/ui/resources/js/halo.js";
 
 window.Alpine = Alpine;
 Alpine.start();
@@ -131,7 +136,7 @@ Alpine.start();
 </head>
 <body>
     {{ $slot }}
-    
+
     {{-- Toast Container --}}
     <x-halo.toast />
 </body>
@@ -223,16 +228,16 @@ Alpine.start();
     <x-halo.modal.header closeable>
         Create New User
     </x-halo.modal.header>
-    
+
     <x-halo.modal.body>
-        <x-halo.input 
-            name="name" 
+        <x-halo.input
+            name="name"
             label="Full Name"
             icon="user"
             :clearable="true"
         />
     </x-halo.modal.body>
-    
+
     <x-halo.modal.footer>
         <x-halo.button @click="HaloUI.modal.close('user-modal')" variant="outline">
             Cancel
@@ -272,13 +277,13 @@ HaloUI.toast.info('Info', 'New features available');
     <x-halo.card.header>
         <h3 class="text-xl font-bold">Premium Feature</h3>
     </x-halo.card.header>
-    
+
     <x-halo.card.body>
         <p class="text-gray-600">
             Glassmorphism card with interactive hover effect
         </p>
     </x-halo.card.body>
-    
+
     <x-halo.card.footer>
         <x-halo.button variant="gradient-ocean" class="w-full">
             Upgrade Now
@@ -291,19 +296,19 @@ HaloUI.toast.info('Info', 'New features available');
 
 ```javascript
 // Modal API
-HaloUI.modal.open('modal-name');
-HaloUI.modal.close('modal-name');
+HaloUI.modal.open("modal-name");
+HaloUI.modal.close("modal-name");
 HaloUI.modal.closeAll();
 
 // Toast API
-HaloUI.toast.success('Title', 'Message');
-HaloUI.toast.error('Title', 'Message');
-HaloUI.toast.warning('Title', 'Message');
-HaloUI.toast.info('Title', 'Message');
+HaloUI.toast.success("Title", "Message");
+HaloUI.toast.error("Title", "Message");
+HaloUI.toast.warning("Title", "Message");
+HaloUI.toast.info("Title", "Message");
 
 // Theme API
 HaloUI.theme.toggle();
-HaloUI.theme.set('dark');
+HaloUI.theme.set("dark");
 const mode = HaloUI.theme.get();
 
 // Utilities
@@ -380,19 +385,6 @@ MIT License - see [LICENSE.md](LICENSE.md)
 - Icons from [Blade UI Kit](https://blade-ui-kit.com/)
 - Inspired by [shadcn/ui](https://shadcn.com/)
 
-<<<<<<< Updated upstream
 <p align="center">
   <strong>HaloUI - Build with ❤️ by Aure Dulvresse</strong>
 </p>
-=======
-## 💬 Support
-
-- Email: ironflow-framework@gmail.com
-- Discord: [Join Community](https://discord.gg/haloui)
-- Issues: [GitHub Issues](https://github.com/your-org/halo-ui/issues)
-<!-- - Docs: [Documentation](https://haloui.dev) -->
-
----
-
-<p align="center">Made with ❤️ by Aure Dulvresse</p>
->>>>>>> Stashed changes

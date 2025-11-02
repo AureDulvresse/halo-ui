@@ -1,10 +1,12 @@
 @props([
     'position' => config('halo.toast.position', 'top-right'),
-    'duration' => config('halo.toast.duration', 3000),
+    'duration' => config('halo.toast.duration', 4000),
+    'glass' => true,
+    'animate' => 'slide',
 ])
 
 @php
-    $positionClasses = match($position) {
+    $positionClasses = match ($position) {
         'top-right' => 'top-4 right-4',
         'top-left' => 'top-4 left-4',
         'bottom-right' => 'bottom-4 right-4',
@@ -13,93 +15,129 @@
         'bottom-center' => 'bottom-4 left-1/2 -translate-x-1/2',
         default => 'top-4 right-4',
     };
+
+    $classes = halo_classes('toast', null, null, $attributes->get('class'), [
+        'glass' => $glass,
+        'animate' => $animate,
+        'dark' => $glass && isset($attributes['dark']),
+    ]);
 @endphp
 
-<div
-    x-data="{
-        toasts: [],
-        duration: {{ $duration }},
-        add(toast) {
-            toast.id = Date.now();
-            this.toasts.push(toast);
-            
-            setTimeout(() => {
-                this.remove(toast.id);
-            }, this.duration);
-        },
-        remove(id) {
-            this.toasts = this.toasts.filter(t => t.id !== id);
-        }
-    }"
-    @toast.window="add($event.detail)"
-    class="fixed {{ $positionClasses }} z-50 space-y-3 pointer-events-none"
-    {{ $attributes }}
->
+<div x-data="{
+    toasts: [],
+    duration: {{ $duration }},
+    add(toast) {
+        const id = Date.now() + Math.random();
+        this.toasts.push({
+            id,
+            type: toast.type || 'info',
+            title: toast.title || '',
+            message: toast.message || '',
+            icon: toast.icon || this.getDefaultIcon(toast.type),
+        });
+
+        setTimeout(() => {
+            this.remove(id);
+        }, toast.duration || this.duration);
+    },
+    remove(id) {
+        this.toasts = this.toasts.filter(t => t.id !== id);
+    },
+    getDefaultIcon(type) {
+        const icons = {
+            success: 'check-circle',
+            error: 'x-circle',
+            warning: 'exclamation-triangle',
+            info: 'information-circle',
+        };
+        return icons[type] || icons.info;
+    },
+    getColorClasses(type) {
+        const glassColors = {
+            success: 'bg-emerald-500/90 backdrop-blur supports-[backdrop-filter]:bg-emerald-500/70',
+            error: 'bg-red-500/90 backdrop-blur supports-[backdrop-filter]:bg-red-500/70',
+            warning: 'bg-amber-500/90 backdrop-blur supports-[backdrop-filter]:bg-amber-500/70',
+            info: 'bg-blue-500/90 backdrop-blur supports-[backdrop-filter]:bg-blue-500/70'
+        };
+
+        const solidColors = {
+            success: 'bg-emerald-500 dark:bg-emerald-600',
+            error: 'bg-red-500 dark:bg-red-600',
+            warning: 'bg-amber-500 dark:bg-amber-600',
+            info: 'bg-blue-500 dark:bg-blue-600'
+        };
+        return colors[type] || colors.info;
+    }
+}" @toast.window="add($event.detail)"
+    class="fixed {{ $positionClasses }} z-50 space-y-3 pointer-events-none max-w-md" {{ $attributes }}>
     <template x-for="toast in toasts" :key="toast.id">
-        <div
-            x-show="true"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 transform translate-y-2"
-            x-transition:enter-end="opacity-100 transform translate-y-0"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100 transform translate-y-0"
-            x-transition:leave-end="opacity-0 transform translate-y-2"
-            class="pointer-events-auto max-w-sm w-full bg-white shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 overflow-hidden"
-        >
+        <div x-show="true" x-transition x-transition:enter.duration.300ms x-transition:leave.duration.200ms
+            class="pointer-events-auto w-full rounded-2xl shadow-lg overflow-hidden"
+            :class="getColorClasses(toast.type)">
             <div class="p-4">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                        <!-- Success Icon -->
-                        <svg x-show="toast.type === 'success'" class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <!-- Error Icon -->
-                        <svg x-show="toast.type === 'error'" class="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <!-- Warning Icon -->
-                        <svg x-show="toast.type === 'warning'" class="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-                        </svg>
-                        <!-- Info Icon -->
-                        <svg x-show="toast.type === 'info'" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                        </svg>
+                <div class="flex items-start gap-3">
+                    <div class="shrink-0 mt-0.5">
+                        <x-halo::icon :name="toast . icon" size="lg" class="text-white" x-bind:name="toast.icon" />
                     </div>
-                    <div class="ml-3 w-0 flex-1">
-                        <p class="text-sm font-medium text-gray-900" x-text="toast.title"></p>
-                        <p class="mt-1 text-sm text-gray-500" x-text="toast.message" x-show="toast.message"></p>
+
+                    <div class="flex-1 min-w-0">
+                        <p x-text="toast.title" @class([
+                            'text-sm font-bold',
+                            'text-white' => $glass,
+                            'text-gray-900 dark:text-white' => !$glass,
+                        ])></p>
+                        <p x-text="toast.message" x-show="toast.message" @class([
+                            'mt-1 text-sm',
+                            'text-white/90' => $glass,
+                            'text-gray-600 dark:text-gray-300' => !$glass,
+                        ])></p>
                     </div>
-                    <div class="ml-4 flex flex-shrink-0">
-                        <button
-                            @click="remove(toast.id)"
-                            class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            <span class="sr-only">Close</span>
-                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-                            </svg>
-                        </button>
-                    </div>
+
+                    <button @click="remove(toast.id)" @class([
+                        'shrink-0 ml-2 p-1 rounded-lg transition-colors focus:outline-none focus:ring-2',
+                        'text-white/80 hover:text-white hover:bg-white/20 focus:ring-white/50' => $glass,
+                        'text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-600 focus:ring-primary-500/50' => !$glass,
+                    ])>
+                        <span class="sr-only">Close</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                {{-- Progress bar --}}
+                <div class="mt-3 h-1 rounded-full overflow-hidden"
+                    :class="glass ? 'bg-white/30' : 'bg-black/10 dark:bg-white/10'" x-data="{ width: 100 }"
+                    x-init="let interval = setInterval(() => {
+                        width = width - (100 / (duration / 100));
+                        if (width <= 0) clearInterval(interval);
+                    }, 100);">
+                    <div class="h-full bg-white transition-all duration-100 ease-linear rounded-full"
+                        :style="`width: ${width}%`"></div>
                 </div>
             </div>
         </div>
     </template>
 </div>
 
-@if(session()->has('toast'))
+{{-- Laravel Session Flash Integration --}}
+@if (session()->has('toast'))
     @php
         $toast = session('toast');
     @endphp
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            window.dispatchEvent(new CustomEvent('toast', {
-                detail: {
-                    type: '{{ $toast['type'] ?? 'info' }}',
-                    title: '{{ $toast['title'] ?? '' }}',
-                    message: '{{ $toast['message'] ?? '' }}'
-                }
-            }));
+            setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('toast', {
+                    detail: {
+                        type: '{{ $toast['type'] ?? 'info' }}',
+                        title: '{{ $toast['title'] ?? '' }}',
+                        message: '{{ $toast['message'] ?? '' }}',
+                        duration: {{ $toast['duration'] ?? 'null' }}
+                    }
+                }));
+            }, 100);
         });
     </script>
 @endif

@@ -1,16 +1,24 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Halo\UI\Components\Popover;
+namespace Halo\UI\Components;
 
 use Illuminate\View\Component;
 
 class Popover extends Component
 {
-    public function __construct(public $trigger = null) {}
+    public string $position;
+    public string $trigger;
+
+    public function __construct(
+        string $position = 'top',
+        string $trigger = 'click'
+    ) {
+        $this->position = $position;
+        $this->trigger = $trigger;
+    }
+
     public function render()
     {
-        return view('components.halo.popover');
+        return view('halo::popover');
     }
 }

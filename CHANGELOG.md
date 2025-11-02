@@ -7,50 +7,86 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Ajouté
+
+- Support des effets visuels glass/glow sur tous les composants via props
+- Système d'animation unifié avec configurations par composant
+- Props `glass` et `animate` ajoutés aux composants :
+  - Toast - Effets de glassmorphisme et transitions fluides
+  - Badge - Styles adaptables avec/sans effet verre
+  - Chip - Animation et effets visuels
+  - Avatar - Support du mode glass et transitions
+
+### Modifié
+
+- Refactoring des stubs pour utiliser `halo_classes` uniformément
+- Optimisation des classes Tailwind pour la clarté du code
+- Migration vers les nouvelles classes de glassmorphisme
+- Amélioration du support du mode sombre avec classes conditionnelles
+
+## [3.0.0] - 2025-11-01
+
 ### Added
 
-- Nothing yet
+- **21 Nouveaux Composants**:
+  - Avatar & AvatarGroup - Support d'images et fallback initiales
+  - Progress - Barres de progression avec motifs et animations
+  - Accordion - Sections pliables avec support multi-ouverture
+  - Divider - Séparateurs avec étiquettes et variantes
+  - Skeleton - États de chargement avec presets
+  - Empty State - Affichage des états vides
+  - Rating - Notation par étoiles interactive
+  - Timeline - Affichage chronologique d'événements
+  - Calendar & DatePicker - Sélection de dates avancée
+  - ColorPicker - Sélection de couleurs avec palette
+  - ImageCropper - Recadrage d'images intégré
+  - RichText - Éditeur WYSIWYG
+  - SliderRange - Sélection de plages de valeurs
+  - Stats - Affichage de statistiques
+  - Chip - Tags interactifs
+  - BottomSheet - Panneau coulissant mobile
+  - CommandPalette - Recherche rapide type Spotlight
+  - ContextMenu - Menu contextuel personnalisable
+  - TreeView - Navigation arborescente
+  - Kbd - Affichage de raccourcis clavier
+  - Code - Mise en forme de code avec highlight
 
-### Changed
+### Améliorations
 
-- Nothing yet
+- **Thème & Design**:
 
-## [2.1.0] - 2025-10-24
+  - Nouvelles variables CSS pour personnalisation avancée
+  - Support du mode sombre amélioré avec persistance
+  - Effets de glassmorphisme pour interfaces modernes
+  - Animations optimisées et transitions fluides
+  - Nouveau système de grilles pour layouts responsifs
 
-### Added
+- **DX (Developer Experience)**:
 
-- **Switch** component for boolean toggle inputs
-- **Avatar** component with automatic fallback to initials
-- **Progress** component with striped and animated variants
-- **Accordion** component with collapsible sections
-- **Divider** component with label support
-- **Skeleton** component for loading states
-- **Empty State** component for no-data displays
-- **Rating** component for star ratings
-- **Timeline** component for chronological events
-- Enhanced documentation for all new components
-- 9 new component examples
+  - InstallCommand revu avec workflow guidé
+  - Nouveau helper 'halo_merge_classes' pour fusion de classes
+  - Support TypeScript avec types générés
+  - Tests unitaires étendus (couverture >90%)
+  - Documentation interactive
 
-### Features
+- **Architecture**:
+  - Refonte du système de thèmes avec CSS variables
+  - Nouvelles API JavaScript pour gestion d'état
+  - Support des slots nommés Blade
+  - Optimisation des performances
+  - Meilleure gestion des dépendances Alpine.js
 
-- Switch component with 3 sizes and Alpine.js integration
-- Avatar component with circle/square shapes and 6 sizes
-- Progress bars with striped patterns and animations
-- Accordion with single/multiple open support
-- Divider with 4 style variants (solid, dashed, dotted, thick)
-- Skeleton with 5 preset variants
-- Empty state with customizable icons and actions
-- Interactive star rating with hover states
-- Timeline with icon and variant support
+### Breaking Changes
 
-### Improved
-- InstallCommand updated to support 9 new components
-- Documentation structure enhanced
-- Component count increased from 20 to 29
+- Nouvelle structure de configuration des thèmes
+- Migration vers les CSS variables pour customisation
+- Changements d'API sur certains composants
+- Suppression des anciennes classes de compatibilité
 
 ## [2.0.0] - 2025-10-22
 
 ### Added
+
 - Initial release of HaloUI
 - 20+ production-ready components
 - Full Laravel 11+ and 12+ support
@@ -65,6 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Pages documentation site
 
 #### Components
+
 - Alert component with variants and dismissible state
 - Badge component with multiple variants and sizes
 - Breadcrumb navigation component
