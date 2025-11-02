@@ -52,7 +52,7 @@
         </div>
 
         @if ($icon)
-            <div class="w-16 h-16 bg-gradient-to-br {{ $variantClasses }} rounded-lg flex items-center justify-center">
+            <div class="w-16 h-16 bg-linear-to-br {{ $variantClasses }} rounded-lg flex items-center justify-center">
                 <x-icon :name="$icon" class="w-8 h-8 text-white" />
             </div>
         @endif

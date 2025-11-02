@@ -43,7 +43,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Halo\\UI\\Tests\\": "tests/"
+            "Tests\\": "tests/"
         }
     },
     "extra": {
