@@ -13,10 +13,25 @@ abstract class TestCase extends Orchestra
 
         // Configuration des chemins de vue pour les tests
         $this->app['config']->set('view.paths', [
+            __DIR__ . '/views',
             __DIR__ . '/../stubs/components',
             __DIR__ . '/../resources/views',
             __DIR__ . '/../vendor/orchestra/testbench-core/laravel/views',
         ]);
+
+        // Configuration des chemins de composants et de cache
+        $this->app['config']->set('view.compiled', __DIR__ . '/storage/framework/views');
+
+        // Copier les stubs des composants dans le répertoire de test
+        $stubsPath = __DIR__ . '/../stubs/components';
+        $testComponentsPath = __DIR__ . '/views/components/halo';
+
+        if (is_dir($stubsPath)) {
+            foreach (glob($stubsPath . '/*.blade.php') as $file) {
+                $filename = basename($file);
+                copy($file, $testComponentsPath . '/' . $filename);
+            }
+        }
 
         // Publier les composants pour les tests
         $this->artisan('vendor:publish', [
