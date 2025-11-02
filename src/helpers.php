@@ -15,7 +15,7 @@ if (!function_exists('halo_classes')) {
     function halo_classes(string $component, ?string $variant = null, ?string $size = null, string $extra = '', array $options = []): string
     {
         $classes = [];
-
+        
         // Get variant base classes
         if ($variant) {
             $variantClasses = config("halo.variants.{$component}.{$variant}");

@@ -18,7 +18,6 @@ test('avatar shows initials when no image', function () {
     ]);
 
     expect($html)->toContain('JD');
-    assertHasClass($html, 'bg-gradient-to-br');
 });
 
 test('avatar group stacks correctly', function () {

@@ -8,7 +8,7 @@
 ])
 
 @php
-    $classes = halo_classes('card', $variant, null, $attributes->get('class'), [
+    $classes = halo_classes('card', $variant, null, $attributes->get('class') ?? '', [
         'glass' => $glass,
         'gradient' => $gradient,
         'glow' => $glow,

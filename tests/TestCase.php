@@ -22,7 +22,6 @@ abstract class TestCase extends Orchestra
         // Configuration des chemins de composants et de cache
         $this->app['config']->set('view.compiled', __DIR__ . '/storage/framework/views');
 
-        // Copier les stubs des composants dans le répertoire de test
         $stubsPath = __DIR__ . '/../stubs/components';
         $testComponentsPath = __DIR__ . '/views/components/halo';
 
@@ -33,13 +32,16 @@ abstract class TestCase extends Orchestra
             }
         }
 
-        // Publier les composants pour les tests
+        /* The commented code `// ->artisan('vendor:publish', ['--tag' => 'halo-components',
+        '--force' => true, ]);` is attempting to publish vendor assets for the 'halo-components' tag
+        with the force option set to true. This command is typically used in Laravel applications to
+        publish assets from packages to the application's public directory or other relevant
+        locations. */
         $this->artisan('vendor:publish', [
             '--tag' => 'halo-components',
             '--force' => true,
         ]);
 
-        // Configuration du thème pour les tests
         $this->app['config']->set('halo.theme.colors', [
             'primary' => '#3B82F6',
             'secondary' => '#6B7280',
@@ -70,7 +72,7 @@ abstract class TestCase extends Orchestra
         })->filter()->implode(' ');
 
         return trim($this->blade(
-            sprintf('<x-halo-%s %s />', $name, $attrs)
+            sprintf('<x-halo::%s %s />', $name, $attrs)
         ));
     }
 }
