@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Halo\UI\Commands;
 
 use Illuminate\Console\Command;
@@ -7,44 +9,90 @@ use Illuminate\Support\Facades\File;
 
 class InstallCommand extends Command
 {
-    protected $signature = 'halo:install
-                            {components?* : Specific components to install (optional)}
+    protected $signature = 'halo:install 
+                            {components?* : Specific components to install}
                             {--all : Install all components}
-                            {--force : Overwrite existing components}';
+                            {--force : Overwrite existing components}
+                            {--with-templates : Install pre-built templates}
+                            {--skip-deps : Skip dependency installation}';
 
     protected $description = 'Install HaloUI components into your project';
 
+    /**
+     * All available components (v2.1 - 49 components).
+     */
     protected array $availableComponents = [
-        'alert', 'badge', 'breadcrumb', 'breadcrumb-item', 'button',
-        'card', 'checkbox', 'icon', 'dropdown', 'input', 'modal',
-        'navbar', 'pagination', 'popover', 'radio', 'select', 'sidebar',
-        'spinner', 'tab', 'table', 'textarea', 'toast', 'tooltip'
+        // Form Components (8)
+        'button', 'input', 'textarea', 'select', 'checkbox', 'radio', 'toggle', 'rating',
+        
+        // Advanced Form Components (6)
+        'file-upload', 'date-picker', 'time-picker', 'rich-text', 'color-picker', 'slider-range',
+        
+        // Layout Components (7)
+        'card', 'modal', 'navbar', 'sidebar', 'breadcrumb', 'accordion', 'bottom-sheet',
+        
+        // Feedback Components (8)
+        'alert', 'toast', 'badge', 'spinner', 'progress', 'skeleton', 'empty-state', 'notification',
+        
+        // Navigation Components (5)
+        'dropdown', 'tab', 'pagination', 'timeline', 'stepper',
+        
+        // Data Display & Utilities (11)
+        'table', 'tooltip', 'avatar', 'avatar-group', 'divider', 'stats', 'chip', 'kbd', 
+        'code', 'popover', 'breadcrumb-item',
+        
+        // Advanced Components (9)
+        'context-menu', 'command-palette', 'carousel', 'calendar', 'image-cropper', 
+        'tree-view', 'kanban', 'icon', 'select-item',
     ];
 
+    /**
+     * Modular components with subcomponents.
+     */
     protected array $modularComponents = [
         'card' => ['index', 'header', 'body', 'footer'],
         'dropdown' => ['index', 'item'],
         'modal' => ['index', 'header', 'body', 'footer'],
-        'popover' => ['index', 'content'],
         'select' => ['index', 'item'],
         'tab' => ['index', 'item'],
         'table' => ['index', 'row', 'cell'],
+        'accordion' => ['index', 'item'],
+        'timeline' => ['index', 'item'],
+        'stepper' => ['index', 'item'],
+        'context-menu' => ['index', 'item'],
+        'kanban' => ['index', 'column', 'card'],
+    ];
+
+    /**
+     * Component dependencies.
+     */
+    protected array $componentDependencies = [
+        'date-picker' => ['calendar', 'input'],
+        'file-upload' => ['button'],
+        'stepper' => ['button'],
+        'kanban' => ['card'],
+        'avatar-group' => ['avatar'],
+        'dropdown' => ['button'],
+        'context-menu' => ['dropdown'],
     ];
 
     public function handle(): int
     {
-        $this->output->title('🎨 HaloUI Component Installer');
-        $this->newLine();
+        $this->displayBanner();
 
-        // Determine which components to install
         $componentsToInstall = $this->determineComponents();
 
         if (empty($componentsToInstall)) {
-            $this->error('No components specified. Use --all or specify component names.');
+            $this->error('❌ No components specified. Use --all or specify component names.');
+            $this->info('💡 Available components: ' . implode(', ', $this->availableComponents));
             return self::FAILURE;
         }
 
-        // Ensure destination directory exists
+        // Resolve dependencies
+        if (!$this->option('skip-deps')) {
+            $componentsToInstall = $this->resolveDependencies($componentsToInstall);
+        }
+
         $destinationPath = resource_path('views/components/halo');
         if (!File::exists($destinationPath)) {
             File::makeDirectory($destinationPath, 0755, true);
@@ -53,52 +101,103 @@ class InstallCommand extends Command
         $installed = 0;
         $skipped = 0;
 
+        $progressBar = $this->output->createProgressBar(count($componentsToInstall));
+        $progressBar->start();
+
         foreach ($componentsToInstall as $component) {
             if ($this->installComponent($component, $destinationPath)) {
                 $installed++;
             } else {
                 $skipped++;
             }
+            $progressBar->advance();
         }
 
-        $this->newLine();
-        $this->output->info("Installed: {$installed} component(s)");
+        $progressBar->finish();
+        $this->newLine(2);
 
-        if ($skipped > 0) {
-            $this->warn("Skipped: {$skipped} component(s) (already exists, use --force to overwrite)");
+        $this->displaySummary($installed, $skipped);
+
+        if ($this->option('with-templates')) {
+            $this->installTemplates();
         }
 
-        $this->newLine();
-        $this->info('Next steps:');
-        $this->line('  1. Make sure Alpine.js is installed: npm install alpinejs');
-        $this->line('  2. Import HaloUI JS: <script src="{{ asset(\'vendor/halo-ui/halo.js\') }}"></script>');
-        $this->line('  3. Customize components in: resources/views/components/halo/');
-        $this->line('  4. Read docs: https://github.com/AureDulvresse/halo-ui');
+        $this->displayNextSteps();
 
         return self::SUCCESS;
+    }
+
+    protected function displayBanner(): void
+    {
+        $this->newLine();
+        $this->line('╔═══════════════════════════════════════════╗');
+        $this->line('║   HaloUI v3.0 Component Installer         ║');
+        $this->line('║   Modern UI Components for Laravel        ║');
+        $this->line('╚═══════════════════════════════════════════╝');
+        $this->newLine();
     }
 
     protected function determineComponents(): array
     {
         if ($this->option('all')) {
+            $this->info('📦 Installing all ' . count($this->availableComponents) . ' components...');
             return $this->availableComponents;
         }
 
         $requested = $this->argument('components');
 
         if (empty($requested)) {
-            return [];
+            return $this->interactiveSelection();
         }
 
-        // Validate requested components
         $invalid = array_diff($requested, $this->availableComponents);
 
         if (!empty($invalid)) {
-            $this->warn('Invalid component(s): ' . implode(', ', $invalid));
-            $this->line('Available: ' . implode(', ', $this->availableComponents));
+            $this->warn('⚠️  Invalid component(s): ' . implode(', ', $invalid));
+            $this->line('Available components:');
+            $this->displayComponentList();
         }
 
         return array_intersect($requested, $this->availableComponents);
+    }
+
+    protected function interactiveSelection(): array
+    {
+        $this->info('🎯 Interactive component selection:');
+        $this->newLine();
+
+        $categories = [
+            'Form Components' => ['button', 'input', 'textarea', 'select', 'checkbox', 'radio', 'toggle', 'rating'],
+            'Advanced Forms' => ['file-upload', 'date-picker', 'time-picker', 'rich-text', 'color-picker', 'slider-range'],
+            'Layout' => ['card', 'modal', 'navbar', 'sidebar', 'breadcrumb', 'accordion', 'bottom-sheet'],
+            'Feedback' => ['alert', 'toast', 'badge', 'spinner', 'progress', 'skeleton', 'empty-state', 'notification'],
+            'Navigation' => ['dropdown', 'tab', 'pagination', 'timeline', 'stepper'],
+        ];
+
+        $selected = [];
+
+        foreach ($categories as $category => $components) {
+            if ($this->confirm("Install {$category} components?", true)) {
+                $selected = array_merge($selected, $components);
+            }
+        }
+
+        return $selected;
+    }
+
+    protected function resolveDependencies(array $components): array
+    {
+        $resolved = $components;
+
+        foreach ($components as $component) {
+            if (isset($this->componentDependencies[$component])) {
+                $deps = $this->componentDependencies[$component];
+                $this->info("📌 Component '{$component}' requires: " . implode(', ', $deps));
+                $resolved = array_merge($resolved, $deps);
+            }
+        }
+
+        return array_unique($resolved);
     }
 
     protected function installComponent(string $component, string $destinationPath): bool
@@ -106,7 +205,6 @@ class InstallCommand extends Command
         $stubsPath = __DIR__ . '/../../stubs/components';
         $force = $this->option('force');
 
-        // Check if this is a modular component
         if (isset($this->modularComponents[$component])) {
             return $this->installModularComponent($component, $stubsPath, $destinationPath, $force);
         }
@@ -125,13 +223,10 @@ class InstallCommand extends Command
         }
 
         if (File::exists($destinationFile) && !$force) {
-            $this->warn("⏭️  Skipped: {$component} (already exists)");
             return false;
         }
 
         File::copy($sourceFile, $destinationFile);
-        $this->line("✅ Installed: {$component}");
-
         return true;
     }
 
@@ -146,16 +241,13 @@ class InstallCommand extends Command
         }
 
         if (File::exists($destinationDir) && !$force) {
-            $this->warn("⏭️  Skipped: {$component}/ (already exists)");
             return false;
         }
 
-        // Create destination directory
         if (!File::exists($destinationDir)) {
             File::makeDirectory($destinationDir, 0755, true);
         }
 
-        // Copy all files
         $files = File::files($sourceDir);
         foreach ($files as $file) {
             File::copy(
@@ -164,8 +256,55 @@ class InstallCommand extends Command
             );
         }
 
-        $this->line("✅ Installed: {$component}/ (" . count($files) . " files)");
-
         return true;
+    }
+
+    protected function installTemplates(): void
+    {
+        $this->newLine();
+        $this->info('📄 Installing pre-built templates...');
+
+        $templates = ['auth/login', 'auth/register', 'landing/hero', 'admin/dashboard'];
+
+        foreach ($templates as $template) {
+            $this->line("  ✓ {$template}");
+        }
+
+        $this->call('vendor:publish', ['--tag' => 'halo-templates', '--force' => $this->option('force')]);
+    }
+
+    protected function displaySummary(int $installed, int $skipped): void
+    {
+        $this->info("✅ Installed: {$installed} component(s)");
+
+        if ($skipped > 0) {
+            $this->warn("⏭️  Skipped: {$skipped} component(s) (already exists, use --force to overwrite)");
+        }
+    }
+
+    protected function displayNextSteps(): void
+    {
+        $this->newLine();
+        $this->info('📚 Next steps:');
+        $this->line('  1. Install Alpine.js: npm install alpinejs');
+        $this->line('  2. Import HaloUI JS: <script src="{{ asset(\'vendor/halo-ui/js/halo.js\') }}"></script>');
+        $this->line('  3. Configure Tailwind: Add HaloUI paths to tailwind.config.js');
+        $this->line('  4. Customize components: resources/views/components/halo/');
+        $this->line('  5. Read docs: https://github.com/AureDulvresse/halo-ui/docs');
+        $this->newLine();
+    } 
+
+    protected function displayComponentList(): void
+    {
+        $categories = [
+            'Form' => array_slice($this->availableComponents, 0, 8),
+            'Layout' => array_slice($this->availableComponents, 8, 7),
+            'Feedback' => array_slice($this->availableComponents, 15, 8),
+            'Data' => array_slice($this->availableComponents, 23, 11),
+        ];
+
+        foreach ($categories as $category => $components) {
+            $this->line("  {$category}: " . implode(', ', $components));
+        }
     }
 }

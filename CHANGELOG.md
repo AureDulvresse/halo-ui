@@ -1,115 +1,180 @@
 # Changelog
 
-All notable changes to HaloUI will be documented in this file.
+All notable changes to **HaloUI** are documented in this file.
+This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+---
 
 ## [Unreleased]
 
+---
+
+## [3.0.0] — 2025-11-02
+
 ### Added
 
-- Nothing yet
+#### New Components
+
+* **TimePicker** — Time selector supporting 12- and 24-hour formats.
+* **Timeline** & **TimelineItem** — Advanced chronological event visualization.
+* **Toggle** — Customizable on/off switch component.
+* **TreeView** — Hierarchical navigation structure with nested items.
+
+#### 🧩 Expanded Component Library (21 New Components)
+
+* **Avatar** & **AvatarGroup** — Image and initials fallback system.
+* **Progress** — Patterned and animated progress bars.
+* **Accordion** — Collapsible panels with multi-expand option.
+* **Divider** — Labelled separators with visual variants.
+* **Skeleton** — Flexible loading placeholders.
+* **EmptyState** — Elegant empty-content presentation.
+* **Rating** — Interactive star rating system.
+* **Timeline** — Chronological event tracking.
+* **Calendar** & **DatePicker** — Advanced date selection.
+* **ColorPicker** — Palette-based color selection.
+* **ImageCropper** — Integrated image cropping tool.
+* **RichText** — WYSIWYG text editor.
+* **SliderRange** — Range selection slider.
+* **Stats** — Data summary blocks.
+* **Chip** — Interactive tags and labels.
+* **BottomSheet** — Mobile-style sliding panel.
+* **CommandPalette** — Spotlight-like quick action search.
+* **ContextMenu** — Fully customizable right-click menu.
+* **TreeView** — Hierarchical item navigation.
+* **Kbd** — Keyboard shortcut display.
+* **Code** — Syntax-highlighted code blocks.
+
+#### Visual Enhancements
+
+* **New props** `glass` and `animate` across all core components.
+* **Glass/glow visual system** available globally.
+* Unified animation system with per-component configuration.
+* Enhanced support for **glassmorphism** and **fluid transitions** on:
+
+  * **Toast** — Glass effects and motion presets.
+  * **Badge** — Adaptive glass or flat variants.
+  * **Chip** — Animated entry/exit effects.
+  * **Avatar** — Glass and transition modes.
+
+---
 
 ### Changed
 
-- Nothing yet
+* Refactored Blade stubs to use `halo_classes` consistently.
+* Optimized Tailwind class structure for readability and maintainability.
+* Migrated to unified glassmorphism utilities.
+* Improved dark mode handling with conditional classes.
 
-## [2.1.0] - 2025-10-24
+---
 
-### Added
+### Improvements
 
-- **Switch** component for boolean toggle inputs
-- **Avatar** component with automatic fallback to initials
-- **Progress** component with striped and animated variants
-- **Accordion** component with collapsible sections
-- **Divider** component with label support
-- **Skeleton** component for loading states
-- **Empty State** component for no-data displays
-- **Rating** component for star ratings
-- **Timeline** component for chronological events
-- Enhanced documentation for all new components
-- 9 new component examples
+#### Theme & Design
 
-### Features
+* Added new CSS variables for advanced customization.
+* Enhanced and persistent dark mode.
+* Unified glassmorphism style system.
+* Optimized animations and transitions.
+* Introduced new responsive grid utilities.
 
-- Switch component with 3 sizes and Alpine.js integration
-- Avatar component with circle/square shapes and 6 sizes
-- Progress bars with striped patterns and animations
-- Accordion with single/multiple open support
-- Divider with 4 style variants (solid, dashed, dotted, thick)
-- Skeleton with 5 preset variants
-- Empty state with customizable icons and actions
-- Interactive star rating with hover states
-- Timeline with icon and variant support
+#### Developer Experience (DX)
 
-### Improved
-- InstallCommand updated to support 9 new components
-- Documentation structure enhanced
-- Component count increased from 20 to 29
+* Reworked `InstallCommand` with a guided installation workflow.
+* Added helper `halo_merge_classes` for class name merging.
+* TypeScript support with auto-generated type definitions.
+* Extended unit test coverage (now >90%).
+* Interactive documentation with real-time examples.
 
-## [2.0.0] - 2025-10-22
+#### Architecture
 
-### Added
-- Initial release of HaloUI
-- 20+ production-ready components
-- Full Laravel 11+ and 12+ support
-- PHP 8.2+ support
-- TailwindCSS 3.0+ integration
-- Alpine.js powered interactions
-- Copy-and-own component architecture
-- CLI installer command `halo:install`
-- Comprehensive configuration system
-- Theme customization support
-- Component documentation for all components
-- GitHub Pages documentation site
+* Full theme system refactor using CSS variables.
+* New JavaScript APIs for reactive state management.
+* Added Blade named slot support.
+* Improved performance and reduced dependency overhead.
+* Enhanced Alpine.js state integration.
 
-#### Components
-- Alert component with variants and dismissible state
-- Badge component with multiple variants and sizes
-- Breadcrumb navigation component
-- Button component with 8 variants and 5 sizes
-- Card component with header, body, and footer
-- Checkbox input component
-- Dropdown menu component
-- Input component with validation states
-- Modal dialog component with animations
-- Navbar component with mobile menu
-- Pagination component for Laravel paginators
-- Radio button component
-- Select dropdown component
-- Sidebar navigation component
-- Spinner loading indicator
-- Tab navigation component
-- Table component with rows and cells
-- Textarea component
-- Toast notification system
+---
 
-## [1.0.0] - 2025-10-17
+### Breaking Changes
+
+* Overhauled theme configuration structure.
+* Migration to CSS variable-based customization.
+* API changes for several core components.
+* Removal of legacy compatibility classes and utilities.
+
+---
+
+## [2.0.0] — 2025-10-22
 
 ### Added
 
-- Initial v1.0.0 scaffolding for HaloUI
-- Service provider HaloUIServiceProvider for publishing components and assets
-- CLI command halo:install supporting both stub folders and single stub files
-- Base components implemented:
-  - Button, Input, Textarea
-  - Select + SelectItem
-  - Modal
-  - Dropdown
-  - Card
-- README v1.0.0 with installation instructions, usage examples, and component list
-- Alpine.js hooks prepared for interactive components: Modal, Dropdown, Toast, Tooltip, Popover
-- Theme customization via CSS variables
-- Testing structure prepared for unit and snapshot tests
+* **Initial public release** of HaloUI.
+* Over **20 production-ready Blade components**.
+* Full support for **Laravel 11+** and **12+**.
+* **PHP 8.2+** compatibility.
+* Integrated **TailwindCSS 3.x** and **Alpine.js**.
+* Copy-and-own architecture for flexible customization.
+* CLI installer: `halo:install`.
+* Theme customization and configuration system.
+* Complete component documentation.
+* Published documentation site on GitHub Pages.
+
+#### Components Included
+
+* Alert (variants + dismissible)
+* Badge (multiple sizes & variants)
+* Breadcrumb
+* Button (8 variants, 5 sizes)
+* Card (header, body, footer)
+* Checkbox
+* Dropdown
+* Input (with validation states)
+* Modal (animated)
+* Navbar (responsive)
+* Pagination (Laravel paginator support)
+* Radio
+* Select
+* Sidebar
+* Spinner
+* Tabs
+* Table (rows and cells)
+* Textarea
+* Toast notification system
+
+---
+
+## [1.0.0] — 2025-10-17
+
+### Added
+
+* **Initial framework scaffolding** for HaloUI.
+* Introduced `HaloUIServiceProvider` for publishing assets and components.
+* Added CLI command `halo:install` supporting stub folders and single files.
+* Implemented base components:
+
+  * Button, Input, Textarea
+  * Select & SelectItem
+  * Modal
+  * Dropdown
+  * Card
+* Initial documentation with usage examples.
+* Alpine.js hooks prepared for Modal, Dropdown, Toast, Tooltip, and Popover.
+* Theme customization via CSS variables.
+* Test scaffolding for unit and snapshot tests.
 
 ### Notes
 
-- Not all planned components are included yet (Tabs, Accordion, Toast, Tooltip, Popover, BadgeShield, etc.)
-- Future updates will add remaining components and advanced features
-- v1.0.0 considered stable base for initial Packagist release
+* Some planned components (Tabs, Accordion, Toast, Tooltip, BadgeShield, etc.) were deferred.
+* v1.0.0 serves as the **stable foundation** for the initial Packagist release.
 
-## Releases
+---
 
-[Unreleased]: https://github.com/ironflow-framework/ironflow/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/ironflow-framework/ironflow/releases/tag/v1.0.0
+## Release References
+
+| Version      | Description                        | Link                                                                              |
+| ------------ | ---------------------------------- | --------------------------------------------------------------------------------- |
+| [Unreleased] | Compare latest changes with `main` | [🔗 Compare](https://github.com/ironflow-framework/halo-ui/compare/v3.0.0...HEAD) |
+| [3.0.0]      | Release 3.0.0                      | [🔗 View Tag](https://github.com/ironflow-framework/halo-ui/releases/tag/v3.0.0)  |
+| [2.0.0]      | Release 2.0.0                      | [🔗 Diff](https://github.com/ironflow-framework/halo-ui/compare/v1.0.0...v2.0.0)  |
+| [1.0.0]      | Initial release                    | [🔗 View Tag](https://github.com/ironflow-framework/halo-ui/releases/tag/v1.0.0)  |
+

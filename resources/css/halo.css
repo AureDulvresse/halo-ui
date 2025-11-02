@@ -1,0 +1,160 @@
+/**
+ * HaloUI Custom Styles
+ *
+ * Additional styles and animations for HaloUI components
+ */
+
+/* Progress bar striped animation */
+@keyframes progress-stripes {
+    0% {
+        background-position: 2rem 0;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
+}
+
+.animate-progress-stripes {
+    animation: progress-stripes 1s linear infinite;
+}
+
+/* Alpine.js collapse plugin support */
+[x-cloak] {
+    display: none !important;
+}
+
+/* Smooth transitions for Alpine.js */
+[x-transition] {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+/* Custom scrollbar for sidebar and modals */
+.halo-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.halo-scrollbar::-webkit-scrollbar-track {
+    background: var(--halo-scroll-track, #f1f5f9);
+    border-radius: 3px;
+}
+
+.halo-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--halo-scroll-thumb, #cbd5e1);
+    border-radius: 3px;
+}
+
+.halo-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--halo-scroll-thumb-hover, #94a3b8);
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Slide up animation */
+@keyframes slideUp {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+/* Scale animation */
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.2s ease-out;
+}
+
+/* Ripple effect */
+.halo-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.halo-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.halo-ripple:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+/* Gradient backgrounds */
+.halo-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.halo-gradient-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.halo-gradient-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.halo-gradient-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+/* Glass morphism effect */
+.halo-glass {
+    background: rgba(255, 255, 255, 0.25);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Dark mode utilities */
+@media (prefers-color-scheme: dark) {
+    .halo-dark-bg {
+        background-color: #1f2937;
+    }
+
+    .halo-dark-text {
+        color: #f9fafb;
+    }
+}

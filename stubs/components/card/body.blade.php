@@ -1,5 +1,5 @@
 @props([])
 
-<div {{ $attributes->merge(['class' => 'px-6 py-4']) }}>
+<div {{ $attributes->merge(['class' => 'px-6 py-5']) }}>
     {{ $slot }}
 </div>

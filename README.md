@@ -16,286 +16,375 @@
 </p>
 
 <p align="center">
-  <strong>A beautiful, modular UI component library for Laravel</strong>
-</p>
-
-<p align="center">
-  Built with Blade, TailwindCSS, and Alpine.js
+  <strong>Modern, Beautiful UI Components for Laravel</strong><br>
+  Built with Blade, TailwindCSS 3+, and Alpine.js 3+
 </p>
 
 <p align="center">
   <a href="#installation">Installation</a> •
-  <!-- <a href="#documentation">Documentation</a> • -->
+  <a href="#features">Features</a> •
   <a href="#components">Components</a> •
-  <a href="#configuration">Configuration</a>
+  <a href="#documentation">Documentation</a> •
+  <a href="#examples">Examples</a>
 </p>
 
 ---
 
+## What's New in v2.1
+
+**Modern Design System** - Gradient buttons, glassmorphism effects, smooth animations
+**Enhanced Icon Integration** - Full Blade UI Kit support with intelligent fallbacks
+**Alpine Stores** - Global state management for modals, toasts, and themes
+**49 Components** - Complete library with advanced form components
+**Performance Optimized** - Lazy loading, caching, and minification support
+**Dark Mode Ready** - Built-in theme switching with persistence
+**IronFlow Form Builder** - Integrated form builder package (coming soon)
+
 ## Features
 
-- **20+ Production-Ready Components** - From buttons to modals, everything you need  
-- **Fully Customizable** - TailwindCSS-based styling, easy to override  
-- **Copy & Own** - Install components into your project and customize freely  
-- **Alpine.js Powered** - Lightweight, reactive interactions  
-- **Laravel Native** - Built for Laravel 12+ with Blade components  
-- **Zero Dependencies** - Only requires Laravel, TailwindCSS, and Alpine.js  
-- **Accessible** - ARIA-compliant and keyboard navigable  
-- **Responsive** - Mobile-first design approach  
+### Modern Design Language
+
+- **Gradient-based variants** with glow effects
+- **Glassmorphism** support for modern UIs
+- **Smooth animations** with customizable timing
+- **Responsive** mobile-first design
+- **Accessible** ARIA-compliant components
+
+### Developer Experience
+
+- **Copy-and-own** philosophy - full component customization
+- **Interactive CLI** installer with dependency resolution
+- **TypeScript-ready** with full type definitions
+- **Hot reload** support for development
+- **Comprehensive testing** with PHPUnit/Pest
+- **Theme System**
+  - CSS variables for dynamic theming
+  - Gradient & Glass morphism effects
+  - Dark mode with system detection
+  - Component-level theme overrides
+
+### Performance
+
+- **Lazy loading** for heavy components
+- **Minimal JavaScript** footprint with Alpine.js
+- **Optimized rendering** with Blade caching
+- **Production builds** with minification
 
 ## Installation
 
 ### Requirements
 
 - PHP 8.2+
-- Laravel 11.0+ or 12.0+
+- Laravel 11+ or 12+
 - TailwindCSS 3.0+
 - Alpine.js 3.0+
+- Blade UI Kit (optional, recommended)
 
-### Step 1: Install the Package
-
-```bash
-composer require ironflow/halo-ui
-```
-
-### Step 2: Install Alpine.js
+### Quick Install
 
 ```bash
+# 1. Install HaloUI
+composer require halo/ui
+
+# 2. Install Alpine.js & dependencies
 npm install alpinejs
+
+# 3. Install Blade UI Kit (recommended for icons)
+composer require blade-ui-kit/blade-heroicons
+
+# 4. Install components
+php artisan halo:install --all
+
+# 5. Configure Tailwind
+# Add to tailwind.config.js content array:
+'./resources/views/components/halo/**/*.blade.php',
 ```
 
-Add Alpine.js to your `resources/js/app.js`:
+### Configuration
+
+```bash
+# Publish configuration
+php artisan vendor:publish --tag=halo-config
+
+# Publish assets
+php artisan vendor:publish --tag=halo-assets
+
+# Publish templates (optional)
+php artisan vendor:publish --tag=halo-templates
+```
+
+### Setup Alpine.js
 
 ```javascript
-import Alpine from 'alpinejs';
+// resources/js/app.js
+import Alpine from "alpinejs";
+
+// Import HaloUI
+import "../../../vendor/halo/ui/resources/js/halo.js";
+
 window.Alpine = Alpine;
 Alpine.start();
 ```
 
-### Step 3: Configure Tailwind
+### Include in Layout
 
-Update your `tailwind.config.js` to include HaloUI paths:
+```blade
+<!DOCTYPE html>
+<html>
+<head>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body>
+    {{ $slot }}
 
-```javascript
-export default {
-  content: [
-    './resources/**/*.blade.php',
-    './resources/**/*.js',
-    './resources/views/components/halo/**/*.blade.php', // Add this
-  ],
-  // ... rest of config
-}
+    {{-- Toast Container --}}
+    <x-halo.toast />
+</body>
+</html>
 ```
 
-### Step 4: Publish Configuration (Optional)
+## Components (49 Total)
 
-```bash
-php artisan vendor:publish --tag=halo-config
-```
+### Form Components (8)
 
-### Step 5: Install Components
+- **Button** - Gradient variants with glow effects
+- **Input** - Enhanced with icons and clearable option
+- **Textarea** - Auto-resize with character counter
+- **Select** - Custom styled dropdown
+- **Checkbox** - Modern toggle design
+- **Radio** - Styled radio buttons
+- **Toggle** - iOS-style toggle
+- **Rating** - Interactive star ratings
 
-Install all components:
+### Advanced Form Components (6)
 
-```bash
-php artisan halo:install --all
-```
+- **FileUpload** - Drag & drop with preview
+- **DatePicker** - Calendar date selection
+- **TimePicker** - Time selection (12h/24h)
+- **RichText** - WYSIWYG editor
+- **ColorPicker** - Color selection
+- **SliderRange** - Range slider input
 
-Or install specific components:
+### Layout Components (7)
 
-```bash
-composer require ironflow/halo-ui
+- **Card** - Elevated, flat, bordered, glass variants
+- **Modal** - Animated dialogs with Alpine store
+- **Navbar** - Responsive navigation
+- **Sidebar** - Collapsible side navigation
+- **Breadcrumb** - Navigation trail
+- **Accordion** - Collapsible sections
+- **BottomSheet** - Mobile bottom drawer
 
-php artisan vendor:publish --tag=halo-ui-components
-php artisan vendor:publish --tag=halo-ui-assets
-```
+### Feedback Components (8)
 
-### Installing Components
+- **Alert** - Contextual messages
+- **Toast** - Gradient toasts with progress bar
+- **Badge** - Status indicators
+- **Spinner** - Loading indicators
+- **Progress** - Progress bars with animations
+- **Skeleton** - Loading placeholders
+- **EmptyState** - No data displays
+- **Notification** - Persistent notifications
 
-```bash
-# Install a single component
-php artisan halo:install button
+### Navigation (5) & Data Display (11)
 
-# Force reinstall a component
-php artisan halo:install modal --force
+- Dropdown, Tab, Pagination, Timeline, Stepper
+- Table, Tooltip, Avatar, AvatarGroup, Divider
+- Stats, Chip, Kbd, Code, Popover, Icon
 
-# Install all components
-php artisan halo:install
-```
+### Advanced Components (9)
 
----
+- ContextMenu, CommandPalette, Carousel, Calendar
+- ImageCropper, TreeView, Kanban (Board/Column/Card)
 
 ## Usage Examples
 
+### Modern Button with Icon
+
+```blade
+<x-halo.button variant="primary" icon="plus" size="lg">
+    Add New Item
+</x-halo.button>
+
+<x-halo.button variant="glass" icon="heart" icon-position="right">
+    Glassmorphism
+</x-halo.button>
+
+<x-halo.button variant="gradient-sunset" :loading="true">
+    Processing...
+</x-halo.button>
+```
+
+### Modal with Alpine Store
+
 ```blade
 {{-- Trigger --}}
-<x-halo.button @click="$dispatch('open-modal', { name: 'example' })">
+<x-halo.button @click="HaloUI.modal.open('user-modal')">
     Open Modal
 </x-halo.button>
 
 {{-- Modal --}}
-<x-halo.modal name="example">
-    <x-halo.modal.header>
-        Modal Title
+<x-halo.modal name="user-modal" size="lg">
+    <x-halo.modal.header closeable>
+        Create New User
     </x-halo.modal.header>
-    
+
     <x-halo.modal.body>
-        Modal content goes here.
+        <x-halo.input
+            name="name"
+            label="Full Name"
+            icon="user"
+            :clearable="true"
+        />
     </x-halo.modal.body>
-    
+
     <x-halo.modal.footer>
-        <x-halo.button @click="show = false" variant="secondary">
+        <x-halo.button @click="HaloUI.modal.close('user-modal')" variant="outline">
             Cancel
         </x-halo.button>
         <x-halo.button variant="primary">
-            Confirm
+            Create
         </x-halo.button>
     </x-halo.modal.footer>
 </x-halo.modal>
 ```
 
-### Card
+### Toast Notifications
 
 ```blade
-<x-halo.card>
+{{-- In Blade --}}
+<x-halo.button @click="HaloUI.toast.success('Success!', 'Item created successfully')">
+    Show Toast
+</x-halo.button>
+
+{{-- In Controller --}}
+return redirect()->back()->with('toast', [
+    'type' => 'success',
+    'title' => 'Saved!',
+    'message' => 'Changes have been saved successfully.'
+]);
+
+{{-- In JavaScript --}}
+HaloUI.toast.error('Error!', 'Something went wrong');
+HaloUI.toast.warning('Warning!', 'Please review your input');
+HaloUI.toast.info('Info', 'New features available');
+```
+
+### Modern Card Design
+
+```blade
+<x-halo.card variant="glass" :interactive="true">
     <x-halo.card.header>
-        <h3 class="text-lg font-semibold">Card Title</h3>
+        <h3 class="text-xl font-bold">Premium Feature</h3>
     </x-halo.card.header>
-    
+
     <x-halo.card.body>
-        Card content goes here.
+        <p class="text-gray-600">
+            Glassmorphism card with interactive hover effect
+        </p>
     </x-halo.card.body>
-    
+
     <x-halo.card.footer>
-        <x-halo.button variant="primary">Action</x-halo.button>
+        <x-halo.button variant="gradient-ocean" class="w-full">
+            Upgrade Now
+        </x-halo.button>
     </x-halo.card.footer>
 </x-halo.card>
 ```
 
-### Toast Notifications
+## 🎯 JavaScript API
 
-```blade
-{{-- Include in your layout --}}
-<x-halo.toast />
+```javascript
+// Modal API
+HaloUI.modal.open("modal-name");
+HaloUI.modal.close("modal-name");
+HaloUI.modal.closeAll();
 
-{{-- Trigger from JavaScript --}}
-<script>
-    HaloUI.success('Success!', 'Your action was completed.');
-    HaloUI.error('Error!', 'Something went wrong.');
-    HaloUI.warning('Warning!', 'Please be careful.');
-    HaloUI.info('Info', 'Here is some information.');
-</script>
+// Toast API
+HaloUI.toast.success("Title", "Message");
+HaloUI.toast.error("Title", "Message");
+HaloUI.toast.warning("Title", "Message");
+HaloUI.toast.info("Title", "Message");
 
-{{-- Or from Laravel controller --}}
-return redirect()->back()->with('toast', [
-    'type' => 'success',
-    'title' => 'Success!',
-    'message' => 'Action completed successfully.'
-]);
+// Theme API
+HaloUI.theme.toggle();
+HaloUI.theme.set("dark");
+const mode = HaloUI.theme.get();
+
+// Utilities
+HaloUI.utils.debounce(func, 300);
+HaloUI.utils.throttle(func, 100);
+HaloUI.utils.copyToClipboard(text);
 ```
 
-### Dropdown
+## 🎨 Theming & Customization
 
-```blade
-<x-halo.dropdown>
-    <x-slot name="trigger">
-        <x-halo.button>Options</x-halo.button>
-    </x-slot>
-    
-    <x-halo.dropdown.item href="/profile">Profile</x-halo.dropdown.item>
-    <x-halo.dropdown.item href="/settings">Settings</x-halo.dropdown.item>
-    <x-halo.dropdown.item @click="logout()">Logout</x-halo.dropdown.item>
-</x-halo.dropdown>
-```
-
-## Configuration
-
-Customize HaloUI by editing `config/halo.php`:
+### Design Styles
 
 ```php
-return [
-    'theme' => [
-        'colors' => [
-            'primary' => 'blue',
-            'secondary' => 'gray',
-            // ...
-        ],
-        'default_radius' => 'md',
+// config/halo.php
+'design' => [
+    'style' => 'modern', // modern, minimal, brutalist, glassmorphism
+]
+```
+
+### Custom Colors
+
+```php
+'colors' => [
+    'primary' => [
+        500 => '#your-color',
+        600 => '#your-hover-color',
     ],
-    'defaults' => [
-        'button' => [
-            'variant' => 'primary',
-            'size' => 'md',
-        ],
-    ],
-];
+]
 ```
 
-## Customization
+### Component Overrides
 
-Since HaloUI follows the "copy and own" philosophy, you can freely modify any installed component:
+After installation, all components are in `resources/views/components/halo/` - modify freely!
 
-1. Install the component: `php artisan halo:install button`
-2. Edit the file: `resources/views/components/halo/button.blade.php`
-3. Customize to your needs
+<!-- ## Full Documentation
 
-Your changes will be preserved during package updates.
+- [Installation Guide](docs/installation.md)
+- [Configuration](docs/configuration.md)
+- [Component Reference](docs/components/)
+- [JavaScript API](docs/javascript-api.md)
+- [Theming Guide](docs/theming.md)
+- [Form Builder](docs/form-builder.md) -->
 
-## JavaScript API
-
-### Modal Methods
-
-```javascript
-// Open a modal
-HaloUI.openModal('modal-name');
-
-// Close all modals
-HaloUI.closeModal();
-```
-
-### Toast Methods
-
-```javascript
-// Show success toast
-HaloUI.success('Title', 'Message');
-
-// Show error toast
-HaloUI.error('Title', 'Message');
-
-// Show warning toast
-HaloUI.warning('Title', 'Message');
-
-// Show info toast
-HaloUI.info('Title', 'Message');
-
-// Custom toast
-HaloUI.toast('success', 'Title', 'Message');
-```
-
-## Testing
-
-Run the test suite:
+## 🧪 Testing
 
 ```bash
+# Run tests
 composer test
+
+# Run with coverage
+composer test-coverage
+
+# Run specific test
+php artisan test tests/Feature/ComponentRenderTest.php
 ```
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history
 
 ## License
 
-HaloUI is open-sourced software licensed under the [MIT license](LICENSE.md).
+MIT License - see [LICENSE.md](LICENSE.md)
 
 ## Credits
 
-- Inspired by [shadcn/ui](https://ui.shadcn.com/)
 - Built with [Laravel](https://laravel.com/)
 - Styled with [TailwindCSS](https://tailwindcss.com/)
 - Powered by [Alpine.js](https://alpinejs.dev/)
+- Icons from [Blade UI Kit](https://blade-ui-kit.com/)
+- Inspired by [shadcn/ui](https://shadcn.com/)
 
 <p align="center">
   <strong>HaloUI - Build with ❤️ by Aure Dulvresse</strong>
 </p>
-co

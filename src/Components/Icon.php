@@ -1,53 +1,81 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Halo\UI\Components;
 
 use Illuminate\View\Component;
-use Illuminate\View\View;
-use Illuminate\Support\Str;
-use BladeUI\Icons\Factory as IconFactory;
 
 class Icon extends Component
 {
     public string $name;
-    public ?string $class;
-    public bool $defer;
+    public string $size;
+    public string $type;
+    public ?string $color;
 
-    public function __construct(string $name, ?string $class = null, bool $defer = false)
-    {
-        $this->name = Str::kebab($name);
-        $this->class = $class;
-        $this->defer = $defer;
+    public function __construct(
+        string $name,
+        string $size = 'md',
+        string $type = 'heroicon-o',
+        ?string $color = null
+    ) {
+        $this->name = $name;
+        $this->size = $size;
+        $this->type = $type ?? config('halo.design.icons.default_set', 'heroicon-o');
+        $this->color = $color;
     }
 
-    public function render(): View|string
+    public function render()
     {
-        return view('halo::icon');
+        return view('halo::icon', [
+            'name' => $this->name,
+            'size' => $this->size,
+            'type' => $this->type,
+            'color' => $this->color,
+            'sizeClasses' => $this->sizeClasses(),
+            'colorClasses' => $this->colorClasses(),
+            'componentName' => $this->componentName(),
+            'hasBladeIcons' => $this->hasBladeIcons(),
+        ]);
     }
 
-    /**
-     * Tente de récupérer le SVG depuis le package Blade Icons.
-     */
-    public function svg(): ?string
+    public function sizeClasses(): string
     {
-        /** @var IconFactory $factory */
-        $factory = app(IconFactory::class);
+        return match($this->size) {
+            'xs' => 'w-3 h-3',
+            'sm' => 'w-4 h-4',
+            'md' => 'w-5 h-5',
+            'lg' => 'w-6 h-6',
+            'xl' => 'w-8 h-8',
+            '2xl' => 'w-10 h-10',
+            default => 'w-5 h-5',
+        };
+    }
 
-        $name = $this->name;
-        $set = null;
-
-        // Permet "lucide.camera" → set=lucide, icon=camera
-        if (Str::contains($name, '.')) {
-            [$set, $name] = explode('.', $name, 2);
+    public function colorClasses(): string
+    {
+        if (!$this->color) {
+            return 'text-current';
         }
 
-        try {
-            $svg = $factory->svg($name, $set ? ['set' => $set] : []);
-            if ($this->class) $svg->addClass($this->class);
-            if ($this->defer) $svg->defer();
-            return (string) $svg;
-        } catch (\Throwable $e) {
-            return null;
-        }
+        return match($this->color) {
+            'primary' => 'text-blue-600',
+            'secondary' => 'text-gray-600',
+            'success' => 'text-emerald-600',
+            'danger' => 'text-red-600',
+            'warning' => 'text-amber-600',
+            'info' => 'text-cyan-600',
+            default => "text-{$this->color}",
+        };
+    }
+
+    public function hasBladeIcons(): bool
+    {
+        return class_exists(\BladeUI\Icons\BladeIconsServiceProvider::class);
+    }
+
+    public function componentName(): string
+    {
+        return "{$this->type}-{$this->name}";
     }
 }
