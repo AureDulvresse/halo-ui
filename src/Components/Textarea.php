@@ -1,36 +1,36 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Halo\UI\Components;
 
 use Illuminate\View\Component;
 
 class Textarea extends Component
 {
-    public int $rows;
-    public bool $error;
-    public bool $disabled;
     public ?string $label;
+    public ?string $error;
     public ?string $hint;
-    public ?string $errorMessage;
+    public int $rows;
+    public bool $disabled;
+    public string $resize;
+
     public function __construct(
-        int $rows = 3,
-        bool $error = false,
-        bool $disabled = false,
         ?string $label = null,
+        ?string $error = null,
         ?string $hint = null,
-        ?string $errorMessage = null
+        int $rows = 4,
+        bool $disabled = false,
+        string $resize = 'vertical',
     ) {
-        $this->rows = $rows;
-        $this->error = $error;
-        $this->disabled = $disabled;
         $this->label = $label;
+        $this->error = $error;
         $this->hint = $hint;
-        $this->errorMessage = $errorMessage;
+        $this->rows = $rows;
+        $this->disabled = $disabled;
+        $this->resize = $resize;
     }
+
     public function render()
     {
-        return view('halo::textarea');
+        return view('halo::components.halo.textarea');
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Halo\UI\Components;
 
 use Illuminate\View\Component;
@@ -9,16 +7,18 @@ use Illuminate\View\Component;
 class Spinner extends Component
 {
     public string $size;
-    public string $color;
+    public ?string $label;
+
     public function __construct(
         string $size = 'md',
-        string $color = 'blue'
+        ?string $label = null,
     ) {
         $this->size = $size;
-        $this->color = $color;
+        $this->label = $label;
     }
+
     public function render()
     {
-        return view('halo::spinner');
+        return view('halo::components.halo.spinner');
     }
 }

@@ -6,22 +6,19 @@ use Illuminate\View\Component;
 
 class Divider extends Component
 {
-    public ?string $label;
-    public string $position;
-    public string $variant;
+    public string $orientation;
+    public ?string $text;
 
     public function __construct(
-        ?string $label = null,
-        string $position = 'center',
-        string $variant = 'default'
+        string $orientation = 'horizontal',
+        ?string $text = null,
     ) {
-        $this->label = $label;
-        $this->position = $position;
-        $this->variant = $variant;
+        $this->orientation = $orientation;
+        $this->text = $text;
     }
 
     public function render()
     {
-        return view('halo::divider');
+        return view('halo::components.halo.divider');
     }
 }

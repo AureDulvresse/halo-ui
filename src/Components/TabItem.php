@@ -1,24 +1,24 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Halo\UI\Components;
 
 use Illuminate\View\Component;
 
 class TabItem extends Component
 {
-    public string $name;
-    public string $title;
+    public int $index;
+    public ?string $icon;
+
     public function __construct(
-        string $name = '',
-        string $title = ''
+        int $index = 0,
+        ?string $icon = null,
     ) {
-        $this->name = $name;
-        $this->title = $title;
+        $this->index = $index;
+        $this->icon = $icon;
     }
+
     public function render()
     {
-        return view('halo::tab.item');
+        return view('halo::components.halo.tabs.item');
     }
 }

@@ -1,59 +1,50 @@
 @props([
-    'value' => '',
     'label' => '',
+    'value' => '',
     'change' => null,
+    'changeType' => 'neutral',
     'icon' => null,
-    'variant' => 'default',
-    'glass' => false,
-    'animate' => null,
 ])
 
 @php
-    $classes = trim(
-        'rounded-lg p-6 ' .
-            halo_classes('stats', $variant, null, $attributes->get('class'), [
-                'glass' => $glass,
-                'animate' => $animate,
-                'dark' => $glass && isset($attributes['dark']),
-            ]),
-    );
+    $changeColors = match ($changeType) {
+        'positive' => 'text-green-600 dark:text-green-400',
+        'negative' => 'text-red-600 dark:text-red-400',
+        'neutral' => 'text-slate-600 dark:text-slate-400',
+        default => 'text-slate-600 dark:text-slate-400',
+    };
 @endphp
 
-<div {{ $attributes->merge(['class' => $classes]) }}>
-    <div class="flex items-center justify-between">
-        <div class="flex-1">
-            <p class="text-sm font-medium text-gray-600">{{ $label }}</p>
-            <p class="text-3xl font-bold text-gray-900 mt-2">{{ $value }}</p>
-
-            @if ($change)
-                @php
-                    $isPositive = str_starts_with($change, '+');
-                    $changeClass = $isPositive ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100';
-                @endphp
-                <div class="flex items-center gap-1 mt-2">
-                    <span
-                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {{ $changeClass }}">
-                        @if ($isPositive)
-                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                            </svg>
-                        @else
-                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                            </svg>
-                        @endif
-                        {{ $change }}
-                    </span>
-                    <span class="text-xs text-gray-500">vs last period</span>
-                </div>
-            @endif
-        </div>
-
+<div
+    {{ $attributes->merge(['class' => 'bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6']) }}>
+    <div class="flex items-center justify-between mb-2">
+        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">{{ $label }}</p>
         @if ($icon)
-            <div class="w-16 h-16 bg-linear-to-br {{ $variantClasses }} rounded-lg flex items-center justify-center">
-                <x-icon :name="$icon" class="w-8 h-8 text-white" />
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <x-halo::icon :name="$icon" class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            </div>
+        @endif
+    </div>
+
+    <div class="flex items-end justify-between">
+        <h3 class="text-3xl font-bold text-slate-900 dark:text-slate-100">{{ $value }}</h3>
+
+        @if ($change)
+            <div class="flex items-center gap-1 {{ $changeColors }}">
+                @if ($changeType === 'positive')
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                @elseif($changeType === 'negative')
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                @endif
+                <span class="text-sm font-medium">{{ $change }}</span>
             </div>
         @endif
     </div>

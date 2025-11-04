@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Halo\UI\Components;
 
 use Illuminate\View\Component;
@@ -9,25 +7,30 @@ use Illuminate\View\Component;
 class Select extends Component
 {
     public ?string $label;
-    public bool $error;
+    public ?string $error;
+    public ?string $hint;
+    public string $size;
     public bool $disabled;
     public ?string $placeholder;
-    public string $size;
+
     public function __construct(
         ?string $label = null,
-        bool $error = false,
+        ?string $error = null,
+        ?string $hint = null,
+        string $size = 'md',
         bool $disabled = false,
-        ?string $placeholder = 'Select an option',
-        string $size = 'md'
+        ?string $placeholder = null,
     ) {
         $this->label = $label;
         $this->error = $error;
+        $this->hint = $hint;
+        $this->size = $size;
         $this->disabled = $disabled;
         $this->placeholder = $placeholder;
-        $this->size = $size;
     }
+
     public function render()
     {
-        return view('halo::select.index');
+        return view('halo::components.halo.select');
     }
 }

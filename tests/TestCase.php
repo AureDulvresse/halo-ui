@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Halo\UI\Tests;
 
 use Halo\UI\Providers\HaloServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -11,40 +11,7 @@ abstract class TestCase extends Orchestra
     {
         parent::setUp();
 
-        // Configuration des chemins de vue pour les tests
-        $this->app['config']->set('view.paths', [
-            __DIR__ . '/views',
-            __DIR__ . '/../stubs/components',
-            __DIR__ . '/../resources/views',
-            __DIR__ . '/../vendor/orchestra/testbench-core/laravel/views',
-        ]);
-
-        // Configuration des chemins de composants et de cache
-        $this->app['config']->set('view.compiled', __DIR__ . '/storage/framework/views');
-
-        $stubsPath = __DIR__ . '/../stubs/components';
-        $testComponentsPath = __DIR__ . '/views/components/halo';
-
-        if (is_dir($stubsPath)) {
-            foreach (glob($stubsPath . '/*.blade.php') as $file) {
-                $filename = basename($file);
-                copy($file, $testComponentsPath . '/' . $filename);
-            }
-        }
-
-        $this->artisan('vendor:publish', [
-            '--tag' => 'halo-components',
-            '--force' => true,
-        ]);
-
-        $this->app['config']->set('halo.theme.colors', [
-            'primary' => '#3B82F6',
-            'secondary' => '#6B7280',
-            'success' => '#10B981',
-            'danger' => '#EF4444',
-            'warning' => '#F59E0B',
-            'info' => '#3B82F6',
-        ]);
+        // Additional setup
     }
 
     protected function getPackageProviders($app): array
@@ -54,20 +21,45 @@ abstract class TestCase extends Orchestra
         ];
     }
 
-    /**
-     * Helper pour rendre un composant Blade.
-     */
-    protected function renderComponent(string $name, array $data = []): string
+    protected function getEnvironmentSetUp($app): void
     {
-        $attrs = collect($data)->map(function ($value, $key) {
-            if (is_bool($value)) {
-                return $value ? $key : '';
-            }
-            return sprintf('%s="%s"', $key, $value);
-        })->filter()->implode(' ');
+        // Setup default database to use sqlite :memory:
+        $app['config']->set('database.default', 'testing');
+        $app['config']->set('database.connections.testing', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
 
-        return trim($this->blade(
-            sprintf('<x-halo::%s %s />', $name, $attrs)
-        ));
+        // Load HaloUI config
+        $app['config']->set('halo', require __DIR__.'/../config/halo.php');
+    }
+
+    /**
+     * Render a Blade component view.
+     */
+    protected function renderComponent(string $component, array $data = []): string
+    {
+        return view("halo::components.halo.{$component}", $data)->render();
+    }
+
+    /**
+     * Assert that rendered HTML contains a specific class.
+     */
+    protected function assertHasClass(string $html, string $class): void
+    {
+        $this->assertStringContainsString($class, $html);
+    }
+
+    /**
+     * Assert that rendered HTML contains a specific attribute.
+     */
+    protected function assertHasAttribute(string $html, string $attribute, ?string $value = null): void
+    {
+        if ($value === null) {
+            $this->assertStringContainsString($attribute, $html);
+        } else {
+            $this->assertStringContainsString("{$attribute}=\"{$value}\"", $html);
+        }
     }
 }

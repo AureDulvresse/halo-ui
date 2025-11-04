@@ -3,140 +3,191 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | HaloUI Theme Configuration  
+    | Active Theme
     |--------------------------------------------------------------------------
     |
-    | Customize the default theme settings for HaloUI components.
-    | These values can be overridden per component.
+    | Choose your active theme: 'default', 'neutral', 'glass', 'sunset',
+    | 'iron', 'ocean', 'forest', 'neon'
     |
     */
 
-    'theme' => [
-        'colors' => [
-            'primary' => 'blue-600',
-            'secondary' => 'gray-600', 
-            'success' => 'green-600',
-            'danger' => 'red-600',
-            'warning' => 'yellow-500',
-            'info' => 'cyan-600',
-            'light' => 'gray-100',
-            'dark' => 'gray-900',
+    'active_theme' => env('HALO_THEME', 'default'),
 
-            // Gradients
-            'gradients' => [
-                'primary' => 'from-blue-600 to-indigo-600',
-                'success' => 'from-green-500 to-emerald-600',
-                'danger' => 'from-red-500 to-rose-600',
-                'warning' => 'from-amber-400 to-orange-500',
-            ],
+    /*
+    |--------------------------------------------------------------------------
+    | Dark Mode
+    |--------------------------------------------------------------------------
+    |
+    | Enable dark mode support. When enabled, all components will include
+    | dark mode variants using Tailwind's dark: modifier.
+    |
+    */
 
-            // Glass effects
-            'glass' => [
-                'light' => 'bg-white/80 backdrop-blur-sm',
-                'dark' => 'bg-gray-900/80 backdrop-blur-sm',
-            ]
-        ],
+    'dark_mode' => [
+        'enabled' => true,
+        'strategy' => 'class', // 'class' or 'media'
+    ],
 
-        'spacing' => [
-            'xs' => '0.5rem',
-            'sm' => '1rem',
-            'md' => '1.5rem', 
-            'lg' => '2rem',
-            'xl' => '2.5rem',
-            '2xl' => '3rem',
-        ],
+    /*
+    |--------------------------------------------------------------------------
+    | Themes
+    |--------------------------------------------------------------------------
+    |
+    | Define multiple themes with their color palettes and styles.
+    |
+    */
 
-        'typography' => [
-            'font-family' => [
-                'sans' => 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                'serif' => 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
-                'mono' => 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-            ],
-            'sizes' => [
-                'xs' => '0.75rem',
-                'sm' => '0.875rem',
-                'base' => '1rem',
-                'lg' => '1.125rem', 
-                'xl' => '1.25rem',
-                '2xl' => '1.5rem',
-                '3xl' => '1.875rem',
-            ],
-            'line-height' => [
-                'tight' => '1.25',
-                'snug' => '1.375',
-                'normal' => '1.5',
-                'relaxed' => '1.625',
-                'loose' => '2',
-            ]
-        ],
-
-        'border_radius' => [
-            'none' => '0',
-            'sm' => '0.25rem',
-            'md' => '0.375rem',
-            'lg' => '0.5rem',
-            'xl' => '0.75rem',
-            'full' => '9999px',
-        ],
-
-        'shadows' => [
-            'sm' => '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-            'md' => '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-            'lg' => '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-            'xl' => '0 20px 25px -5px rgb(0 0 0 / 0.1)',
-            'glow' => [
-                'primary' => '0 0 15px rgb(37 99 235 / 0.5)',
-                'success' => '0 0 15px rgb(34 197 94 / 0.5)',
-                'danger' => '0 0 15px rgb(239 68 68 / 0.5)',
-                'warning' => '0 0 15px rgb(245 158 11 / 0.5)',
-            ]
-        ],
-
-        'animations' => [
-            'duration' => [
-                'fast' => '150ms',
-                'normal' => '300ms',
-                'slow' => '500ms',
-            ],
-            'timing' => [
-                'ease-in-out' => 'cubic-bezier(0.4, 0, 0.2, 1)',
-                'ease-out' => 'cubic-bezier(0, 0, 0.2, 1)',
-                'ease-in' => 'cubic-bezier(0.4, 0, 1, 1)',
+    'themes' => [
+        'default' => [
+            'colors' => [
+                'primary' => 'blue',
+                'secondary' => 'slate',
+                'success' => 'green',
+                'danger' => 'red',
+                'warning' => 'amber',
+                'info' => 'sky',
             ],
         ],
 
-        'z-index' => [
-            'dropdown' => '10',
-            'sticky' => '20',
-            'fixed' => '30',
-            'modal' => '40',
-            'popover' => '50',
-            'toast' => '60',
+        'neutral' => [
+            'colors' => [
+                'primary' => 'slate',
+                'secondary' => 'zinc',
+                'success' => 'emerald',
+                'danger' => 'rose',
+                'warning' => 'orange',
+                'info' => 'gray',
+            ],
+        ],
+
+        'glass' => [
+            'colors' => [
+                'primary' => 'cyan',
+                'secondary' => 'slate',
+                'success' => 'teal',
+                'danger' => 'pink',
+                'warning' => 'amber',
+                'info' => 'blue',
+            ],
+            'effects' => [
+                'backdrop_blur' => 'backdrop-blur-xl',
+                'transparency' => 'bg-opacity-60 dark:bg-opacity-40',
+            ],
+        ],
+
+        'sunset' => [
+            'colors' => [
+                'primary' => 'orange',
+                'secondary' => 'amber',
+                'success' => 'lime',
+                'danger' => 'red',
+                'warning' => 'yellow',
+                'info' => 'orange',
+            ],
+        ],
+
+        'iron' => [
+            'colors' => [
+                'primary' => 'gray',
+                'secondary' => 'neutral',
+                'success' => 'green',
+                'danger' => 'red',
+                'warning' => 'yellow',
+                'info' => 'slate',
+            ],
+        ],
+
+        'ocean' => [
+            'colors' => [
+                'primary' => 'blue',
+                'secondary' => 'cyan',
+                'success' => 'teal',
+                'danger' => 'rose',
+                'warning' => 'amber',
+                'info' => 'sky',
+            ],
+        ],
+
+        'forest' => [
+            'colors' => [
+                'primary' => 'green',
+                'secondary' => 'emerald',
+                'success' => 'lime',
+                'danger' => 'red',
+                'warning' => 'amber',
+                'info' => 'teal',
+            ],
+        ],
+
+        'neon' => [
+            'colors' => [
+                'primary' => 'purple',
+                'secondary' => 'pink',
+                'success' => 'green',
+                'danger' => 'red',
+                'warning' => 'yellow',
+                'info' => 'cyan',
+            ],
+            'effects' => [
+                'glow' => 'shadow-[0_0_15px_rgba(168,85,247,0.4)] dark:shadow-[0_0_20px_rgba(168,85,247,0.6)]',
+            ],
         ],
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Icon Configuration
+    | Theme Configuration
     |--------------------------------------------------------------------------
     |
-    | Configure the default icon set and classes for HaloUI icons.
+    | Global theme tokens accessible via theme() helper.
     |
     */
 
-    'icons' => [
-        'set' => 'halo',
-        'default_class' => 'w-5 h-5',
-        'fallback_set' => 'heroicon',
+    'theme' => [
+        'radius' => [
+            'none' => 'rounded-none',
+            'sm' => 'rounded-sm',
+            'md' => 'rounded-md',
+            'lg' => 'rounded-lg',
+            'xl' => 'rounded-xl',
+            '2xl' => 'rounded-2xl',
+            'full' => 'rounded-full',
+        ],
+
+        'spacing' => [
+            'xs' => '0.5rem',
+            'sm' => '0.75rem',
+            'md' => '1rem',
+            'lg' => '1.5rem',
+            'xl' => '2rem',
+            '2xl' => '2.5rem',
+        ],
+
+        'typography' => [
+            'font-family' => 'font-sans',
+            'sizes' => [
+                'xs' => 'text-xs',
+                'sm' => 'text-sm',
+                'md' => 'text-base',
+                'lg' => 'text-lg',
+                'xl' => 'text-xl',
+                '2xl' => 'text-2xl',
+            ],
+        ],
+
+        'shadows' => [
+            'sm' => 'shadow-sm',
+            'md' => 'shadow-md',
+            'lg' => 'shadow-lg',
+            'xl' => 'shadow-xl',
+            '2xl' => 'shadow-2xl',
+        ],
     ],
 
     /*
     |--------------------------------------------------------------------------
     | Component Defaults
     |--------------------------------------------------------------------------
-    |
-    | Default variant and size for each component type.
-    |
     */
 
     'defaults' => [
@@ -144,73 +195,96 @@ return [
             'variant' => 'primary',
             'size' => 'md',
         ],
+
         'input' => [
-            'variant' => 'default',
             'size' => 'md',
         ],
-        'badge' => [
-            'variant' => 'primary',
+
+        'modal' => [
             'size' => 'md',
+            'backdrop' => 'blur',
         ],
+
         'alert' => [
             'variant' => 'info',
-            'dismissible' => false,
+            'dismissible' => true,
+        ],
+
+        'card' => [
+            'variant' => 'default',
+            'padding' => true,
         ],
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Component Variants
+    | Icon Configuration
     |--------------------------------------------------------------------------
-    |
-    | Define Tailwind classes for each component variant.
-    |
+    */
+
+    'icons' => [
+        'set' => 'halo',
+        'fallback_set' => 'heroicon',
+        'default_class' => 'w-5 h-5',
+        'path' => resource_path('icons/halo'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Alpine.js Configuration
+    |--------------------------------------------------------------------------
+    */
+
+    'alpine' => [
+        'enabled' => true,
+        'cdn' => 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Component Variants (with Dark Mode Support)
+    |--------------------------------------------------------------------------
     */
 
     'variants' => [
         'button' => [
-            'primary' => 'bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500',
-            'secondary' => 'bg-gray-600 hover:bg-gray-700 text-white focus:ring-gray-500',
-            'success' => 'bg-green-600 hover:bg-green-700 text-white focus:ring-green-500',
-            'danger' => 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500',
-            'warning' => 'bg-yellow-600 hover:bg-yellow-700 text-white focus:ring-yellow-500',
-            'info' => 'bg-cyan-600 hover:bg-cyan-700 text-white focus:ring-cyan-500',
-            'outline' => 'border border-gray-300 hover:bg-gray-50 text-gray-700 focus:ring-gray-500',
-            'ghost' => 'hover:bg-gray-100 text-gray-700 focus:ring-gray-500',
-            'link' => 'text-blue-600 hover:text-blue-700 underline-offset-4 hover:underline',
-        ],
-
-        'badge' => [
-            'primary' => 'bg-blue-100 text-blue-800 border-blue-200',
-            'secondary' => 'bg-gray-100 text-gray-800 border-gray-200',
-            'success' => 'bg-green-100 text-green-800 border-green-200',
-            'danger' => 'bg-red-100 text-red-800 border-red-200',
-            'warning' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
-            'info' => 'bg-cyan-100 text-cyan-800 border-cyan-200',
+            'primary' => 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white border-transparent',
+            'secondary' => 'bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-900 dark:text-slate-100 border-transparent',
+            'outline' => 'bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100 border-slate-300 dark:border-slate-600',
+            'ghost' => 'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100 border-transparent',
+            'danger' => 'bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white border-transparent',
+            'success' => 'bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white border-transparent',
+            'glass' => 'bg-white/10 dark:bg-white/5 backdrop-blur-xl border border-white/20 dark:border-white/10 text-slate-900 dark:text-white hover:bg-white/20 dark:hover:bg-white/10',
         ],
 
         'alert' => [
-            'info' => 'bg-cyan-50 border-cyan-200 text-cyan-900',
-            'success' => 'bg-green-50 border-green-200 text-green-900',
-            'warning' => 'bg-yellow-50 border-yellow-200 text-yellow-900',
-            'danger' => 'bg-red-50 border-red-200 text-red-900',
+            'info' => 'bg-sky-50 dark:bg-sky-950/30 text-sky-900 dark:text-sky-200 border-sky-200 dark:border-sky-800',
+            'success' => 'bg-green-50 dark:bg-green-950/30 text-green-900 dark:text-green-200 border-green-200 dark:border-green-800',
+            'warning' => 'bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-200 border-amber-200 dark:border-amber-800',
+            'danger' => 'bg-red-50 dark:bg-red-950/30 text-red-900 dark:text-red-200 border-red-200 dark:border-red-800',
         ],
 
-        'input' => [
-            'default' => 'border-gray-300 focus:border-blue-500 focus:ring-blue-500',
-            'error' => 'border-red-300 focus:border-red-500 focus:ring-red-500',
-            'success' => 'border-green-300 focus:border-green-500 focus:ring-green-500',
+        'badge' => [
+            'primary' => 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+            'secondary' => 'bg-slate-100 dark:bg-slate-800/50 text-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700',
+            'success' => 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800',
+            'danger' => 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800',
+            'glass' => 'bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-900 dark:text-white border-white/20 dark:border-white/10',
         ],
-        
+
+        'card' => [
+            'default' => 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-sm',
+            'bordered' => 'bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700',
+            'elevated' => 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-lg',
+            'flat' => 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-none',
+            'glass' => 'bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border-white/20 dark:border-white/10 shadow-xl',
+        ],
     ],
 
     /*
     |--------------------------------------------------------------------------
     | Component Sizes
     |--------------------------------------------------------------------------
-    |
-    | Define size classes for components.
-    |
     */
 
     'sizes' => [
@@ -218,43 +292,32 @@ return [
             'xs' => 'px-2 py-1 text-xs',
             'sm' => 'px-3 py-1.5 text-sm',
             'md' => 'px-4 py-2 text-base',
-            'lg' => 'px-5 py-2.5 text-lg',
-            'xl' => 'px-6 py-3 text-xl',
+            'lg' => 'px-6 py-3 text-lg',
+            'xl' => 'px-8 py-4 text-xl',
         ],
 
         'input' => [
             'sm' => 'px-3 py-1.5 text-sm',
             'md' => 'px-4 py-2 text-base',
-            'lg' => 'px-5 py-2.5 text-lg',
+            'lg' => 'px-5 py-3 text-lg',
         ],
 
-        'badge' => [
-            'sm' => 'px-2 py-0.5 text-xs',
-            'md' => 'px-2.5 py-1 text-sm',
-            'lg' => 'px-3 py-1.5 text-base',
+        'modal' => [
+            'sm' => 'max-w-md',
+            'md' => 'max-w-lg',
+            'lg' => 'max-w-2xl',
+            'xl' => 'max-w-4xl',
+            '2xl' => 'max-w-6xl',
+            'full' => 'max-w-full',
         ],
 
         'avatar' => [
-            'xs' => 'w-6 h-6',
-            'sm' => 'w-8 h-8',
-            'md' => 'w-10 h-10',
-            'lg' => 'w-12 h-12',
-            'xl' => 'w-16 h-16',
+            'xs' => 'w-6 h-6 text-xs',
+            'sm' => 'w-8 h-8 text-sm',
+            'md' => 'w-10 h-10 text-base',
+            'lg' => 'w-12 h-12 text-lg',
+            'xl' => 'w-16 h-16 text-xl',
+            '2xl' => 'w-20 h-20 text-2xl',
         ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Accessibility
-    |--------------------------------------------------------------------------
-    |
-    | Enable/disable accessibility features.
-    |
-    */
-
-    'accessibility' => [
-        'focus_visible' => true,
-        'screen_reader_text' => true,
-        'keyboard_navigation' => true,
     ],
 ];

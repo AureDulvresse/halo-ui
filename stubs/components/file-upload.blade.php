@@ -1,80 +1,86 @@
 @props([
     'label' => null,
+    'hint' => null,
+    'error' => null,
     'multiple' => false,
     'accept' => null,
-    'hint' => null,
-    'error' => false,
-    'errorMessage' => null,
+    'maxSize' => null,
+    'disabled' => false,
 ])
 
-<div 
-    x-data="{ 
-        files: [],
-        isDragging: false,
-        handleFiles(fileList) {
-            this.files = Array.from(fileList);
-        }
-    }"
-    class="space-y-2"
->
-    @if($label)
-        <label class="block text-sm font-medium text-gray-700">{{ $label }}</label>
+@php
+    $id = $attributes->get('id', 'file-upload-' . uniqid());
+@endphp
+
+<div x-data="window.HaloUI.fileUpload({ multiple: {{ $multiple ? 'true' : 'false' }} })" class="w-full">
+    @if ($label)
+        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            {{ $label }}
+        </label>
     @endif
-    
-    <div
-        @dragover.prevent="isDragging = true"
-        @dragleave.prevent="isDragging = false"
-        @drop.prevent="isDragging = false; handleFiles($event.dataTransfer.files)"
-        :class="isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'"
-        class="relative border-2 border-dashed rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer"
-    >
-        <input 
-            type="file"
-            {{ $multiple ? 'multiple' : '' }}
-            {{ $accept ? "accept={$accept}" : '' }}
-            @change="handleFiles($event.target.files)"
-            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            {{ $attributes }}
-        />
-        
-        <div class="space-y-2">
-            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            <div class="text-sm text-gray-600">
-                <span class="font-medium text-blue-600 hover:text-blue-500">Click to upload</span>
-                or drag and drop
+
+    <div @dragover.prevent="$el.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-950/20')"
+        @dragleave.prevent="$el.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-950/20')"
+        @drop.prevent="handleFiles($event); $el.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-950/20')"
+        class="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-6 text-center transition-colors hover:border-slate-400 dark:hover:border-slate-500 bg-white dark:bg-slate-800">
+        <input type="file" id="{{ $id }}" class="hidden" @if ($multiple) multiple @endif
+            @if ($accept) accept="{{ $accept }}" @endif @change="handleFiles($event)"
+            @if ($disabled) disabled @endif />
+
+        <label for="{{ $id }}" class="cursor-pointer">
+            <div class="flex flex-col items-center">
+                <svg class="w-12 h-12 text-slate-400 dark:text-slate-500 mb-3" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                    </path>
+                </svg>
+
+                <p class="text-sm text-slate-600 dark:text-slate-400">
+                    <span class="text-blue-600 dark:text-blue-400 font-medium">Click to upload</span>
+                    or drag and drop
+                </p>
+
+                @if ($hint)
+                    <p class="text-xs text-slate-500 dark:text-slate-500 mt-1">{{ $hint }}</p>
+                @endif
             </div>
-            @if($hint)
-                <p class="text-xs text-gray-500">{{ $hint }}</p>
-            @endif
-        </div>
+        </label>
     </div>
-    
-    <div x-show="files.length > 0" class="space-y-2 mt-4">
-        <template x-for="(file, index) in files" :key="index">
-            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div class="flex items-center gap-3">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                    <span class="text-sm text-gray-700" x-text="file.name"></span>
-                    <span class="text-xs text-gray-500" x-text="(file.size / 1024).toFixed(2) + ' KB'"></span>
+
+    <!-- File List -->
+    <template x-if="files.length > 0">
+        <div class="mt-4 space-y-2">
+            <template x-for="(file, index) in files" :key="index">
+                <div
+                    class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                        <div>
+                            <p class="text-sm font-medium text-slate-900 dark:text-slate-100" x-text="file.name"></p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400"
+                                x-text="(file.size / 1024).toFixed(2) + ' KB'"></p>
+                        </div>
+                    </div>
+
+                    <button type="button" @click="removeFile(index)"
+                        class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
                 </div>
-                <button 
-                    type="button"
-                    @click="files.splice(index, 1)"
-                    class="text-red-500 hover:text-red-700"
-                >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </template>
-    </div>
-    
-    @if($error && $errorMessage)
-        <p class="text-sm text-red-600">{{ $errorMessage }}</p>
+            </template>
+        </div>
+    </template>
+
+    @if ($error)
+        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $error }}</p>
     @endif
 </div>

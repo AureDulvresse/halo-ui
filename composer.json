@@ -1,7 +1,7 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "halo/ui",
-    "description": "Modern, composable Blade UI component library for Laravel 12+ powered by TailwindCSS, Alpine.js, and Blade Icons",
+    "name": "ironflow/halo-ui",
+    "description": "Modern, composable Blade UI component library for Laravel — elegant as shadcn, native as Blade.",
     "keywords": [
         "laravel",
         "blade",
@@ -43,7 +43,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Halo\\UI\\Tests\\": "tests/"
         }
     },
     "extra": {

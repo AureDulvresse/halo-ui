@@ -6,38 +6,35 @@ use Illuminate\View\Component;
 
 class Modal extends Component
 {
-    public string $name;
     public string $size;
-    public bool $backdrop;
-    public bool $static;
+    public string $backdrop;
+    public bool $closeable;
+    public bool $open;
 
     public function __construct(
-        string $name,
         string $size = 'md',
-        bool $backdrop = true,
-        bool $static = false
+        string $backdrop = 'blur',
+        bool $closeable = true,
+        bool $open = false,
     ) {
-        $this->name = $name;
         $this->size = $size;
         $this->backdrop = $backdrop;
-        $this->static = $static;
+        $this->closeable = $closeable;
+        $this->open = $open;
     }
 
     public function render()
     {
-        return view('halo::modal.index');
+        return view('halo::components.halo.modal.index');
     }
 
-    public function sizeClasses(): string
+    public function sizeClass(): string
     {
-        return match ($this->size) {
-            'sm' => 'max-w-md',
-            'md' => 'max-w-lg',
-            'lg' => 'max-w-2xl',
-            'xl' => 'max-w-4xl',
-            '2xl' => 'max-w-6xl',
-            'full' => 'max-w-full mx-4',
-            default => 'max-w-lg',
-        };
+        return config("halo.sizes.modal.{$this->size}", 'max-w-lg');
+    }
+
+    public function backdropClass(): string
+    {
+        return $this->backdrop === 'blur' ? 'backdrop-blur-sm' : '';
     }
 }

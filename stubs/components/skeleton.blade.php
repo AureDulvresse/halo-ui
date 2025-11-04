@@ -1,31 +1,37 @@
 @props([
     'variant' => 'text',
-    'width' => null,
-    'height' => null,
-    'animated' => true,
-    'glass' => false,
-    'animate' => null,
+    'lines' => 3,
+    'width' => 'full',
 ])
 
 @php
-    $customStyles = '';
-    if ($width) {
-        $customStyles .= "width: {$width}; ";
-    }
-    if ($height) {
-        $customStyles .= "height: {$height};";
-    }
+$baseClasses = 'animate-pulse bg-slate-200 dark:bg-slate-700';
 
-    $classes = trim(
-        'bg-gray-200 dark:bg-gray-700 ' .
-            halo_classes('skeleton', $variant, null, $attributes->get('class'), [
-                'glass' => $glass,
-                'animate' => $animate,
-                'animated' => $animated,
-                'dark' => $glass && isset($attributes['dark']),
-            ]),
-    );
+$variantClasses = match($variant) {
+    'text' => 'h-4 rounded',
+    'title' => 'h-8 rounded',
+    'circle' => 'rounded-full',
+    'rect' => 'rounded-md',
+    default => 'h-4 rounded',
+};
+
+$widthClass = match($width) {
+    'full' => 'w-full',
+    '3/4' => 'w-3/4',
+    '1/2' => 'w-1/2',
+    '1/4' => 'w-1/4',
+    default => $width,
+};
+
+$classes = halo_merge_classes("{$baseClasses} {$variantClasses} {$widthClass}", $attributes->get('class'));
 @endphp
 
-<div {{ $attributes->merge(['class' => $classes]) }}
-    @if ($customStyles) style="{{ $customStyles }}" @endif></div>
+@if($variant === 'text' && $lines > 1)
+    <div class="space-y-3">
+        @for($i = 0; $i < $lines; $i++)
+            <div class="{{ $classes }}" style="width: {{ $i === $lines - 1 ? '75%' : '100%' }}"></div>
+        @endfor
+    </div>
+@else
+    <div {{ $attributes->merge(['class' => $classes]) }}></div>
+@endif
