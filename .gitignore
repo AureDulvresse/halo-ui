@@ -11,3 +11,6 @@ composer.phar
 composer.lock
 package-lock.json
 Thumbs.db
+
+# Locally generated static docs site preview (see docs-site/README.txt)
+/docs-site
