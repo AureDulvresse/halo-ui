@@ -37,6 +37,8 @@ Chaque fichier Blade de composant utilise `bg-halo-primary`, `text-halo-foregrou
 | **Eclipse** | `eclipse` | Fond sombre, accent bleu |
 | **Ember** | `ember` | Clair, accent orange chaud, coins plus nets (0.375rem) |
 | **Nocturne** | `nocturne` | Sombre, fond quasi noir, accent émeraude — distinct du sombre bleuté d'Eclipse |
+| **Luma** | `luma` | Clair, accent corail/rose chaud, coins très arrondis (1.75rem) — en pilule sur les boutons/badges/champs, généreusement arrondi sur les grandes surfaces comme Card |
+| **Flint** | `flint` | Clair, accent slate monochrome, coins carrés nets (radius `0px`) — l'opposé volontaire de Luma |
 
 ## Changer de thème
 

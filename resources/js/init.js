@@ -9,7 +9,7 @@
 
 import Alpine from 'alpinejs';
 
-const THEMES = ['halo', 'aurora', 'eclipse', 'ember', 'nocturne'];
+const THEMES = ['halo', 'aurora', 'eclipse', 'ember', 'nocturne', 'luma', 'flint'];
 const STORAGE_KEY = 'halo-theme';
 
 // Elements a focus trap / roving tabindex should consider stoppable points.
@@ -369,6 +369,88 @@ document.addEventListener('alpine:init', () => {
 
         close() {
             this.open = false;
+        },
+    }));
+
+    // Select: a custom-styled trigger + role="listbox" panel, replacing the
+    // native <select> popup (which a browser renders itself and can't be
+    // restyled to match a themed, rounded field). `selected`/`selectedLabel`
+    // back a hidden form input and the trigger's displayed text. Arrow keys
+    // roam between options (WAI-ARIA listbox pattern); Enter/click selects,
+    // escape/outside-click closes with focus returned to the trigger.
+    Alpine.data('haloSelect', (initialValue = null, initialLabel = null) => ({
+        open: false,
+        selected: initialValue,
+        selectedLabel: initialLabel,
+        previouslyFocused: null,
+
+        toggle() {
+            this.open ? this.close() : this.openPanel();
+        },
+
+        openPanel() {
+            this.previouslyFocused = document.activeElement;
+            this.open = true;
+            this.$nextTick(() => this.focusSelected());
+        },
+
+        close() {
+            if (!this.open) {
+                return;
+            }
+
+            this.open = false;
+
+            if (this.previouslyFocused instanceof HTMLElement) {
+                this.previouslyFocused.focus();
+            }
+
+            this.previouslyFocused = null;
+        },
+
+        select(value, label) {
+            this.selected = value;
+            this.selectedLabel = label;
+            this.close();
+        },
+
+        isSelected(value) {
+            return this.selected === value;
+        },
+
+        options() {
+            return Array.from(this.$refs.panel?.querySelectorAll('[role="option"]') ?? []);
+        },
+
+        focusSelected() {
+            const options = this.options();
+            const current = options.find((option) => option.dataset.value === String(this.selected));
+
+            (current ?? options[0])?.focus();
+        },
+
+        focusNext() {
+            const options = this.options();
+
+            if (!options.length) {
+                return;
+            }
+
+            const index = options.indexOf(document.activeElement);
+
+            (options[index + 1] ?? options[0]).focus();
+        },
+
+        focusPrevious() {
+            const options = this.options();
+
+            if (!options.length) {
+                return;
+            }
+
+            const index = options.indexOf(document.activeElement);
+
+            (options[index - 1] ?? options[options.length - 1]).focus();
         },
     }));
 
