@@ -7,6 +7,23 @@ This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/
 
 ## [Unreleased]
 
+## [4.2.0] — 2026-07-08
+
+### Added
+
+- `SECURITY.md` — a security policy and reporting contact.
+- A GitHub Actions workflow (`jekyll-gh-pages.yml`) that builds and deploys `docs/` to GitHub Pages on every push to `main`.
+- `docs/index.md` (site home) and `docs/installation.md` — both referenced from `docs/_config.yml`'s navigation since the original v4 rebuild, but never actually created, so the site root and the installation link had nothing to render.
+
+### Fixed
+
+- **GitHub Pages served a 404 for every URL.** Two compounding causes: the auto-generated Pages workflow built the Jekyll site from the repository root (`source: ./`) instead of `docs/`, where the real `_config.yml` (theme, nav, baseurl) lives — pointed at `./docs` instead. Separately, none of the 36 files under `docs/` had YAML front matter, which Jekyll requires to treat a file as a page and run it through a layout; without it, each `.md` file was copied into the built site verbatim instead of being converted to HTML. Added `layout: default`, `title`, and a `permalink` (matching each page's existing nav entry) to every doc page.
+- A CI-only test failure in `AssetsTest`: the Content-Type assertion pinned an exact `charset=UTF-8` string, but Symfony's auto-detected charset casing differs between Windows (`UTF-8`, where the suite was authored) and Linux CI (`utf-8`) — the check is now case-insensitive on the media type.
+
+### Known limitation
+
+- `docs/_config.yml`'s custom `navigation` key isn't rendered by `jekyll-theme-cayman`'s default layout — Cayman is a single-page-style theme with no built-in sidebar/nav. Pages currently cross-link manually from `index.md`. A real multi-page navigation menu would need a custom `_layouts/default.html`.
+
 ## [4.1.0]
 
 ### Added
