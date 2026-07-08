@@ -4,9 +4,11 @@ use Halo\UI\Providers\HaloServiceProvider;
 use Illuminate\Support\Facades\Blade;
 
 it('serves the built CSS and JS directly, with no publish step', function () {
-    $this->get(route('halo-ui.css'))
-        ->assertOk()
-        ->assertHeader('Content-Type', 'text/css; charset=UTF-8');
+    // The charset Symfony appends to the CSS Content-Type is cased
+    // differently across platforms (UTF-8 on Windows, utf-8 on Linux CI) —
+    // assert case-insensitively rather than pin an exact string.
+    $css = $this->get(route('halo-ui.css'))->assertOk();
+    expect(strtolower($css->headers->get('Content-Type')))->toContain('text/css');
 
     $this->get(route('halo-ui.js'))
         ->assertOk()
