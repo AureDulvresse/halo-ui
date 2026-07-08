@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Layout: Base
+title: "Layout: Base"
 permalink: /layout-base/
 ---
 

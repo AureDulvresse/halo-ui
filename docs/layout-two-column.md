@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Layout: Two Column
+title: "Layout: Two Column"
 permalink: /layout-two-column/
 ---
 

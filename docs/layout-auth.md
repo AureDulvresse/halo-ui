@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Layout: Auth
+title: "Layout: Auth"
 permalink: /layout-auth/
 ---
 

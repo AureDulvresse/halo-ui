@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Layout: Container
+title: "Layout: Container"
 permalink: /layout-container/
 ---
 

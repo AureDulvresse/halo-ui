@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Layout: Page Header
+title: "Layout: Page Header"
 permalink: /layout-page-header/
 ---
 

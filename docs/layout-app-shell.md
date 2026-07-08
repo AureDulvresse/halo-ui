@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Layout: App Shell
+title: "Layout: App Shell"
 permalink: /layout-app-shell/
 ---
 
