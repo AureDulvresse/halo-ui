@@ -5,3 +5,35 @@
 [x-cloak] {
     display: none !important;
 }
+
+/* Progress: indeterminate state sweeps a fixed-width bar left-to-right. */
+@keyframes halo-progress-indeterminate {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(300%);
+    }
+}
+
+.animate-halo-progress-indeterminate {
+    animation: halo-progress-indeterminate 1.2s ease-in-out infinite;
+}
+
+/* Respect the OS-level "reduce motion" preference (WCAG 2.3.3): slow the
+   indeterminate sweep to a near-static pulse instead of disabling it
+   outright — an indeterminate progress bar still needs to visibly change
+   over time, or it reads as stuck/broken rather than "in progress". Alpine's
+   own x-transition durations aren't affected here since they're driven by
+   Alpine's JS timing, not CSS animation — see resources/js/init.js if a
+   reduced-motion mode is added there too. */
+@media (prefers-reduced-motion: reduce) {
+    .animate-halo-progress-indeterminate {
+        animation-duration: 3s;
+        animation-timing-function: ease-in-out;
+    }
+
+    .animate-spin {
+        animation-duration: 1.5s;
+    }
+}

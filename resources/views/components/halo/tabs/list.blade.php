@@ -1,5 +1,5 @@
 @php
-$classes = halo_merge_classes('inline-flex items-center gap-1 border-b border-halo-border', $attributes->get('class'));
+$classes = halo_merge_classes('flex items-center gap-1 overflow-x-auto border-b border-halo-border', $attributes->get('class'));
 @endphp
 
 <div

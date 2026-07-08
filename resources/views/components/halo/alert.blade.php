@@ -30,7 +30,7 @@ $classes = halo_variants([
 
 <div
     role="alert"
-    @if($dismissible) x-data="{ show: true }" x-show="show" @endif
+    @if($dismissible) x-data="{ show: true }" x-show="show" x-transition @endif
     {{ $attributes->except(['variant', 'dismissible', 'icon', 'class'])->merge(['class' => $classes]) }}
 >
     @if($resolvedIcon)
@@ -43,7 +43,7 @@ $classes = halo_variants([
         <button
             type="button"
             @click="show = false"
-            class="shrink-0 text-current/60 hover:text-current"
+            class="-m-2 shrink-0 rounded-halo p-2 text-current/60 transition-colors hover:text-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-ring"
             aria-label="Dismiss"
         >
             <x-halo::icon name="x" size="sm" />

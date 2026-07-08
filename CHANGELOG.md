@@ -7,7 +7,41 @@ This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/
 
 ## [Unreleased]
 
-## [4.0.0] — v4 rebuild (in progress)
+## [4.1.0]
+
+### Added
+
+- **2 new themes**: Ember (light, warm orange accent, sharper 0.375rem radius) and Nocturne (dark, near-black zinc-950 background, emerald accent — distinct from Eclipse's blue-tinted dark). 5 themes total. Both new primaries pair a vivid color with a dark (rather than white) foreground text, the same contrast strategy used to fix `--halo-warning-foreground` earlier in this changelog — white text on either theme's primary would fall short of WCAG AA (~3.5–3.7:1).
+- **11 new components**: Heading, Text (typography); 6 layout components — Base (full HTML skeleton, `@haloStyles`/`@haloScripts` pre-wired), Container, App Shell (sidebar + topbar, off-canvas below `lg`), Auth (centered), Two Column, Page Header; File Upload and Image Upload (drag-and-drop over a real `<input type="file">`, removable file list / live thumbnail previews, `DataTransfer`-based removal); Table (+ `.row`/`.head`/`.cell`). **35 components total**, 265 Pest tests.
+- `Alpine.data('haloFileUpload', ...)` and `Alpine.data('haloImageUpload', ...)` registered in `resources/js/init.js`.
+- Regression guard added to the security review of this session: no `x-html`, no `{!! !!}`, no unescaped output introduced anywhere in this batch — verified via a dedicated security-review pass.
+
+### Fixed
+
+- **`tests/Pest.php`'s `renderComponent()` helper silently broke every test that passed a named slot** (Dropdown/Tooltip/Popover's `trigger`, and every new layout's `sidebar`/`topbar`/`actions`/`logo`/`head`/`scripts`) — it stuffed slot values into the same `ComponentAttributeBag` used for regular props, which a real compiled `@props()` unsets any bare variable colliding with a leftover (undeclared) attribute key. The slot variable would end up empty while its string leaked instead as a stray HTML attribute on some other element in the template (e.g. `trigger="Open menu"` landing on Dropdown's panel `<div>`) — and because that leaked string still happened to contain the text an assertion was checking for, affected tests **passed for the wrong reason** rather than failing. `renderComponent()` now takes a third `$slots` argument that bypasses the attributes bag entirely, matching how Blade actually keeps `<x-slot:x>` content out of `$attributes`. All affected tests were updated to use it; none of the underlying components were ever actually buggy — this was a test-harness-only gap, caught while adding tests for the new layout components' named slots.
+
+- **`@haloStyles`/`@haloScripts` Blade directives** and two asset routes (`registerAssetRoutes()` in `HaloServiceProvider`) that serve the package's own built `halo.css`/`init.js` directly — no `vendor:publish`, no Vite config, no separate Alpine.js install. Alpine.js is bundled inside `init.js`, so these two tags in a layout are a complete working setup. Set `config('halo.assets.serve')` to `false` to fall back to the `halo-assets` publish tag and your own build pipeline instead — the directives point at the published path in that case. This was the single biggest friction point in getting HaloUI running in a new app; previously every consumer had to hand-wire `@theme` imports and Alpine registration themselves before anything rendered correctly.
+- **4 new components**: Switch (native `role="switch"` toggle), Progress (determinate/indeterminate bar), Tooltip (hover/focus hint, auto-wired `aria-describedby`), Popover (Dropdown-style overlay for rich content, no menu semantics). 24 components total, 200 Pest tests.
+- **`error` prop on Input, Textarea, and Select**: renders a message below the field and wires `aria-invalid`/`aria-describedby` automatically — previously `invalid` only set the visual state with no accessible way to associate an error message with the field.
+- `Alpine.data('haloTooltip', ...)` and `Alpine.data('haloPopover', ...)` registered in `resources/js/init.js`.
+
+### Fixed — UI/UX polish pass (found by self-audit, not user reports)
+
+- **Modal could overflow the viewport with no way to scroll** on short screens (mobile, landscape) — the panel now caps at `max-h-[calc(100vh-2rem)]` with `overflow-y-auto`. The most impactful fix in this pass.
+- **Focus-visible outline missing** on 7 interactive elements that had only a `:hover` state: Accordion's trigger, Dropdown's item, Breadcrumb's link, Tabs' trigger, and the dismiss/close buttons on Modal, Alert, and Toast — all now have a visible `focus-visible:ring-2` matching every other interactive component.
+- **`ring-offset-2` had no explicit offset color** on Button, so keyboard-focusing a button in the dark Eclipse theme rendered a stray white halo (browsers default an unset `ring-offset-color` to white). Fixed with `focus-visible:ring-offset-halo-background`.
+- **Tabs panel was the only `x-show` in the whole library with no `x-transition`** — switching tabs cut instantly while every other overlay/reveal (Accordion, Dropdown, Modal, Toast) fades. Added `x-transition`.
+- **Modal's backdrop had no transition of its own** — only the panel faded, so the dark overlay behind it popped in/out abruptly. Added `x-show`/`x-transition.opacity` to the backdrop.
+- **Checkbox's border radius was hardcoded to `0.25rem`**, ignoring the active theme's radius token — harmless on Halo/Eclipse (same value) but on Aurora (0.75rem radius everywhere else) it was the one control that didn't visually belong. Kept it hardcoded intentionally (documented inline) rather than switching to `rounded-halo`, since a 16px box at 0.75rem radius reads as a circle, not a checkbox — the real fix was acknowledging it's a deliberate exception, not a forgotten token.
+- **Checkbox/Radio's clickable area was exactly the 16px box** — added vertical label padding (`py-2`) and a hover border state, closer to a comfortable tap target without changing the control's visual size.
+- **Dropdown's panel and long lists had no max height** — a menu with many items could overflow the viewport with no scroll. Added `max-h-80 overflow-y-auto`.
+- **Toast's fixed `w-80` could overflow very narrow viewports** (< 360px) — added `max-w-[calc(100vw-2rem)]`.
+- **Breadcrumb had no overflow handling** — a long trail of items had nowhere to go on narrow screens. Added `overflow-x-auto` + `whitespace-nowrap`.
+- **Tabs' trigger list had no overflow handling** either — same fix (`overflow-x-auto`).
+- Added `active:` pressed-state feedback to Button, Accordion's trigger, and Dropdown's item — previously a click gave no visual feedback beyond the eventual state change.
+- **`--halo-warning-foreground` was white-on-`#d97706`**, a ~2.4:1 contrast ratio that fails WCAG AA (4.5:1) if that token pairing were ever used as solid text-on-background — changed to a dark amber (`#451a03`) in the Halo and Aurora themes (Eclipse already used a dark foreground here).
+
+## [4.0.0] — v4 rebuild
 
 ### Why
 
@@ -72,17 +106,17 @@ HaloUI v3.0.0 is a **complete rewrite** featuring 70+ production-ready component
   - Authentication flows (2FA, Password reset)
   - Error pages (404, 500, 503)
   - Email templates (Welcome, Invoice, Newsletter)
-  
+
 - **Template Installer CLI**
 
   ```bash
   # Install free templates
   php artisan halo:template login-form
   php artisan halo:template dashboard-sidebar
-  
+
   # Install premium templates (requires license key)
   php artisan halo:template:premium admin-dashboard --key=YOUR_LICENSE_KEY
-  
+
   # List all available templates
   php artisan halo:template:list
   php artisan halo:template:list --premium

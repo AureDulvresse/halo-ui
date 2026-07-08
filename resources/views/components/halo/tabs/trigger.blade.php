@@ -4,7 +4,7 @@
 
 @php
 $classes = halo_merge_classes(
-    'px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors',
+    'px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-ring focus-visible:ring-inset',
     $attributes->get('class'),
 );
 @endphp

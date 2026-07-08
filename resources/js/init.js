@@ -9,7 +9,7 @@
 
 import Alpine from 'alpinejs';
 
-const THEMES = ['halo', 'aurora', 'eclipse'];
+const THEMES = ['halo', 'aurora', 'eclipse', 'ember', 'nocturne'];
 const STORAGE_KEY = 'halo-theme';
 
 // Elements a focus trap / roving tabindex should consider stoppable points.
@@ -229,6 +229,146 @@ document.addEventListener('alpine:init', () => {
             }
 
             this.openItems = this.multiple ? [...this.openItems, name] : [name];
+        },
+    }));
+
+    // Tooltip: shown on hover or focus of its trigger, hidden on the
+    // opposite. Sets aria-describedby on the trigger's first element so
+    // assistive tech announces the tooltip text, per the WAI-ARIA tooltip
+    // pattern (no focus trap or dismiss key needed — it's not interactive).
+    Alpine.data('haloTooltip', (id) => ({
+        open: false,
+
+        init() {
+            this.$refs.trigger.firstElementChild?.setAttribute('aria-describedby', id);
+        },
+
+        show() {
+            this.open = true;
+        },
+
+        hide() {
+            this.open = false;
+        },
+    }));
+
+    // Popover: like Dropdown but for arbitrary rich content rather than a
+    // list of menu items — no role="menu"/arrow-key roving focus, just
+    // open/close on trigger click, escape, or an outside click, with focus
+    // returned to the trigger on close.
+    Alpine.data('haloPopover', () => ({
+        open: false,
+        previouslyFocused: null,
+
+        toggle() {
+            this.open ? this.close() : this.openPanel();
+        },
+
+        openPanel() {
+            this.previouslyFocused = document.activeElement;
+            this.open = true;
+            this.$nextTick(() => this.focusFirst());
+        },
+
+        close() {
+            if (!this.open) {
+                return;
+            }
+
+            this.open = false;
+
+            if (this.previouslyFocused instanceof HTMLElement) {
+                this.previouslyFocused.focus();
+            }
+
+            this.previouslyFocused = null;
+        },
+
+        focusFirst() {
+            const panel = this.$refs.panel;
+
+            if (!panel) {
+                return;
+            }
+
+            const focusable = panel.querySelectorAll(FOCUSABLE_SELECTOR);
+
+            (focusable[0] ?? panel).focus();
+        },
+    }));
+
+    // FileUpload: a native <input type="file"> hidden behind a styled
+    // drop zone. Removing a file rebuilds the input's FileList via
+    // DataTransfer — a plain JS array can't be reassigned to input.files.
+    Alpine.data('haloFileUpload', () => ({
+        dragging: false,
+        files: [],
+
+        change(event) {
+            this.setFiles(event.target.files);
+        },
+
+        drop(event) {
+            this.dragging = false;
+            this.$refs.input.files = event.dataTransfer.files;
+            this.setFiles(event.dataTransfer.files);
+        },
+
+        setFiles(fileList) {
+            this.files = Array.from(fileList);
+        },
+
+        remove(file) {
+            this.files = this.files.filter((candidate) => candidate !== file);
+            this.syncInput();
+        },
+
+        syncInput() {
+            const transfer = new DataTransfer();
+            this.files.forEach((file) => transfer.items.add(file));
+            this.$refs.input.files = transfer.files;
+        },
+
+        formatSize(bytes) {
+            if (bytes < 1024) return `${bytes} B`;
+            if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+
+            return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+        },
+    }));
+
+    // ImageUpload: same drop-zone/DataTransfer mechanics as FileUpload, plus
+    // an object-URL preview per file. Revokes each preview on removal to
+    // avoid leaking blob URLs for images the user decided not to keep.
+    Alpine.data('haloImageUpload', () => ({
+        dragging: false,
+        files: [],
+
+        change(event) {
+            this.setFiles(event.target.files);
+        },
+
+        drop(event) {
+            this.dragging = false;
+            this.$refs.input.files = event.dataTransfer.files;
+            this.setFiles(event.dataTransfer.files);
+        },
+
+        setFiles(fileList) {
+            this.files = Array.from(fileList).map((file) => {
+                file.preview = URL.createObjectURL(file);
+
+                return file;
+            });
+        },
+
+        remove(file) {
+            URL.revokeObjectURL(file.preview);
+            this.files = this.files.filter((candidate) => candidate !== file);
+
+            const transfer = new DataTransfer();
+            this.files.forEach((candidate) => transfer.items.add(candidate));
+            this.$refs.input.files = transfer.files;
         },
     }));
 

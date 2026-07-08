@@ -27,7 +27,9 @@ Every component's Blade file uses `bg-halo-primary`, `text-halo-foreground`, `ro
 |---|---|---|
 | **Halo** | `halo` (default) | Blue, standard radius |
 | **Aurora** | `aurora` | Violet/teal, larger radius |
-| **Eclipse** | `eclipse` | Dark background |
+| **Eclipse** | `eclipse` | Dark background, blue accent |
+| **Ember** | `ember` | Light, warm orange accent, sharper corners (0.375rem) |
+| **Nocturne** | `nocturne` | Dark, near-black background, emerald accent — distinct from Eclipse's blue-tinted dark |
 
 ## Switching themes
 

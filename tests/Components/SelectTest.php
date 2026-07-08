@@ -33,3 +33,12 @@ it('marks the field as invalid', function () {
 it('can be disabled', function () {
     expect(renderComponent('select', ['disabled' => true]))->toContainAttribute('disabled');
 });
+
+it('renders an error message linked via aria-describedby', function () {
+    $html = renderComponent('select', ['id' => 'country', 'error' => 'Pick a country']);
+
+    expect($html)
+        ->toContainAttribute('aria-invalid', 'true')
+        ->toContainAttribute('aria-describedby', 'country-error')
+        ->toContain('Pick a country');
+});

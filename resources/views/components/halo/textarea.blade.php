@@ -5,10 +5,13 @@
     'id' => null,
     'rows' => 3,
     'resize' => 'vertical',
+    'error' => null,
 ])
 
 @php
 $textareaId = $id ?? $attributes->get('name') ?? uniqid('halo-textarea-');
+$errorId = $textareaId.'-error';
+$isInvalid = $invalid || $error;
 
 $resizeClasses = [
     'none' => 'resize-none',
@@ -31,16 +34,22 @@ $classes = halo_variants([
 
 $classes = halo_merge_classes(
     $classes,
-    $invalid ? 'border-halo-danger focus-visible:ring-halo-danger' : 'border-halo-border',
+    $isInvalid ? 'border-halo-danger focus-visible:ring-halo-danger' : 'border-halo-border hover:border-halo-foreground/40',
     $resizeClasses[$resize] ?? $resizeClasses['vertical'],
     $attributes->get('class'),
 );
 @endphp
 
-<textarea
-    id="{{ $textareaId }}"
-    rows="{{ $rows }}"
-    @if($disabled) disabled @endif
-    @if($invalid) aria-invalid="true" @endif
-    {{ $attributes->except(['size', 'invalid', 'disabled', 'id', 'rows', 'resize', 'class'])->merge(['class' => $classes]) }}
->{{ $slot }}</textarea>
+<div>
+    <textarea
+        id="{{ $textareaId }}"
+        rows="{{ $rows }}"
+        @if($disabled) disabled @endif
+        @if($isInvalid) aria-invalid="true" aria-describedby="{{ $errorId }}" @endif
+        {{ $attributes->except(['size', 'invalid', 'disabled', 'id', 'rows', 'resize', 'error', 'class'])->merge(['class' => $classes]) }}
+    >{{ $slot }}</textarea>
+
+    @if($error)
+        <p id="{{ $errorId }}" class="mt-1 text-xs text-halo-danger">{{ $error }}</p>
+    @endif
+</div>

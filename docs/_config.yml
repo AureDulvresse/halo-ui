@@ -48,6 +48,10 @@ navigation:
   - title: Components
     url: /components/
     children:
+      - title: Heading
+        url: /components/heading
+      - title: Text
+        url: /components/text
       - title: Icon
         url: /components/icon
       - title: Button
@@ -64,22 +68,36 @@ navigation:
         url: /components/radio
       - title: Select
         url: /components/select
+      - title: Switch
+        url: /components/switch
+      - title: File Upload
+        url: /components/file-upload
+      - title: Image Upload
+        url: /components/image-upload
       - title: Badge
         url: /components/badge
       - title: Avatar
         url: /components/avatar
       - title: Spinner
         url: /components/spinner
+      - title: Progress
+        url: /components/progress
       - title: Divider
         url: /components/divider
       - title: Card
         url: /components/card
+      - title: Table
+        url: /components/table
       - title: Alert
         url: /components/alert
       - title: Modal
         url: /components/modal
       - title: Dropdown
         url: /components/dropdown
+      - title: Popover
+        url: /components/popover
+      - title: Tooltip
+        url: /components/tooltip
       - title: Toast
         url: /components/toast
       - title: Tabs
@@ -88,3 +106,18 @@ navigation:
         url: /components/accordion
       - title: Breadcrumb
         url: /components/breadcrumb
+  - title: Layouts
+    url: /layouts/
+    children:
+      - title: Base
+        url: /layout-base
+      - title: Container
+        url: /layout-container
+      - title: App Shell
+        url: /layout-app-shell
+      - title: Auth
+        url: /layout-auth
+      - title: Two Column
+        url: /layout-two-column
+      - title: Page Header
+        url: /layout-page-header

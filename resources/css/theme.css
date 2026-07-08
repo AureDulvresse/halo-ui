@@ -19,7 +19,7 @@
     --halo-danger: #dc2626; /* red-600 */
     --halo-danger-foreground: #ffffff;
     --halo-warning: #d97706; /* amber-600 */
-    --halo-warning-foreground: #ffffff;
+    --halo-warning-foreground: #451a03; /* amber-950 — white-on-amber-600 fails WCAG AA (~2.4:1) */
     --halo-info: #0284c7; /* sky-600 */
     --halo-info-foreground: #ffffff;
 
@@ -42,7 +42,7 @@
     --halo-danger: #e11d48; /* rose-600 */
     --halo-danger-foreground: #ffffff;
     --halo-warning: #d97706;
-    --halo-warning-foreground: #ffffff;
+    --halo-warning-foreground: #451a03;
     --halo-info: #0891b2; /* cyan-600 */
     --halo-info-foreground: #ffffff;
 
@@ -73,6 +73,53 @@
     --halo-foreground: #f1f5f9;
     --halo-border: #334155;
     --halo-ring: #3b82f6;
+
+    --halo-radius: 0.5rem;
+}
+
+/* Ember — light, warm orange accent, sharper corners */
+[data-theme='ember'] {
+    --halo-primary: #f97316; /* orange-500 */
+    --halo-primary-foreground: #431407; /* amber-950 — dark-on-vivid keeps AA contrast (~5.5:1) without muddying the orange */
+    --halo-secondary: #fef3c7; /* amber-100 */
+    --halo-secondary-foreground: #78350f; /* amber-900 */
+    --halo-success: #16a34a;
+    --halo-success-foreground: #ffffff;
+    --halo-danger: #dc2626;
+    --halo-danger-foreground: #ffffff;
+    --halo-warning: #d97706;
+    --halo-warning-foreground: #451a03;
+    --halo-info: #0284c7;
+    --halo-info-foreground: #ffffff;
+
+    --halo-background: #ffffff;
+    --halo-foreground: #1c1917; /* stone-900 */
+    --halo-border: #e7e5e4; /* stone-200 */
+    --halo-ring: #f97316;
+
+    --halo-radius: 0.375rem;
+}
+
+/* Nocturne — dark, near-black background, emerald accent (distinct from
+   Eclipse's blue-tinted dark) */
+[data-theme='nocturne'] {
+    --halo-primary: #10b981; /* emerald-500 */
+    --halo-primary-foreground: #022c1e; /* dark-on-vivid, same contrast strategy as Ember */
+    --halo-secondary: #27272a; /* zinc-800 */
+    --halo-secondary-foreground: #f4f4f5; /* zinc-100 */
+    --halo-success: #22c55e;
+    --halo-success-foreground: #ffffff;
+    --halo-danger: #ef4444;
+    --halo-danger-foreground: #ffffff;
+    --halo-warning: #f59e0b;
+    --halo-warning-foreground: #0f172a;
+    --halo-info: #38bdf8;
+    --halo-info-foreground: #0f172a;
+
+    --halo-background: #09090b; /* zinc-950 */
+    --halo-foreground: #f4f4f5; /* zinc-100 */
+    --halo-border: #27272a; /* zinc-800 */
+    --halo-ring: #10b981;
 
     --halo-radius: 0.5rem;
 }
