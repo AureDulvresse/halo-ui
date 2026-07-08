@@ -56,3 +56,27 @@ it('reproduces the button primary-variant render and keeps its text color', func
 
     expect($html)->toHaveClass('text-halo-primary-foreground');
 });
+
+it('ignores extra whitespace between classes', function () {
+    expect(halo_merge_classes('flex   items-center'))->toBe('flex items-center');
+});
+
+it('reads the whole theme config when no key is given', function () {
+    expect(theme())->toBe(config('halo.theme'));
+});
+
+it('reads a specific theme config value by key', function () {
+    expect(theme('default'))->toBe('halo');
+});
+
+it('falls back to a default when a theme key is missing', function () {
+    expect(theme('does-not-exist', 'fallback'))->toBe('fallback');
+});
+
+it('reads a component default from config', function () {
+    expect(halo_default('button', 'variant'))->toBe('primary');
+});
+
+it('falls back to a default when a component default is missing', function () {
+    expect(halo_default('button', 'does-not-exist', 'fallback'))->toBe('fallback');
+});

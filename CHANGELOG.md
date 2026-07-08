@@ -7,6 +7,13 @@ This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/
 
 ## [Unreleased]
 
+## [4.2.1] — 2026-07-08
+
+### Fixed
+
+- **`halo:install` silently overwrote customized single-file components on every run, regardless of `--force`.** `installSpecificComponents()`'s directory (modular) branch correctly checked `--force`/file-existence before copying, but its single-file branch (used by the majority of components — Button, Input, Badge, and anything else that isn't a `{component}/index.blade.php` directory) called `File::copy()` unconditionally. Ejecting a component, customizing it, then re-running `halo:install button` (e.g. as part of ejecting a second component) would silently discard the edit. Found while writing the first tests for `InstallCommand`, which had 0% coverage until this release.
+- CI code coverage was failing its 60% floor (52.6%) because `InstallCommand` (a real, user-facing command) had no tests at all, and `helpers.php`'s `theme()`/`halo_default()` fallback paths were untested. Added full command coverage (default eject, `--all`, named components, modular vs. single-file components, unknown-component warning, `--force`, `--no-assets`) and the missing helper branches.
+
 ## [4.2.0] — 2026-07-08
 
 ### Added

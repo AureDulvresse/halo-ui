@@ -136,7 +136,9 @@ class InstallCommand extends Command
                 $this->copyDirectory($sourceDir, $destinationDir);
                 $this->info("✓ {$componentName} (modular) ejected");
             } elseif ($this->files->exists($sourceFile)) {
-                $this->files->copy($sourceFile, $destinationFile);
+                if ($this->option('force') || ! $this->files->exists($destinationFile)) {
+                    $this->files->copy($sourceFile, $destinationFile);
+                }
                 $this->info("✓ {$componentName} ejected");
             } else {
                 $this->warn("✗ {$componentName} not found");
