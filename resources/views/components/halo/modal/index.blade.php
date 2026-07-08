@@ -26,7 +26,13 @@ $classes = halo_merge_classes(
     class="fixed inset-0 z-50 flex items-center justify-center p-4"
     style="display: none;"
 >
-    <div class="absolute inset-0 bg-halo-foreground/50" @click="close()" aria-hidden="true"></div>
+    <div
+        x-show="open"
+        x-transition.opacity
+        class="absolute inset-0 bg-halo-foreground/50"
+        @click="close()"
+        aria-hidden="true"
+    ></div>
 
     <div
         x-ref="panel"
@@ -37,12 +43,12 @@ $classes = halo_merge_classes(
         role="dialog"
         aria-modal="true"
         tabindex="-1"
-        {{ $attributes->except(['name', 'size', 'class'])->merge(['class' => $classes]) }}
+        {{ $attributes->except(['name', 'size', 'class'])->merge(['class' => halo_merge_classes($classes, 'max-h-[calc(100vh-2rem)] overflow-y-auto')]) }}
     >
         <button
             type="button"
             @click="close()"
-            class="absolute right-4 top-4 text-halo-foreground/50 hover:text-halo-foreground"
+            class="absolute right-3 top-3 rounded-halo p-2 text-halo-foreground/50 transition-colors hover:text-halo-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-ring"
             aria-label="Close"
         >
             <x-halo::icon name="x" size="sm" />

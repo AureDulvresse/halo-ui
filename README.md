@@ -36,10 +36,11 @@
 
 **v4 is a from-scratch rebuild, currently at an early, deliberately small stage.** Earlier versions accumulated dead code and a documentation/reality gap (classes and templates that were never wired up, a theme system that didn't actually theme anything). Rather than carry that forward, v4 starts over with a strict rule: **every component that exists is real, tested, and themed correctly** — nothing is listed here until it ships.
 
-Today that's **20 components**. More are added incrementally; see [CHANGELOG.md](CHANGELOG.md) for what's shipped and `docs/` for what's next.
+Today that's **35 components** (including 6 layout components). More are added incrementally; see [CHANGELOG.md](CHANGELOG.md) for what's shipped and `docs/` for what's next.
 
 ## Features
 
+- **Zero-config assets** — `@haloStyles`/`@haloScripts` serve the package's own built CSS/JS (Alpine.js bundled in) with no `vendor:publish`, no Vite config, no separate Alpine install
 - **Anonymous Blade components** — no PHP classes to maintain, just `@props()` and a Blade file
 - **Real runtime theming** — colors, radius, and dark/light are CSS custom properties (`--halo-*`) mapped into Tailwind v4 via `@theme`; switching themes changes an attribute, not a build step
 - **Copy-and-own** — works out of the box after `composer require`; `php artisan halo:install` is an optional eject for full customization
@@ -55,8 +56,8 @@ Today that's **20 components**. More are added incrementally; see [CHANGELOG.md]
 
 - PHP 8.2+
 - Laravel 11+ or 12+
-- Tailwind CSS v4
-- Alpine.js 3.x
+
+Tailwind and Alpine.js are **not** separate requirements — HaloUI ships its own built CSS and JS (Alpine.js is bundled inside the JS build), so there's nothing extra to install for the fast path below.
 
 ### Install via Composer
 
@@ -64,35 +65,48 @@ Today that's **20 components**. More are added incrementally; see [CHANGELOG.md]
 composer require ironflow/halo-ui
 ```
 
-Components are usable immediately — `<x-halo::button>`, `<x-halo::input>`, `<x-halo::badge>` — no publish step required.
+### Fastest path: two tags in your layout
 
-### Configure Tailwind
-
-Tailwind v4 discovers content automatically in most setups. If you need to point it explicitly at the package's components, add to your CSS entry file:
-
-```css
-@import "tailwindcss";
-@source "../../vendor/ironflow/halo-ui/resources/views";
-```
-
-### Include Alpine.js and the theme tokens
-
-In your layout:
+No `vendor:publish`, no Vite config, no separate Alpine.js install. `@haloStyles`/`@haloScripts` serve the package's own built assets directly:
 
 ```html
 <!DOCTYPE html>
-<html lang="en" data-theme="halo">
+<html lang="en" data-theme="{{ config('halo.theme.default') }}">
 <head>
     <meta charset="UTF-8">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @haloStyles
 </head>
 <body>
     {{ $slot }}
+
+    @haloScripts
 </body>
 </html>
 ```
 
-Your app's own CSS entry should import the package's tokens and Alpine.js should be bundled or loaded — see [Theming](#theming) below for the `@theme` setup and [resources/js/init.js](resources/js/init.js) for the Alpine registration pattern.
+That's the whole setup. `<x-halo::button>`, `<x-halo::input>`, `<x-halo::badge>`, theme switching, focus traps, roving-focus menus — all working, with no build step of your own.
+
+### Integrated path: your own Vite/Tailwind pipeline
+
+If your app already runs Tailwind v4 and Alpine.js and you want HaloUI's classes to be purgeable/tree-shakeable alongside your own, skip `@haloStyles`/`@haloScripts` and wire the package's sources into your own build instead:
+
+```css
+/* resources/css/app.css */
+@import "tailwindcss";
+@import "../../vendor/ironflow/halo-ui/resources/css/theme.css";
+@source "../../vendor/ironflow/halo-ui/resources/views";
+```
+
+```js
+// resources/js/app.js
+import Alpine from 'alpinejs';
+import '../../vendor/ironflow/halo-ui/resources/js/init.js'; // registers haloModal, haloDropdown, etc.
+
+window.Alpine = Alpine;
+Alpine.start();
+```
+
+Set `'assets' => ['serve' => false]` in `config/halo.php` (publish it first with `php artisan vendor:publish --tag=halo-config`) so `@haloStyles`/`@haloScripts`, if you still use them anywhere, point at your own published/bundled files instead of the package's asset routes.
 
 ### Eject and customize (optional)
 
@@ -156,17 +170,27 @@ Once ejected to `resources/views/components/halo/`, your local copy takes preced
 
 Full props reference for each lives in `docs/{component}.md`; this is the map.
 
+### Typography
+
+| Component | Notes |
+|-----------|-------|
+| **Heading** | `<h1>`–`<h6>` via `level`, each with a matching default type scale; `size` overrides the look without changing the tag |
+| **Text** | Body copy; `as` (`p`/`span`/`div`/`blockquote`), `size`, `muted` |
+
 ### Form
 
 | Component | Notes |
 |-----------|-------|
 | **Button** | Variants `primary`/`secondary`/`outline`/`ghost`/`danger`; sizes `sm`/`md`/`lg`; `icon`, `iconPosition`, `loading`, `disabled` |
-| **Input** | Sizes `sm`/`md`/`lg`; `icon`, `iconPosition`, `invalid`, `disabled`, auto-generated `id` |
-| **Textarea** | Same size/invalid/disabled pattern as Input, plus `rows` and `resize` |
+| **Input** | Sizes `sm`/`md`/`lg`; `icon`, `iconPosition`, `invalid`, `error` (message + `aria-describedby`), `disabled`, auto-generated `id` |
+| **Textarea** | Same size/invalid/error/disabled pattern as Input, plus `rows` and `resize` |
 | **Label** | Pairs with any field via `for`; `required` adds a decorative `*` |
 | **Checkbox** | Native `<input type="checkbox">` wrapped in a `<label>`; themed via `accent-halo-primary` |
 | **Radio** | Same pattern as Checkbox; never derives its `id` from the shared group `name` |
-| **Select** | `options` prop (`value => label`) or slot-authored `<option>` tags |
+| **Select** | `options` prop (`value => label`) or slot-authored `<option>` tags; `invalid`/`error` like Input |
+| **Switch** | Native `<input type="checkbox" role="switch">` styled as a track/thumb toggle |
+| **File Upload** | Drag-and-drop over a real `<input type="file">`; removable file list, `multiple`, `accept` |
+| **Image Upload** | Same drag-and-drop pattern, restricted to images, with live thumbnail previews |
 
 ### Display
 
@@ -176,8 +200,10 @@ Full props reference for each lives in `docs/{component}.md`; this is the map.
 | **Badge** | Variants `primary`/`secondary`/`success`/`danger`/`warning` |
 | **Avatar** | `src` image, `initials` fallback, or generic icon; `status` dot |
 | **Spinner** | Standalone loading indicator; also used internally by Button's `loading` state |
+| **Progress** | Determinate (`value`/`max`) or `indeterminate` progress bar |
 | **Divider** | Horizontal (with optional centered `label`) or `vertical` |
 | **Card** (+ `.header`/`.body`/`.footer`) | Variants `default`/`bordered`/`elevated` |
+| **Table** (+ `.row`/`.head`/`.cell`) | Styled wrappers around native `<table>`/`<tr>`/`<th>`/`<td>`; `<thead>`/`<tbody>` stay plain HTML |
 
 ### Feedback
 
@@ -191,6 +217,8 @@ Full props reference for each lives in `docs/{component}.md`; this is the map.
 |-----------|-------|
 | **Modal** (+ `.header`/`.body`/`.footer`) | Opened/closed by `name` via `$dispatch('open-modal', name)` — no `:open` prop to sync; traps focus while open, returns it to the trigger on close |
 | **Dropdown** (+ `.item`) | `trigger` named slot; arrow keys move between items, closes on escape/outside click/selecting an item, returns focus to the trigger |
+| **Popover** | `trigger` named slot for arbitrary rich content; no menu semantics, focus returns to the trigger on close |
+| **Tooltip** | `trigger` named slot; shown on hover/focus, `aria-describedby` wired automatically |
 | **Toast** | One global queue rendered by a single `<x-halo::toast />`; push via `$store.haloToast.push(message, variant)` |
 
 ### Navigation (Alpine-powered)
@@ -200,6 +228,17 @@ Full props reference for each lives in `docs/{component}.md`; this is the map.
 | **Tabs** (`.list`, `.trigger`, `.panel`) | `default` active tab; arrow keys roam between triggers |
 | **Accordion** (+ `.item`) | `multiple` allows more than one item open at once; each item tracked by an explicit `name` or an auto-generated one |
 | **Breadcrumb** (+ `.item`) | `href` for links, `current` for the non-interactive last item |
+
+### Layouts
+
+| Component | Notes |
+|-----------|-------|
+| **Layout: Base** | A full `<!DOCTYPE html>`…`</html>` skeleton, `@haloStyles`/`@haloScripts` already wired in — the fastest way to get a page rendering |
+| **Layout: Container** | Max-width, centered content wrapper; `size` `sm`–`xl`\|`full` |
+| **Layout: App Shell** | Sidebar + topbar dashboard layout; off-canvas drawer below `lg`, static above it |
+| **Layout: Auth** | Centered layout for login/register pages, optional `logo` slot |
+| **Layout: Two Column** | Content + secondary sidebar (docs nav, settings nav); `sidebarPosition` `left`\|`right` |
+| **Layout: Page Header** | Title + description + right-aligned `actions` slot |
 
 Each component's props, variant maps, and rendered markup live directly in its `.blade.php` file under `resources/views/components/halo/` — read the source, it's short by design.
 
@@ -218,6 +257,8 @@ Colors, radius, and light/dark are CSS custom properties defined in `resources/c
 | **Halo** | `halo` (default) | Blue, neutral radius — the baseline |
 | **Aurora** | `aurora` | Violet/teal accent, larger radius |
 | **Eclipse** | `eclipse` | Dark background, same blue family as Halo |
+| **Ember** | `ember` | Light, warm orange accent, sharper corners |
+| **Nocturne** | `nocturne` | Dark, near-black background, emerald accent |
 
 ```html
 <html data-theme="eclipse">

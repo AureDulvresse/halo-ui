@@ -37,3 +37,12 @@ it('can be disabled', function () {
 it('auto-generates an id when none is given', function () {
     expect(renderComponent('textarea'))->toContain('id="halo-textarea-');
 });
+
+it('renders an error message linked via aria-describedby', function () {
+    $html = renderComponent('textarea', ['id' => 'bio', 'error' => 'Too long']);
+
+    expect($html)
+        ->toContainAttribute('aria-invalid', 'true')
+        ->toContainAttribute('aria-describedby', 'bio-error')
+        ->toContain('Too long');
+});

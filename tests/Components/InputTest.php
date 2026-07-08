@@ -41,3 +41,13 @@ it('can be disabled', function () {
 
     expect($html)->toContainAttribute('disabled');
 });
+
+it('renders an error message linked via aria-describedby', function () {
+    $html = renderComponent('input', ['id' => 'email', 'error' => 'Email is required']);
+
+    expect($html)
+        ->toContainAttribute('aria-invalid', 'true')
+        ->toContainAttribute('aria-describedby', 'email-error')
+        ->toContain('id="email-error"')
+        ->toContain('Email is required');
+});

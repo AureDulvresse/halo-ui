@@ -46,3 +46,13 @@ it('renders a footer with actions aligned to the end', function () {
         ->toContain('Actions')
         ->toHaveClass('justify-end');
 });
+
+it('scrolls internally instead of overflowing the viewport on small screens', function () {
+    expect(renderComponent('modal.index', ['name' => 'x']))
+        ->toHaveClass('max-h-[calc(100vh-2rem)]')
+        ->toHaveClass('overflow-y-auto');
+});
+
+it('fades the overlay in and out with the panel', function () {
+    expect(renderComponent('modal.index', ['name' => 'x']))->toContain('x-transition.opacity');
+});

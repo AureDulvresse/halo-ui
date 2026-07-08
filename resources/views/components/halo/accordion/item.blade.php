@@ -12,7 +12,7 @@ $itemName = $name ?? uniqid('halo-accordion-item-');
         type="button"
         @click="toggle('{{ $itemName }}')"
         :aria-expanded="isOpen('{{ $itemName }}') ? 'true' : 'false'"
-        class="flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium text-halo-foreground hover:bg-halo-secondary"
+        class="flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium text-halo-foreground transition-colors hover:bg-halo-secondary active:bg-halo-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-ring focus-visible:ring-inset"
     >
         {{ $title }}
         {{-- ::style (double colon) is required here, not :style — <x-halo::icon> is a

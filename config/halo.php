@@ -22,7 +22,7 @@ return [
 
     'theme' => [
         'default' => 'halo',
-        'available' => ['halo', 'aurora', 'eclipse'],
+        'available' => ['halo', 'aurora', 'eclipse', 'ember', 'nocturne'],
         'radius' => 'rounded-halo',
     ],
 
@@ -61,6 +61,14 @@ return [
         'alert' => [
             'variant' => 'info',
         ],
+
+        'tooltip' => [
+            'position' => 'top',
+        ],
+
+        'popover' => [
+            'align' => 'left',
+        ],
     ],
 
     /*
@@ -72,5 +80,25 @@ return [
     'icons' => [
         'set' => 'halo',
         'default_class' => 'w-5 h-5',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Assets
+    |--------------------------------------------------------------------------
+    |
+    | HaloUI ships its CSS (Alpine.js is bundled inside its JS build — see
+    | resources/js/init.js). When 'serve' is true, the package registers two
+    | routes that serve those built files directly from the package itself,
+    | so @haloStyles/@haloScripts work immediately after `composer require`
+    | with no `vendor:publish` or Vite config needed.
+    |
+    | Set this to false if you'd rather publish the assets (`halo-assets` tag)
+    | and bundle them through your own app's Vite pipeline instead.
+    |
+    */
+
+    'assets' => [
+        'serve' => true,
     ],
 ];

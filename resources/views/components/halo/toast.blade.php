@@ -11,7 +11,7 @@ $positions = [
 ];
 
 $classes = halo_merge_classes(
-    'fixed z-50 flex flex-col gap-2 w-80',
+    'fixed z-50 flex flex-col gap-2 w-80 max-w-[calc(100vw-2rem)]',
     $positions[$position] ?? $positions['bottom-right'],
     $attributes->get('class'),
 );
@@ -37,9 +37,9 @@ $classes = halo_merge_classes(
                 type="button"
                 @click="$store.haloToast.remove(toast.id)"
                 aria-label="Dismiss"
-                class="shrink-0 text-current/60 hover:text-current"
+                class="-m-2 shrink-0 rounded-halo p-2 text-current/60 transition-colors hover:text-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-ring"
             >
-                <x-halo::icon name="x" size="xs" />
+                <x-halo::icon name="x" size="sm" />
             </button>
         </div>
     </template>

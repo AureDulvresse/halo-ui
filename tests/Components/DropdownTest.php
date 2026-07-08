@@ -2,9 +2,8 @@
 
 it('renders the trigger and content slots', function () {
     $html = renderComponent('dropdown.index', [
-        'trigger' => 'Open menu',
         'slot' => 'Menu content',
-    ]);
+    ], ['trigger' => 'Open menu']);
 
     expect($html)
         ->toContain('Open menu')

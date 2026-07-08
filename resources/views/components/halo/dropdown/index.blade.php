@@ -9,7 +9,7 @@ $alignClasses = [
 ];
 
 $classes = halo_merge_classes(
-    'absolute z-40 mt-2 min-w-[10rem] rounded-halo border border-halo-border bg-halo-background text-halo-foreground shadow-lg py-1',
+    'absolute z-40 mt-2 min-w-[10rem] max-h-80 overflow-y-auto rounded-halo border border-halo-border bg-halo-background text-halo-foreground shadow-lg py-1',
     $alignClasses[$align] ?? $alignClasses['left'],
     $attributes->get('class'),
 );

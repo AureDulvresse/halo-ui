@@ -10,7 +10,7 @@
 
 @php
 $classes = halo_variants([
-    'base' => 'inline-flex items-center justify-center gap-2 font-medium rounded-halo border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+    'base' => 'inline-flex items-center justify-center gap-2 font-medium rounded-halo border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-ring focus-visible:ring-offset-2 focus-visible:ring-offset-halo-background active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed',
     'variants' => [
         'variant' => [
             'primary' => 'bg-halo-primary text-halo-primary-foreground border-transparent hover:opacity-90',
