@@ -1,26 +1,21 @@
 @props([
-    'variant' => 'default',
-    'padding' => true,
+    'variant' => halo_default('card', 'variant', 'default'),
 ])
 
 @php
-$baseClasses = 'bg-white border border-slate-200 shadow-sm';
-$radiusClass = theme('radius.lg', 'rounded-lg');
-$paddingClass = $padding ? '' : 'p-0';
-
-$variantClasses = match($variant) {
-    'bordered' => 'border-2',
-    'elevated' => 'shadow-md',
-    'flat' => 'shadow-none',
-    default => '',
-};
-
-$classes = halo_merge_classes(
-    "{$baseClasses} {$radiusClass} {$variantClasses} {$paddingClass}",
-    $attributes->get('class')
-);
+$classes = halo_variants([
+    'base' => 'rounded-halo border bg-halo-background text-halo-foreground',
+    'variants' => [
+        'variant' => [
+            'default' => 'border-halo-border',
+            'bordered' => 'border-halo-border border-2',
+            'elevated' => 'border-transparent shadow-lg',
+        ],
+    ],
+    'defaults' => ['variant' => 'default'],
+], compact('variant'), $attributes->get('class'));
 @endphp
 
-<div {{ $attributes->merge(['class' => $classes]) }}>
+<div {{ $attributes->except(['variant', 'class'])->merge(['class' => $classes]) }}>
     {{ $slot }}
 </div>

@@ -1,7 +1,7 @@
 # HaloUI
 
 <p align="start">
-  <a href="https://packagist.org/packages/ironflow/ironflow">
+  <a href="https://packagist.org/packages/ironflow/halo-ui">
     <img src="https://img.shields.io/packagist/v/ironflow/halo-ui" alt="Latest Version" />
   </a>
   <a href="https://packagist.org/packages/ironflow/halo-ui">
@@ -17,32 +17,35 @@
 
 <p align="center">
   <strong>Modern, composable Blade UI component library for Laravel</strong><br>
-  Elegant as shadcn/ui, native as Blade. Built with TailwindCSS, Alpine.js, and Blade Icons.
+  Elegant as shadcn/ui, native as Blade. Built with Tailwind CSS v4, Alpine.js, and Blade Icons.
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> •
+  <a href="#status">Status</a> •
   <a href="#installation">Installation</a> •
   <a href="#components">Components</a> •
-  <a href="#themes">Themes</a> •
-  <a href="#documentation">Documentation</a> •
+  <a href="#theming">Theming</a> •
+  <a href="#customization">Customization</a> •
+  <a href="#testing">Testing</a> •
   <a href="#contributing">Contributing</a>
 </p>
 
 ---
 
+## Status
+
+**v4 is a from-scratch rebuild, currently at an early, deliberately small stage.** Earlier versions accumulated dead code and a documentation/reality gap (classes and templates that were never wired up, a theme system that didn't actually theme anything). Rather than carry that forward, v4 starts over with a strict rule: **every component that exists is real, tested, and themed correctly** — nothing is listed here until it ships.
+
+Today that's **20 components**. More are added incrementally; see [CHANGELOG.md](CHANGELOG.md) for what's shipped and `docs/` for what's next.
+
 ## Features
 
-- **70+ Production-Ready Components** — From buttons to data tables
-- **Dark Mode Built-in** — Full dark mode support on every component
-- **8 Modern Themes** — Default, Neutral, Glass, Sunset, Iron, Ocean, Forest, Neon
-- **Copy-and-Own** — Publish and customize without limitations
-- **Alpine.js Powered** — Smooth interactions with minimal JavaScript
-- **Blade Icons Integration** — First-class icon support
-- **Fully Composable** — Mix and match components freely
-- **Accessible** — ARIA attributes and keyboard navigation
-- **Zero Build Step** — Works out of the box
-- **Tailwind-First** — Pure utility classes, no custom CSS
+- **Anonymous Blade components** — no PHP classes to maintain, just `@props()` and a Blade file
+- **Real runtime theming** — colors, radius, and dark/light are CSS custom properties (`--halo-*`) mapped into Tailwind v4 via `@theme`; switching themes changes an attribute, not a build step
+- **Copy-and-own** — works out of the box after `composer require`; `php artisan halo:install` is an optional eject for full customization
+- **Blade Icons integration** — icons resolve through Blade Icons' native component API, not a hand-rolled resolver
+- **Accessible by default** — ARIA attributes and keyboard behavior are part of a component's first version, not an afterthought
+- **Alpine.js for interactivity** — registered as named `Alpine.data()`/`Alpine.store()`, invoked directly in Blade
 
 ---
 
@@ -51,8 +54,8 @@
 ### Requirements
 
 - PHP 8.2+
-- Laravel 12+
-- TailwindCSS 3.4+
+- Laravel 11+ or 12+
+- Tailwind CSS v4
 - Alpine.js 3.x
 
 ### Install via Composer
@@ -61,376 +64,262 @@
 composer require ironflow/halo-ui
 ```
 
-### Install Components
-
-```bash
-# Install all components
-php artisan halo:install --all
-
-# Install specific components
-php artisan halo:install button modal datatable kanban-board
-
-# Force overwrite existing files
-php artisan halo:install --all --force
-
-# Skip assets publishing
-php artisan halo:install --all --no-assets
-```
+Components are usable immediately — `<x-halo::button>`, `<x-halo::input>`, `<x-halo::badge>` — no publish step required.
 
 ### Configure Tailwind
 
-Update your `tailwind.config.js`:
+Tailwind v4 discovers content automatically in most setups. If you need to point it explicitly at the package's components, add to your CSS entry file:
 
-```js
-export default {
-  content: [
-    './resources/**/*.blade.php',
-    './resources/views/components/halo/**/*.blade.php',
-    './vendor/halo/ui/resources/views/**/*.blade.php',
-  ],
-  darkMode: 'class', // Enable dark mode
-  // ... rest of config
-}
+```css
+@import "tailwindcss";
+@source "../../vendor/ironflow/halo-ui/resources/views";
 ```
 
-### Include Alpine.js & HaloUI
+### Include Alpine.js and the theme tokens
 
-In your layout file (`resources/views/layouts/app.blade.php`):
+In your layout:
 
 ```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="halo">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
     {{ $slot }}
-    
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
-    <!-- HaloUI Init -->
-    <script src="{{ asset('vendor/halo-ui/js/init.js') }}"></script>
 </body>
 </html>
 ```
+
+Your app's own CSS entry should import the package's tokens and Alpine.js should be bundled or loaded — see [Theming](#theming) below for the `@theme` setup and [resources/js/init.js](resources/js/init.js) for the Alpine registration pattern.
+
+### Eject and customize (optional)
+
+`halo:install` copies the package's own component files into your app, so you can edit them directly:
+
+```bash
+# Eject every component
+php artisan halo:install --all
+
+# Eject specific components
+php artisan halo:install button input
+
+# Overwrite files already ejected
+php artisan halo:install --all --force
+```
+
+Once ejected to `resources/views/components/halo/`, your local copy takes precedence — the package's own components still work for anything you didn't eject.
 
 ---
 
 ## Quick Start
 
-### Basic Components
-
 ```blade
-<!-- Button -->
 <x-halo::button variant="primary" icon="check">
-    Save Changes
+    Save changes
 </x-halo::button>
 
-<!-- Input -->
 <x-halo::input
-    label="Email"
+    name="email"
     type="email"
     icon="mail"
     placeholder="you@example.com"
 />
 
-<!-- Alert -->
-<x-halo::alert variant="success" dismissible>
-    Profile updated successfully!
+<x-halo::badge variant="success">Active</x-halo::badge>
+
+<x-halo::icon name="user" size="lg" />
+
+<x-halo::alert variant="danger" dismissible>
+    Something went wrong — please try again.
 </x-halo::alert>
-```
 
-### Advanced Components
+{{-- Modal: opened by name, from anywhere --}}
+<x-halo::button @click="$dispatch('open-modal', 'confirm-delete')">
+    Delete account
+</x-halo::button>
 
-```blade
-<!-- DataTable -->
-<x-halo::datatable
-    :columns="[
-        ['key' => 'name', 'label' => 'Name'],
-        ['key' => 'email', 'label' => 'Email'],
-        ['key' => 'role', 'label' => 'Role'],
-    ]"
-    :data="$users"
-    sortable
-    searchable
-    selectable
-    exportable
-/>
-
-<!-- Kanban Board -->
-<x-halo::kanban-board
-    :columns="[
-        ['id' => 'todo', 'title' => 'To Do', 'color' => '#3B82F6'],
-        ['id' => 'doing', 'title' => 'In Progress', 'color' => '#F59E0B'],
-        ['id' => 'done', 'title' => 'Done', 'color' => '#10B981'],
-    ]"
-    :tasks="$tasks"
-/>
-
-<!-- Rich Text Editor -->
-<x-halo::rich-text-editor
-    name="content"
-    label="Post Content"
-    placeholder="Start writing..."
-/>
+<x-halo::modal name="confirm-delete">
+    <x-halo::modal.header>Delete account?</x-halo::modal.header>
+    <x-halo::modal.body>This can't be undone.</x-halo::modal.body>
+    <x-halo::modal.footer>
+        <x-halo::button variant="outline" @click="$dispatch('close-modal')">Cancel</x-halo::button>
+        <x-halo::button variant="danger">Delete</x-halo::button>
+    </x-halo::modal.footer>
+</x-halo::modal>
 ```
 
 ---
 
 ## Components
 
-### Base Components (12)
+Full props reference for each lives in `docs/{component}.md`; this is the map.
 
-| Component | Description | Features |
-|-----------|-------------|----------|
-| **Button** | Action buttons | Variants, sizes, icons, loading |
-| **Input** | Text inputs | Icons, validation, hints |
-| **Textarea** | Multi-line text | Resizable, auto-grow |
-| **Select** | Dropdown select | Custom styling, placeholder |
-| **Checkbox** | Checkboxes | Labels, descriptions |
-| **Radio** | Radio buttons | Groups, validation |
-| **Switch** | Toggle switches | Alpine.js powered |
-| **Range** | Sliders | Live value display |
-| **FileUpload** | File inputs | Drag & drop, preview |
-| **ColorPicker** | Color selection | Palette, custom colors |
-| **DatePicker** | Date selection | Calendar, presets |
-| **Combobox** | Search & select | Autocomplete |
+### Form
 
-### Layout Components (20)
+| Component | Notes |
+|-----------|-------|
+| **Button** | Variants `primary`/`secondary`/`outline`/`ghost`/`danger`; sizes `sm`/`md`/`lg`; `icon`, `iconPosition`, `loading`, `disabled` |
+| **Input** | Sizes `sm`/`md`/`lg`; `icon`, `iconPosition`, `invalid`, `disabled`, auto-generated `id` |
+| **Textarea** | Same size/invalid/disabled pattern as Input, plus `rows` and `resize` |
+| **Label** | Pairs with any field via `for`; `required` adds a decorative `*` |
+| **Checkbox** | Native `<input type="checkbox">` wrapped in a `<label>`; themed via `accent-halo-primary` |
+| **Radio** | Same pattern as Checkbox; never derives its `id` from the shared group `name` |
+| **Select** | `options` prop (`value => label`) or slot-authored `<option>` tags |
 
-- Card (Header, Body, Footer)
-- Modal (Header, Body, Footer)
-- Dropdown, DropdownItem
-- Tabs, TabItem
-- Accordion, AccordionItem
-- Table (Header, Row, Cell, Footer)
-- Sidebar, SidebarItem
-- Navbar, NavItem
-- Breadcrumb, BreadcrumbItem
-- Pagination
-- Container, Stack, Grid
-- Divider, Spacer
-- Drawer, Dialog
-- CommandPalette
-- SplitPane, TreeView
+### Display
 
-### Feedback Components (18)
+| Component | Notes |
+|-----------|-------|
+| **Icon** | Resolves any icon in the `halo` Blade Icons set (`resources/icons/halo/*.svg`) by name; sizes `xs`–`xl` |
+| **Badge** | Variants `primary`/`secondary`/`success`/`danger`/`warning` |
+| **Avatar** | `src` image, `initials` fallback, or generic icon; `status` dot |
+| **Spinner** | Standalone loading indicator; also used internally by Button's `loading` state |
+| **Divider** | Horizontal (with optional centered `label`) or `vertical` |
+| **Card** (+ `.header`/`.body`/`.footer`) | Variants `default`/`bordered`/`elevated` |
 
-- Alert, Toast, Spinner, Skeleton
-- Badge, Tooltip, Popover
-- Progress, Stepper, Timeline, Rating
-- Avatar, AvatarGroup
-- Tag, EmptyState
-- Stats, ContextMenu
-- A11yChecker
+### Feedback
 
-### Advanced Components (15)
+| Component | Notes |
+|-----------|-------|
+| **Alert** | Variants `info`/`success`/`warning`/`danger`, each with a matching default icon; `dismissible` |
 
-1. **DataTable** — Advanced data table with sorting, filtering, search, selection, export
-2. **DateRangePicker** — Date range selector with presets
-3. **KanbanBoard** — Drag & drop task board
-4. **RichTextEditor** — WYSIWYG editor
-5. **Calendar** — Full calendar with events
-6. **Carousel** — Image/content slider
-7. **VideoPlayer** — Custom video player
-8. **Chart** — Chart.js wrapper
-9. **ImageGallery** — Lightbox gallery
-10. **TreeView** — Hierarchical tree
-11. **ContextMenu** — Right-click menu
-12. **SplitPane** — Resizable panels
-13. **Multiselect** — Multi-tag input
-14. **MarkdownEditor** — Markdown with preview
-15. **A11yChecker** — Accessibility validator
+### Overlays (Alpine-powered)
+
+| Component | Notes |
+|-----------|-------|
+| **Modal** (+ `.header`/`.body`/`.footer`) | Opened/closed by `name` via `$dispatch('open-modal', name)` — no `:open` prop to sync; traps focus while open, returns it to the trigger on close |
+| **Dropdown** (+ `.item`) | `trigger` named slot; arrow keys move between items, closes on escape/outside click/selecting an item, returns focus to the trigger |
+| **Toast** | One global queue rendered by a single `<x-halo::toast />`; push via `$store.haloToast.push(message, variant)` |
+
+### Navigation (Alpine-powered)
+
+| Component | Notes |
+|-----------|-------|
+| **Tabs** (`.list`, `.trigger`, `.panel`) | `default` active tab; arrow keys roam between triggers |
+| **Accordion** (+ `.item`) | `multiple` allows more than one item open at once; each item tracked by an explicit `name` or an auto-generated one |
+| **Breadcrumb** (+ `.item`) | `href` for links, `current` for the non-interactive last item |
+
+Each component's props, variant maps, and rendered markup live directly in its `.blade.php` file under `resources/views/components/halo/` — read the source, it's short by design.
+
+See [CHANGELOG.md](CHANGELOG.md) for release history and `docs/` for per-component prop references.
 
 ---
 
-## Themes
+## Theming
 
-HaloUI comes with 8 beautiful themes:
+Colors, radius, and light/dark are CSS custom properties defined in `resources/css/theme.css`, scoped to a `data-theme` attribute, and mapped into real Tailwind utility classes (`bg-halo-primary`, `rounded-halo`, ...) via Tailwind v4's `@theme` directive. There is no build-time "active theme" setting — switching themes means changing an attribute.
 
-### Built-in Themes
+### Built-in themes
 
-```php
-// config/halo.php
-'active_theme' => 'glass', // Change active theme
-```
-
-- **Default** — Classic blue theme
-- **Neutral** — Monochrome elegance
-- **Glass** — Glassmorphism with blur
-- **Sunset** — Warm orange gradient
-- **Iron** — Industrial metallic
-- **Ocean** — Deep blue
-- **Forest** — Natural green
-- **Neon** — Vibrant with glow effects
-
-### Dark Mode
+| Theme | `data-theme` | Character |
+|-------|--------------|-----------|
+| **Halo** | `halo` (default) | Blue, neutral radius — the baseline |
+| **Aurora** | `aurora` | Violet/teal accent, larger radius |
+| **Eclipse** | `eclipse` | Dark background, same blue family as Halo |
 
 ```html
-<!-- Enable dark mode -->
-<html class="dark">
-  <!-- All components adapt automatically -->
-</html>
+<html data-theme="eclipse">
 ```
 
-Toggle dark mode programmatically:
+### Switching at runtime
 
-```javascript
-// Toggle dark mode
-document.documentElement.classList.toggle('dark');
+`resources/js/init.js` registers an `Alpine.store('haloTheme', ...)` that persists the choice in `localStorage` and applies it to `<html>`:
+
+```html
+<button @click="$store.haloTheme.set('aurora')">Aurora</button>
 ```
+
+Render the correct theme on first paint (before Alpine boots) by reading the configured default server-side:
+
+```blade
+<html data-theme="{{ config('halo.theme.default') }}">
+```
+
+### Adding a theme
+
+Add a `[data-theme="yourname"]` block to `resources/css/theme.css` defining the same `--halo-*` variables as the existing themes, then add `'yourname'` to `config('halo.theme.available')` and to the `THEMES` array in `resources/js/init.js`.
 
 ---
 
 ## Customization
 
-### Config-Based Theming
+### Component-level
 
-```php
-// config/halo.php
-return [
-    'active_theme' => 'default',
-    
-    'dark_mode' => [
-        'enabled' => true,
-        'strategy' => 'class', // or 'media'
-    ],
-    
-    'theme' => [
-        'colors' => [
-            'primary' => 'purple', // Change primary color
-        ],
-        'radius' => [
-            'md' => 'rounded-xl', // More rounded
-        ],
-    ],
-    
-    'variants' => [
-        'button' => [
-            'gradient' => 'bg-gradient-to-r from-purple-500 to-pink-500 text-white',
-        ],
-    ],
-];
-```
-
-### Component-Level Customization
+Every component merges any extra classes you pass, with the last-wins conflict resolution in `halo_merge_classes()` — a class you pass always overrides the component's own default for the same Tailwind utility family (`bg-*`, `text-*`, `p{x,y,...}-*`, etc.):
 
 ```blade
-<!-- Override with custom classes -->
-<x-halo::button class="shadow-2xl transform hover:scale-110">
-    Custom Button
+<x-halo::button class="px-10">
+    Wider button
 </x-halo::button>
 ```
 
-### Publishing & Editing
+### Defaults
 
-```bash
-# Publish views to customize
-php artisan vendor:publish --tag=halo-views
-
-# Edit directly
-resources/views/vendor/halo/components/halo/button.blade.php
-```
-
----
-
-## Documentation
-
-### Component Documentation
-
-Each component has detailed documentation in the `/docs` folder:
-
-- Props and attributes
-- Usage examples
-- Variants and sizes
-- Alpine.js integration
-- Accessibility notes
-
-### Helper Functions
+`config/halo.php` sets each component's default variant/size:
 
 ```php
-// Get theme value
-theme('colors.primary'); // 'blue'
+'defaults' => [
+    'button' => ['variant' => 'primary', 'size' => 'md'],
+],
+```
 
-// Generate component classes
-halo_classes('button', 'primary', 'lg', 'custom-class');
+### Helper functions
 
-// Get default config
+```php
+// CVA-style variant recipe: base classes + variant/size maps + defaults
+halo_variants($config, $props, $extraClass);
+
+// Merge class strings, deduping conflicting utilities (last wins)
+halo_merge_classes(...$classGroups);
+
+// Read a component's configured default prop
 halo_default('button', 'variant'); // 'primary'
 
-// Merge classes
-halo_merge_classes($default, $custom);
-
-// Alpine.js data
-halo_alpine_data('modal', ['open' => false]);
+// Read a theme.* config value
+theme('radius'); // 'rounded-halo'
 ```
 
 ---
 
 ## Testing
 
-HaloUI uses Pest for clean, modern testing:
+HaloUI uses Pest:
 
 ```bash
-# Run tests
 composer test
-
-# Run with coverage
 composer test-coverage
 ```
 
-### Example Test
-
 ```php
-it('renders button with variant', function () {
-    $html = renderComponent('button', [
-        'variant' => 'primary',
-        'slot' => 'Click me'
-    ]);
-    
+it('applies the default variant and size classes', function () {
+    $html = renderComponent('button', ['slot' => 'Save']);
+
     expect($html)
-        ->toContain('bg-blue-600')
-        ->toContain('Click me');
+        ->toHaveClass('bg-halo-primary')
+        ->toHaveClass('px-4 py-2');
 });
 ```
+
+Every component has a render test in `tests/Components/`, including a regression test on Icon that guards against a real bug this rebuild fixed (an icon resolver that could recurse into itself).
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-### Development Setup
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ```bash
-# Clone repository
-git clone https://github.com/halo-ui/core.git
-cd core
-
-# Install dependencies
+git clone https://github.com/AureDulvresse/halo-ui.git
+cd halo-ui
 composer install
 npm install
 
-# Run tests
 composer test
-
-# Build assets
+vendor/bin/pint --test
 npm run build
 ```
-
----
-
-<!-- ## Resources
-
-- **Documentation:** [https://haloui.dev/docs](https://haloui.dev/docs)
-- **Storybook:** [https://storybook.haloui.dev](https://storybook.haloui.dev)
-- **GitHub:** [https://github.com/halo-ui/core](https://github.com/halo-ui/core)
-- **Discord:** [https://discord.gg/haloui](https://discord.gg/haloui)
-- **Twitter:** [@HaloUI](https://twitter.com/HaloUI) -->
 
 ---
 
@@ -438,31 +327,15 @@ npm run build
 
 HaloUI is open-sourced software licensed under the [MIT license](LICENSE).
 
----
-
 ## Credits
 
 - Inspired by [shadcn/ui](https://ui.shadcn.com)
-- Built with [TailwindCSS](https://tailwindcss.com)
+- Built with [Tailwind CSS](https://tailwindcss.com)
 - Powered by [Alpine.js](https://alpinejs.dev)
 - Icons by [Blade Icons](https://github.com/blade-ui-kit/blade-icons)
-- Developed for the Laravel community
-
----
-
-## Why HaloUI?
-
-✅ **70+ Components** — Everything you need  
-✅ **8 Themes + Dark Mode** — Beautiful out of the box  
-✅ **Copy-and-Own** — Total control  
-✅ **Zero Lock-in** — Modify anything  
-✅ **Laravel Native** — Built for Blade  
-✅ **Production Ready** — Used in real projects  
 
 ---
 
 <p align="center">
-  <strong>HaloUI - Build with ❤️ by Aure Dulvresse</strong>
+  <strong>HaloUI — Built with ❤️ by Aure Dulvresse</strong>
 </p>
-
-<!-- For questions, visit [https://haloui.dev](https://haloui.dev) -->

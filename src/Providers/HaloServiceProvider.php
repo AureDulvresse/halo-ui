@@ -2,6 +2,7 @@
 
 namespace Halo\UI\Providers;
 
+use BladeUI\Icons\Components\Svg as SvgComponent;
 use BladeUI\Icons\Factory;
 use Halo\UI\Console\InstallCommand;
 use Illuminate\Support\Facades\Blade;
@@ -26,7 +27,6 @@ class HaloServiceProvider extends ServiceProvider
         $this->registerPublishing();
         $this->registerBladeComponents();
         $this->registerBladeIcons();
-        $this->registerViews();
     }
 
     /**
@@ -47,70 +47,63 @@ class HaloServiceProvider extends ServiceProvider
     protected function registerPublishing(): void
     {
         if ($this->app->runningInConsole()) {
-            // Publish config
             $this->publishes([
                 __DIR__.'/../../config/halo.php' => config_path('halo.php'),
             ], 'halo-config');
 
-            // Publish views
-            $this->publishes([
-                __DIR__.'/../../resources/views' => resource_path('views/vendor/halo'),
-            ], 'halo-views');
-
-            // Publish stubs for component installation
-            $this->publishes([
-                __DIR__.'/../../stubs/components' => resource_path('views/components/halo'),
-            ], 'halo-components');
-
-            // Publish icons
             $this->publishes([
                 __DIR__.'/../../resources/icons' => resource_path('icons'),
             ], 'halo-icons');
 
-            // Publish assets (JS + CSS)
             $this->publishes([
-                __DIR__.'/../../public' => public_path('vendor/halo-ui'),
+                __DIR__.'/../../public/js' => public_path('vendor/halo-ui/js'),
+                __DIR__.'/../../public/css' => public_path('vendor/halo-ui/css'),
             ], 'halo-assets');
 
-            // Publish everything
             $this->publishes([
                 __DIR__.'/../../config/halo.php' => config_path('halo.php'),
-                __DIR__.'/../../resources/views' => resource_path('views/vendor/halo'),
                 __DIR__.'/../../resources/icons' => resource_path('icons'),
-                __DIR__.'/../../public' => public_path('vendor/halo-ui'),
+                __DIR__.'/../../public/js' => public_path('vendor/halo-ui/js'),
+                __DIR__.'/../../public/css' => public_path('vendor/halo-ui/css'),
             ], 'halo');
         }
     }
 
     /**
-     * Register Blade components.
+     * Register Blade components. Components work out of the box via this
+     * anonymous component path — running `halo:install` is only needed to
+     * eject an editable copy into the consuming app.
      */
     protected function registerBladeComponents(): void
     {
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'halo');
 
-        // Register anonymous components automatically
         Blade::anonymousComponentPath(__DIR__.'/../../resources/views/components/halo', 'halo');
     }
 
     /**
-     * Register Blade Icons set.
+     * Register the Blade Icons set and its <x-halo-{icon}/> components.
+     *
+     * Components are registered directly here (rather than relying on
+     * BladeUI\Icons\Factory::registerComponents()) because that method reads
+     * through a shared, memoized manifest that can be primed with an empty
+     * result before this package gets a chance to add its icon set —
+     * whichever package's view factory resolves first wins the cache.
+     * Scanning our own icons directory sidesteps that shared cache entirely.
      */
     protected function registerBladeIcons(): void
     {
         $this->callAfterResolving(Factory::class, function (Factory $factory) {
+            $path = __DIR__.'/../../resources/icons/halo';
+
             $factory->add('halo', [
-                'path' => __DIR__.'/../../resources/icons/halo',
+                'path' => $path,
                 'prefix' => 'halo',
             ]);
-        });
-    }
 
-    /**
-     * Register view namespace.
-     */
-    protected function registerViews(): void
-    {
-        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'halo');
+            foreach (glob($path.'/*.svg') as $svg) {
+                Blade::component(SvgComponent::class, basename($svg, '.svg'), 'halo');
+            }
+        });
     }
 }

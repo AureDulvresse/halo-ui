@@ -1,54 +1,37 @@
 @props([
     'align' => 'left',
-    'width' => '48',
 ])
 
 @php
-$alignmentClasses = match ($align) {
-    'left' => 'origin-top-left left-0',
-    'right' => 'origin-top-right right-0',
-    'top' => 'origin-bottom bottom-full',
-    default => 'origin-top-left left-0',
-};
+$alignClasses = [
+    'left' => 'left-0',
+    'right' => 'right-0',
+];
 
-$widthClass = match ($width) {
-    '48' => 'w-48',
-    '56' => 'w-56',
-    '64' => 'w-64',
-    'full' => 'w-full',
-    default => "w-{$width}",
-};
+$classes = halo_merge_classes(
+    'absolute z-40 mt-2 min-w-[10rem] rounded-halo border border-halo-border bg-halo-background text-halo-foreground shadow-lg py-1',
+    $alignClasses[$align] ?? $alignClasses['left'],
+    $attributes->get('class'),
+);
 @endphp
 
-<div
-    x-data="window.HaloUI.dropdown()"
-    @click.outside="close()"
-    @keydown.escape.window="close()"
-    class="relative inline-block text-left"
->
-    <!-- Trigger -->
+<div x-data="haloDropdown()" class="relative inline-block" @keydown.escape="close()">
     <div @click="toggle()">
         {{ $trigger ?? '' }}
     </div>
 
-    <!-- Dropdown Menu -->
     <div
+        x-ref="panel"
         x-show="open"
         x-cloak
-        x-transition:enter="transition ease-out duration-100"
-        x-transition:enter-start="transform opacity-0 scale-95"
-        x-transition:enter-end="transform opacity-100 scale-100"
-        x-transition:leave="transition ease-in duration-75"
-        x-transition:leave-start="transform opacity-100 scale-100"
-        x-transition:leave-end="transform opacity-0 scale-95"
-        @keydown="handleKeydown($event)"
-        x-ref="menu"
-        class="absolute {{ $alignmentClasses }} {{ $widthClass }} mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+        x-transition
+        @click.outside="close()"
+        @click="closeOnItemClick($event)"
+        @keydown.down.prevent="focusNext()"
+        @keydown.up.prevent="focusPrevious()"
         role="menu"
-        aria-orientation="vertical"
+        {{ $attributes->except(['align', 'class'])->merge(['class' => $classes]) }}
     >
-        <div class="py-1">
-            {{ $slot }}
-        </div>
+        {{ $slot }}
     </div>
 </div>

@@ -3,10 +3,6 @@
 if (! function_exists('theme')) {
     /**
      * Retrieve a theme value from config.
-     *
-     * @param  string|null  $key
-     * @param  mixed  $default
-     * @return mixed
      */
     function theme(?string $key = null, mixed $default = null): mixed
     {
@@ -18,53 +14,9 @@ if (! function_exists('theme')) {
     }
 }
 
-if (! function_exists('halo_classes')) {
-    /**
-     * Generate component classes based on variant, size, and extra classes.
-     *
-     * @param  string  $component
-     * @param  string|null  $variant
-     * @param  string|null  $size
-     * @param  string  $extra
-     * @return string
-     */
-    function halo_classes(string $component, ?string $variant = null, ?string $size = null, string $extra = ''): string
-    {
-        $classes = [];
-
-        // Get variant classes
-        if ($variant) {
-            $variantClass = config("halo.variants.{$component}.{$variant}");
-            if ($variantClass) {
-                $classes[] = $variantClass;
-            }
-        }
-
-        // Get size classes
-        if ($size) {
-            $sizeClass = config("halo.sizes.{$component}.{$size}");
-            if ($sizeClass) {
-                $classes[] = $sizeClass;
-            }
-        }
-
-        // Add extra classes
-        if ($extra) {
-            $classes[] = $extra;
-        }
-
-        return implode(' ', array_filter($classes));
-    }
-}
-
 if (! function_exists('halo_default')) {
     /**
      * Get default config value for a component property.
-     *
-     * @param  string  $component
-     * @param  string  $property
-     * @param  mixed  $default
-     * @return mixed
      */
     function halo_default(string $component, string $property, mixed $default = null): mixed
     {
@@ -74,34 +26,85 @@ if (! function_exists('halo_default')) {
 
 if (! function_exists('halo_merge_classes')) {
     /**
-     * Merge default and custom classes intelligently.
-     *
-     * @param  string  $default
-     * @param  string|null  $custom
-     * @return string
+     * Merge class strings, keeping only the last occurrence of any utility
+     * within a tracked family (bg-, text-, border-, rounded-, p{x,y,t,r,b,l}-,
+     * w-, h-, gap-) so a caller-supplied class reliably overrides a
+     * component's own default for that family. Everything else passes
+     * through unchanged, in order.
      */
-    function halo_merge_classes(string $default, ?string $custom = null): string
+    function halo_merge_classes(?string ...$classGroups): string
     {
-        if (! $custom) {
-            return $default;
+        $family = '/^(bg|text|border|rounded|p[xytrbl]?|w|h|gap)-/';
+
+        // Tailwind overloads several prefixes for unrelated axes that must
+        // never be deduped against each other: border-{color} vs
+        // border-{side/width} (border-b, border-2, ...), rounded-{radius}
+        // vs rounded-{corner} (rounded-t, rounded-tl, ...), and text-{color}
+        // vs text-{size}/text-{align} (text-sm, text-lg, text-center, ...).
+        // Only the color/radius axis should be deduped against a caller's
+        // override; the others must always pass through untouched — this is
+        // what keeps, say, a button's variant text color from being
+        // silently dropped by its own size class.
+        $excluded = '/^(border|rounded)-([trblxy]|tl|tr|bl|br|\d+)$|^text-(xs|sm|base|lg|\d*xl|left|center|right|justify)$/';
+
+        $tracked = [];
+        $passthrough = [];
+
+        foreach ($classGroups as $group) {
+            if (! $group) {
+                continue;
+            }
+
+            foreach (preg_split('/\s+/', trim($group)) as $class) {
+                if ($class === '') {
+                    continue;
+                }
+
+                if (preg_match($family, $class, $matches) && ! preg_match($excluded, $class)) {
+                    $tracked[$matches[1]][] = $class;
+                } else {
+                    $passthrough[] = $class;
+                }
+            }
         }
 
-        // Simple merge for now - can be enhanced with class conflict resolution
-        return trim("{$default} {$custom}");
+        $resolved = [];
+        foreach ($tracked as $classes) {
+            $resolved[] = end($classes);
+        }
+
+        return implode(' ', array_merge($resolved, $passthrough));
     }
 }
 
-if (! function_exists('halo_alpine_data')) {
+if (! function_exists('halo_variants')) {
     /**
-     * Generate Alpine.js x-data attribute value.
+     * Resolve a component's classes from a small CVA-style recipe.
      *
-     * @param  string  $component
-     * @param  array  $data
-     * @return string
+     * $config shape:
+     * [
+     *     'base' => 'inline-flex items-center ...',
+     *     'variants' => [
+     *         'variant' => ['primary' => '...', 'secondary' => '...'],
+     *         'size' => ['sm' => '...', 'md' => '...'],
+     *     ],
+     *     'defaults' => ['variant' => 'primary', 'size' => 'md'],
+     * ]
      */
-    function halo_alpine_data(string $component, array $data = []): string
+    function halo_variants(array $config, array $props = [], ?string $class = null): string
     {
-        $dataJson = json_encode($data);
-        return "window.HaloUI.{$component}({$dataJson})";
+        $classes = [$config['base'] ?? ''];
+
+        foreach ($config['variants'] ?? [] as $key => $map) {
+            $selected = $props[$key] ?? $config['defaults'][$key] ?? null;
+
+            if ($selected !== null && isset($map[$selected])) {
+                $classes[] = $map[$selected];
+            }
+        }
+
+        $classes[] = $class;
+
+        return halo_merge_classes(...$classes);
     }
 }

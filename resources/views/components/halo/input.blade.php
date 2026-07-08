@@ -1,61 +1,48 @@
 @props([
-    'type' => 'text',
     'size' => halo_default('input', 'size', 'md'),
-    'error' => null,
-    'label' => null,
-    'hint' => null,
     'icon' => null,
     'iconPosition' => 'left',
+    'invalid' => false,
     'disabled' => false,
+    'id' => null,
 ])
 
 @php
-$baseClasses = 'block w-full border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed';
+$inputId = $id ?? $attributes->get('name') ?? uniqid('halo-input-');
 
-$sizeClasses = halo_classes('input', null, $size);
-
-$errorClasses = $error ? 'border-red-300 text-red-900 focus:ring-red-500' : 'border-slate-300 text-slate-900';
-
-$iconPadding = $icon ? ($iconPosition === 'left' ? 'pl-10' : 'pr-10') : '';
-
-$radiusClass = theme('radius.md', 'rounded-md');
+$classes = halo_variants([
+    'base' => 'block w-full rounded-halo border bg-halo-background text-halo-foreground placeholder:text-halo-foreground/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-ring disabled:opacity-50 disabled:cursor-not-allowed',
+    'variants' => [
+        'size' => [
+            'sm' => 'px-3 py-1.5 text-sm',
+            'md' => 'px-4 py-2 text-base',
+            'lg' => 'px-5 py-3 text-lg',
+        ],
+    ],
+    'defaults' => ['size' => 'md'],
+], compact('size'));
 
 $classes = halo_merge_classes(
-    "{$baseClasses} {$sizeClasses} {$errorClasses} {$iconPadding} {$radiusClass}",
-    $attributes->get('class')
+    $classes,
+    $invalid ? 'border-halo-danger focus-visible:ring-halo-danger' : 'border-halo-border',
+    $icon ? ($iconPosition === 'left' ? 'pl-10' : 'pr-10') : null,
+    $attributes->get('class'),
 );
 @endphp
 
-<div class="w-full">
-    @if($label)
-        <label class="block text-sm font-medium text-slate-700 mb-1">
-            {{ $label }}
-        </label>
+<div class="relative">
+    @if($icon && $iconPosition === 'left')
+        <x-halo::icon :name="$icon" size="sm" class="absolute left-3 top-1/2 -translate-y-1/2 text-halo-foreground/50" />
     @endif
 
-    <div class="relative">
-        @if($icon && $iconPosition === 'left')
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <x-dynamic-component :component="'icon-' . config('halo.icons.set', 'halo')" :name="$icon" class="w-5 h-5 text-slate-400" />
-            </div>
-        @endif
+    <input
+        id="{{ $inputId }}"
+        @if($disabled) disabled @endif
+        @if($invalid) aria-invalid="true" @endif
+        {{ $attributes->except(['size', 'icon', 'iconPosition', 'invalid', 'disabled', 'id', 'class'])->merge(['class' => $classes]) }}
+    />
 
-        <input
-            type="{{ $type }}"
-            {{ $attributes->merge(['class' => $classes]) }}
-            @if($disabled) disabled @endif
-        />
-
-        @if($icon && $iconPosition === 'right')
-            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <x-dynamic-component :component="'icon-' . config('halo.icons.set', 'halo')" :name="$icon" class="w-5 h-5 text-slate-400" />
-            </div>
-        @endif
-    </div>
-
-    @if($error)
-        <p class="mt-1 text-sm text-red-600">{{ $error }}</p>
-    @elseif($hint)
-        <p class="mt-1 text-sm text-slate-500">{{ $hint }}</p>
+    @if($icon && $iconPosition === 'right')
+        <x-halo::icon :name="$icon" size="sm" class="absolute right-3 top-1/2 -translate-y-1/2 text-halo-foreground/50" />
     @endif
 </div>

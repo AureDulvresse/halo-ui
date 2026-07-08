@@ -1,0 +1,100 @@
+/*
+ * HaloUI themes.
+ *
+ * Each theme is a full set of --halo-* values scoped to a [data-theme]
+ * attribute on <html> (or any ancestor). "halo" is the default and lives on
+ * :root so it applies even before JS sets the attribute. Switch themes by
+ * setting data-theme, e.g. <html data-theme="eclipse">, or via
+ * HaloUI's theme store (see resources/js/init.js).
+ */
+
+:root,
+[data-theme='halo'] {
+    --halo-primary: #2563eb; /* blue-600 */
+    --halo-primary-foreground: #ffffff;
+    --halo-secondary: #e2e8f0; /* slate-200 */
+    --halo-secondary-foreground: #0f172a;
+    --halo-success: #16a34a; /* green-600 */
+    --halo-success-foreground: #ffffff;
+    --halo-danger: #dc2626; /* red-600 */
+    --halo-danger-foreground: #ffffff;
+    --halo-warning: #d97706; /* amber-600 */
+    --halo-warning-foreground: #ffffff;
+    --halo-info: #0284c7; /* sky-600 */
+    --halo-info-foreground: #ffffff;
+
+    --halo-background: #ffffff;
+    --halo-foreground: #0f172a;
+    --halo-border: #e2e8f0;
+    --halo-ring: #2563eb;
+
+    --halo-radius: 0.5rem;
+}
+
+/* Aurora — light, vivid violet/teal accent */
+[data-theme='aurora'] {
+    --halo-primary: #7c3aed; /* violet-600 */
+    --halo-primary-foreground: #ffffff;
+    --halo-secondary: #ccfbf1; /* teal-100 */
+    --halo-secondary-foreground: #134e4a;
+    --halo-success: #0d9488; /* teal-600 */
+    --halo-success-foreground: #ffffff;
+    --halo-danger: #e11d48; /* rose-600 */
+    --halo-danger-foreground: #ffffff;
+    --halo-warning: #d97706;
+    --halo-warning-foreground: #ffffff;
+    --halo-info: #0891b2; /* cyan-600 */
+    --halo-info-foreground: #ffffff;
+
+    --halo-background: #ffffff;
+    --halo-foreground: #1e1b4b;
+    --halo-border: #e0e7ff;
+    --halo-ring: #7c3aed;
+
+    --halo-radius: 0.75rem;
+}
+
+/* Eclipse — dark */
+[data-theme='eclipse'] {
+    --halo-primary: #3b82f6; /* blue-500 */
+    --halo-primary-foreground: #ffffff;
+    --halo-secondary: #334155; /* slate-700 */
+    --halo-secondary-foreground: #f1f5f9;
+    --halo-success: #22c55e;
+    --halo-success-foreground: #ffffff;
+    --halo-danger: #ef4444;
+    --halo-danger-foreground: #ffffff;
+    --halo-warning: #f59e0b;
+    --halo-warning-foreground: #0f172a;
+    --halo-info: #38bdf8;
+    --halo-info-foreground: #0f172a;
+
+    --halo-background: #0f172a;
+    --halo-foreground: #f1f5f9;
+    --halo-border: #334155;
+    --halo-ring: #3b82f6;
+
+    --halo-radius: 0.5rem;
+}
+
+@theme {
+    --color-halo-primary: var(--halo-primary);
+    --color-halo-primary-foreground: var(--halo-primary-foreground);
+    --color-halo-secondary: var(--halo-secondary);
+    --color-halo-secondary-foreground: var(--halo-secondary-foreground);
+    --color-halo-success: var(--halo-success);
+    --color-halo-success-foreground: var(--halo-success-foreground);
+    --color-halo-danger: var(--halo-danger);
+    --color-halo-danger-foreground: var(--halo-danger-foreground);
+    --color-halo-warning: var(--halo-warning);
+    --color-halo-warning-foreground: var(--halo-warning-foreground);
+    --color-halo-info: var(--halo-info);
+    --color-halo-info-foreground: var(--halo-info-foreground);
+
+    --color-halo-background: var(--halo-background);
+    --color-halo-foreground: var(--halo-foreground);
+    --color-halo-border: var(--halo-border);
+    --color-halo-ring: var(--halo-ring);
+
+    --radius-halo: var(--halo-radius);
+}

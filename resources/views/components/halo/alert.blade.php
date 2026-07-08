@@ -1,59 +1,52 @@
 @props([
     'variant' => halo_default('alert', 'variant', 'info'),
-    'dismissible' => halo_default('alert', 'dismissible', false),
+    'dismissible' => false,
     'icon' => null,
 ])
 
 @php
-$baseClasses = 'flex items-start gap-3 p-4 border';
-$variantClasses = halo_classes('alert', $variant);
-$radiusClass = theme('radius.md', 'rounded-md');
-
-$iconMap = [
+$icons = [
     'info' => 'information-circle',
     'success' => 'check-circle',
     'warning' => 'exclamation-triangle',
     'danger' => 'exclamation-circle',
 ];
 
-$defaultIcon = $icon ?? ($iconMap[$variant] ?? 'information-circle');
+$resolvedIcon = $icon ?? ($icons[$variant] ?? null);
 
-$classes = halo_merge_classes(
-    "{$baseClasses} {$variantClasses} {$radiusClass}",
-    $attributes->get('class')
-);
+$classes = halo_variants([
+    'base' => 'flex items-start gap-3 rounded-halo border px-4 py-3 text-sm',
+    'variants' => [
+        'variant' => [
+            'info' => 'bg-halo-info/10 text-halo-info border-halo-info/20',
+            'success' => 'bg-halo-success/10 text-halo-success border-halo-success/20',
+            'warning' => 'bg-halo-warning/10 text-halo-warning border-halo-warning/20',
+            'danger' => 'bg-halo-danger/10 text-halo-danger border-halo-danger/20',
+        ],
+    ],
+    'defaults' => ['variant' => 'info'],
+], compact('variant'), $attributes->get('class'));
 @endphp
 
 <div
-    {{ $attributes->merge(['class' => $classes]) }}
     role="alert"
-    @if($dismissible)
-        x-data="{ show: true }"
-        x-show="show"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0"
-    @endif
+    @if($dismissible) x-data="{ show: true }" x-show="show" @endif
+    {{ $attributes->except(['variant', 'dismissible', 'icon', 'class'])->merge(['class' => $classes]) }}
 >
-    <!-- Icon -->
-    <div class="flex-shrink-0">
-        <x-dynamic-component :component="'icon-' . config('halo.icons.set', 'halo')" :name="$defaultIcon" class="w-5 h-5" />
-    </div>
+    @if($resolvedIcon)
+        <x-halo::icon :name="$resolvedIcon" size="sm" class="mt-0.5 shrink-0" />
+    @endif
 
-    <!-- Content -->
-    <div class="flex-1 text-sm">
-        {{ $slot }}
-    </div>
+    <div class="flex-1">{{ $slot }}</div>
 
-    <!-- Dismiss Button -->
     @if($dismissible)
         <button
             type="button"
             @click="show = false"
-            class="flex-shrink-0 ml-auto -mr-1 -mt-1 p-1 rounded-md hover:bg-black/5 transition-colors"
+            class="shrink-0 text-current/60 hover:text-current"
             aria-label="Dismiss"
         >
-            <x-dynamic-component :component="'icon-' . config('halo.icons.set', 'halo')" name="x" class="w-4 h-4" />
+            <x-halo::icon name="x" size="sm" />
         </button>
     @endif
 </div>

@@ -1,53 +1,53 @@
 @props([
-    'size' => halo_default('modal', 'size', 'md'),
-    'backdrop' => halo_default('modal', 'backdrop', 'blur'),
-    'closeable' => true,
-    'open' => false,
+    'name',
+    'size' => 'md',
 ])
 
 @php
-$sizeClass = config("halo.sizes.modal.{$size}", 'max-w-lg');
-$backdropClass = $backdrop === 'blur' ? 'backdrop-blur-sm' : '';
+$sizes = [
+    'sm' => 'max-w-sm',
+    'md' => 'max-w-lg',
+    'lg' => 'max-w-2xl',
+    'xl' => 'max-w-4xl',
+];
+
+$classes = halo_merge_classes(
+    'relative w-full rounded-halo border border-halo-border bg-halo-background text-halo-foreground shadow-lg',
+    $sizes[$size] ?? $sizes['md'],
+    $attributes->get('class'),
+);
 @endphp
 
 <div
-    x-data="window.HaloUI.modal({ open: {{ $open ? 'true' : 'false' }} })"
+    x-data="haloModal('{{ $name }}')"
     x-show="open"
     x-cloak
-    @keydown.escape.window="handleEscape($event)"
-    class="fixed inset-0 z-50 overflow-y-auto"
-    role="dialog"
-    aria-modal="true"
+    @keydown.escape.window="close()"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4"
+    style="display: none;"
 >
-    <!-- Backdrop -->
-    <div
-        x-show="open"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0"
-        @click="@if($closeable) hide() @endif"
-        class="fixed inset-0 bg-slate-900/50 {{ $backdropClass }}"
-    ></div>
+    <div class="absolute inset-0 bg-halo-foreground/50" @click="close()" aria-hidden="true"></div>
 
-    <!-- Modal Content -->
-    <div class="flex min-h-full items-center justify-center p-4">
-        <div
-            x-show="open"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 scale-95"
-            x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100 scale-100"
-            x-transition:leave-end="opacity-0 scale-95"
-            x-ref="modal"
-            tabindex="-1"
-            class="relative w-full {{ $sizeClass }} bg-white rounded-lg shadow-xl"
-            @click.stop
+    <div
+        x-ref="panel"
+        x-show="open"
+        x-transition
+        @click.outside="close()"
+        @keydown.tab="trapFocus($event)"
+        role="dialog"
+        aria-modal="true"
+        tabindex="-1"
+        {{ $attributes->except(['name', 'size', 'class'])->merge(['class' => $classes]) }}
+    >
+        <button
+            type="button"
+            @click="close()"
+            class="absolute right-4 top-4 text-halo-foreground/50 hover:text-halo-foreground"
+            aria-label="Close"
         >
-            {{ $slot }}
-        </div>
+            <x-halo::icon name="x" size="sm" />
+        </button>
+
+        {{ $slot }}
     </div>
 </div>

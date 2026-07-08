@@ -1,77 +1,52 @@
 <?php
 
-it('renders a button component', function () {
+it('renders a button with the slot content', function () {
     $html = renderComponent('button', ['slot' => 'Click me']);
 
-    expect($html)->toContain('button');
-    expect($html)->toContain('Click me');
+    expect($html)->toContain('<button')
+        ->and($html)->toContain('Click me');
 });
 
-it('applies variant classes correctly', function () {
-    $html = renderComponent('button', [
-        'variant' => 'primary',
-        'slot' => 'Primary Button'
-    ]);
+it('applies the default variant and size classes', function () {
+    $html = renderComponent('button', ['slot' => 'Save']);
 
-    expect($html)->toContain('bg-blue-600');
-    expect($html)->toContain('Primary Button');
+    expect($html)
+        ->toHaveClass('bg-halo-primary')
+        ->toHaveClass('text-halo-primary-foreground')
+        ->toHaveClass('px-4 py-2');
 });
 
-it('applies size classes correctly', function () {
-    $html = renderComponent('button', [
-        'size' => 'lg',
-        'slot' => 'Large Button'
-    ]);
+it('applies size classes', function () {
+    $html = renderComponent('button', ['size' => 'lg', 'slot' => 'Big']);
 
-    expect($html)->toContain('px-6');
-    expect($html)->toContain('py-3');
+    expect($html)->toHaveClass('px-6 py-3');
 });
 
-it('renders with icon', function () {
-    $html = renderComponent('button', [
-        'icon' => 'check',
-        'slot' => 'With Icon'
-    ]);
+it('is disabled and marked busy while loading', function () {
+    $html = renderComponent('button', ['loading' => true, 'slot' => 'Loading']);
 
-    expect($html)->toContain('With Icon');
-    // Icon rendering depends on Blade Icons setup
-});
-
-it('renders in loading state', function () {
-    $html = renderComponent('button', [
-        'loading' => true,
-        'slot' => 'Loading'
-    ]);
-
-    expect($html)->toContain('disabled');
-    expect($html)->toContain('animate-spin');
+    expect($html)
+        ->toContainAttribute('disabled')
+        ->toContainAttribute('aria-busy', 'true')
+        ->toContain('animate-spin');
 });
 
 it('can be disabled', function () {
-    $html = renderComponent('button', [
-        'disabled' => true,
-        'slot' => 'Disabled'
-    ]);
+    $html = renderComponent('button', ['disabled' => true, 'slot' => 'Disabled']);
 
-    expect($html)->toContain('disabled');
-    expect($html)->toContain('opacity-50');
+    expect($html)->toContainAttribute('disabled');
 });
 
-it('accepts custom classes', function () {
-    $view = view('halo::components.halo.button', [
-        'attributes' => new \Illuminate\View\ComponentAttributeBag(['class' => 'custom-class'])
-    ]);
+it('renders an icon without crashing', function () {
+    $html = renderComponent('button', ['icon' => 'check', 'slot' => 'With Icon']);
 
-    $html = (string) $view;
-
-    expect($html)->toContain('custom-class');
+    expect($html)
+        ->toContain('With Icon')
+        ->and($html)->toContain('<svg');
 });
 
-it('has correct button type', function () {
-    $html = renderComponent('button', [
-        'type' => 'submit',
-        'slot' => 'Submit'
-    ]);
+it('has the correct button type', function () {
+    $html = renderComponent('button', ['type' => 'submit', 'slot' => 'Submit']);
 
-    expect($html)->toContain('type="submit"');
+    expect($html)->toContainAttribute('type', 'submit');
 });

@@ -1,3 +1,7 @@
-<div {{ $attributes->merge(['class' => 'p-6']) }}>
+@php
+$classes = halo_merge_classes('px-6 py-4', $attributes->get('class'));
+@endphp
+
+<div {{ $attributes->except(['class'])->merge(['class' => $classes]) }}>
     {{ $slot }}
 </div>

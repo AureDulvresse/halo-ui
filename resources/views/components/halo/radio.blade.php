@@ -1,31 +1,29 @@
 @props([
-    'label' => null,
+    'id' => null,
     'disabled' => false,
-    'error' => false,
 ])
 
 @php
-    $stateClasses = $error 
-        ? 'border-red-300 text-red-600 focus:ring-red-500' 
-        : 'border-gray-300 text-blue-600 focus:ring-blue-500';
+$radioId = $id ?? uniqid('halo-radio-');
+
+$dotClasses = halo_merge_classes(
+    'w-4 h-4 rounded-full border-halo-border accent-halo-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-ring disabled:opacity-50 disabled:cursor-not-allowed',
+    $attributes->get('class'),
+);
 @endphp
 
-<div class="flex items-start">
-    <div class="flex items-center h-5">
-        <input 
-            type="radio"
-            {{ $disabled ? 'disabled' : '' }}
-            {{ $attributes->merge(['class' => "w-4 h-4 transition-colors {$stateClasses} focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"]) }}
-        />
-    </div>
-    @if($label)
-        <div class="ml-3 text-sm">
-            <label class="font-medium text-gray-700 {{ $disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' }}">
-                {{ $label }}
-            </label>
-            @if($slot->isNotEmpty())
-                <p class="text-gray-500">{{ $slot }}</p>
-            @endif
-        </div>
+<label
+    for="{{ $radioId }}"
+    class="inline-flex items-center gap-2 {{ $disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' }}"
+>
+    <input
+        type="radio"
+        id="{{ $radioId }}"
+        @if($disabled) disabled @endif
+        {{ $attributes->except(['id', 'disabled', 'class'])->merge(['class' => $dotClasses]) }}
+    />
+
+    @if(trim((string) $slot) !== '')
+        <span class="text-sm text-halo-foreground">{{ $slot }}</span>
     @endif
-</div>
+</label>

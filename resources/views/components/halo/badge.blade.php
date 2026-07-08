@@ -1,50 +1,21 @@
 @props([
-    'variant' => 'primary',
-    'size' => 'md',
-    'icon' => null,
-    'dot' => false,
-    'removable' => false,
+    'variant' => halo_default('badge', 'variant', 'secondary'),
 ])
 
 @php
-$baseClasses = 'inline-flex items-center gap-1.5 font-medium border';
-
-$variantClasses = halo_classes('badge', $variant);
-
-$sizeClasses = match($size) {
-    'sm' => 'px-2 py-0.5 text-xs',
-    'md' => 'px-2.5 py-0.5 text-sm',
-    'lg' => 'px-3 py-1 text-base',
-    default => 'px-2.5 py-0.5 text-sm',
-};
-
-$radiusClass = theme('radius.md', 'rounded-md');
-
-$classes = halo_merge_classes(
-    "{$baseClasses} {$variantClasses} {$sizeClasses} {$radiusClass}",
-    $attributes->get('class')
-);
+$classes = halo_variants([
+    'base' => 'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium border',
+    'variants' => [
+        'variant' => [
+            'primary' => 'bg-halo-primary/10 text-halo-primary border-halo-primary/20',
+            'secondary' => 'bg-halo-secondary text-halo-secondary-foreground border-transparent',
+            'success' => 'bg-halo-success/10 text-halo-success border-halo-success/20',
+            'danger' => 'bg-halo-danger/10 text-halo-danger border-halo-danger/20',
+            'warning' => 'bg-halo-warning/10 text-halo-warning border-halo-warning/20',
+        ],
+    ],
+    'defaults' => ['variant' => 'secondary'],
+], compact('variant'), $attributes->get('class'));
 @endphp
 
-<span {{ $attributes->merge(['class' => $classes]) }}>
-    @if($dot)
-        <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-    @endif
-
-    @if($icon)
-        <x-dynamic-component :component="'icon-' . config('halo.icons.set', 'halo')" :name="$icon" class="w-3 h-3" />
-    @endif
-
-    {{ $slot }}
-
-    @if($removable)
-        <button
-            type="button"
-            {{ $attributes->only(['wire:click', '@click', 'onclick']) }}
-            class="hover:bg-black/10 rounded-sm p-0.5 transition-colors"
-            aria-label="Remove"
-        >
-            <x-dynamic-component :component="'icon-' . config('halo.icons.set', 'halo')" name="x" class="w-3 h-3" />
-        </button>
-    @endif
-</span>
+<span {{ $attributes->except(['class'])->merge(['class' => $classes]) }}>{{ $slot }}</span>

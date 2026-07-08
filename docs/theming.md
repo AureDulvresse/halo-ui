@@ -1,150 +1,62 @@
-# Guide de Thème HaloUI v3
+# Theming
 
-## Configuration de Base
+HaloUI's theme is a set of CSS custom properties, not a config array. This is deliberate: an earlier version had a config-driven "active theme" that never actually changed anything rendered, because the component classes were hardcoded Tailwind utilities that never read the config. v4 fixes that by making the tokens the single source of truth that both the config *and* the components point to.
 
-Le système de thème de HaloUI v3 utilise une combinaison de variables CSS et de classes Tailwind pour offrir une personnalisation maximale.
+## How it works
 
-## Variables CSS
+`resources/css/theme.css` defines `--halo-*` variables scoped to a `[data-theme="..."]` attribute, and maps them into real Tailwind v4 utility classes via `@theme`:
 
 ```css
-/* Exemple de personnalisation des variables CSS */
-:root {
-  --halo-scroll-track: #f1f5f9;
-  --halo-scroll-thumb: #cbd5e1;
-  --halo-scroll-thumb-hover: #94a3b8;
+[data-theme='aurora'] {
+    --halo-primary: #7c3aed;
+    --halo-primary-foreground: #fff;
+    /* ... */
+}
+
+@theme {
+    --color-halo-primary: var(--halo-primary);
+    /* generates .bg-halo-primary, .text-halo-primary, .border-halo-primary, ... */
 }
 ```
 
-## Configuration du Thème
+Every component's Blade file uses `bg-halo-primary`, `text-halo-foreground`, `rounded-halo`, etc. — never a literal color. Switching `data-theme` on any ancestor element (typically `<html>`) recolors every component under it, live, with no rebuild.
 
-```php
-// config/halo.php
-return [
-    'theme' => [
-        'colors' => [
-            // Couleurs de base
-            'primary' => 'blue-600',
-            'secondary' => 'gray-600',
-            // ...
+## Built-in themes
 
-            // Gradients
-            'gradients' => [
-                'primary' => 'from-blue-600 to-indigo-600',
-                'success' => 'from-green-500 to-emerald-600',
-            ],
+| Theme | `data-theme` | |
+|---|---|---|
+| **Halo** | `halo` (default) | Blue, standard radius |
+| **Aurora** | `aurora` | Violet/teal, larger radius |
+| **Eclipse** | `eclipse` | Dark background |
 
-            // Effets verre
-            'glass' => [
-                'light' => 'bg-white/80 backdrop-blur-sm',
-                'dark' => 'bg-gray-900/80 backdrop-blur-sm',
-            ]
-        ],
+## Switching themes
 
-        // Ombres avec effets glow
-        'shadows' => [
-            'glow' => [
-                'primary' => '0 0 15px rgb(37 99 235 / 0.5)',
-                'success' => '0 0 15px rgb(34 197 94 / 0.5)',
-            ]
-        ],
-
-        // Animations
-        'animations' => [
-            'duration' => [
-                'fast' => '150ms',
-                'normal' => '300ms',
-                'slow' => '500ms',
-            ],
-            'timing' => [
-                'ease-in-out' => 'cubic-bezier(0.4, 0, 0.2, 1)',
-            ]
-        ],
-    ]
-];
-```
-
-## Utilisation
-
-### Gradients
+Server-side, for the correct theme on first paint:
 
 ```blade
-<x-halo-button gradient variant="primary">
-    Bouton avec Gradient
-</x-halo-button>
+<html data-theme="{{ config('halo.theme.default') }}">
 ```
 
-### Glassmorphisme
+Client-side, via the Alpine store registered in `resources/js/init.js`:
 
 ```blade
-<x-halo-card glass>
-    Carte avec effet verre
-</x-halo-card>
+<button @click="$store.haloTheme.set('eclipse')">Eclipse</button>
 ```
 
-### Effets Glow
+The store persists the choice to `localStorage` and re-applies it on load.
+
+## Adding a theme
+
+1. Add a `[data-theme="yourname"]` block to `resources/css/theme.css` with the same variable names as the existing themes (`--halo-primary`, `--halo-primary-foreground`, `--halo-secondary`, `--halo-secondary-foreground`, `--halo-success`, `--halo-success-foreground`, `--halo-danger`, `--halo-danger-foreground`, `--halo-warning`, `--halo-warning-foreground`, `--halo-info`, `--halo-info-foreground`, `--halo-background`, `--halo-foreground`, `--halo-border`, `--halo-ring`, `--halo-radius`).
+2. Add `'yourname'` to `halo.theme.available` in `config/halo.php`.
+3. Add `'yourname'` to the `THEMES` array in `resources/js/init.js`.
+
+## Component-level overrides
+
+Pass `class` to any component — it's merged with, and takes priority over, the component's own classes for the same utility family:
 
 ```blade
-<x-halo-button glow variant="primary">
-    Bouton avec effet glow
-</x-halo-button>
+<x-halo::button class="rounded-none">Square corners</x-halo::button>
 ```
 
-### Animations
-
-```blade
-<x-halo-modal animate="fade">
-    Modal avec animation de fade
-</x-halo-modal>
-```
-
-### Combinaison d'Effets
-
-```blade
-<x-halo-button
-    variant="primary"
-    gradient
-    glow
-    class="animate-bounce"
->
-    Bouton avec multiples effets
-</x-halo-button>
-```
-
-## Personnalisation Avancée
-
-### Extension des Thèmes
-
-```php
-// Dans votre fichier de configuration
-'theme' => [
-    'colors' => [
-        'custom' => [
-            'brand' => '#FF5733',
-            'accent' => '#33FF57',
-        ]
-    ],
-    'gradients' => [
-        'custom' => 'from-[#FF5733] to-[#33FF57]'
-    ]
-]
-```
-
-### Mode Sombre
-
-Le mode sombre est automatiquement détecté et peut être contrôlé via JavaScript :
-
-```js
-// Basculer le mode sombre
-HaloUI.theme.toggle();
-
-// Définir un mode spécifique
-HaloUI.theme.set("dark");
-```
-
-### Classes Utilitaires
-
-- `.halo-glass` : Appliquer l'effet verre
-- `.halo-gradient-primary` : Appliquer un gradient prédéfini
-- `.animate-fade-in` : Animation de fondu
-- `.animate-slide-up` : Animation de glissement vers le haut
-- `.animate-scale-in` : Animation d'échelle
+This is handled by `halo_merge_classes()` in `src/helpers.php`, which tracks the utility families components actually vary (`bg-`, `text-`, `border-`, `rounded-`, `p{x,y,t,r,b,l}-`, `w-`, `h-`, `gap-`) and keeps the last occurrence of each.

@@ -3,41 +3,47 @@
     'size' => halo_default('button', 'size', 'md'),
     'type' => 'button',
     'disabled' => false,
+    'loading' => false,
     'icon' => null,
     'iconPosition' => 'left',
-    'loading' => false,
 ])
 
 @php
-$baseClasses = 'inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border';
-
-$variantClasses = halo_classes('button', $variant, $size);
-
-$radiusClass = theme('radius.md', 'rounded-md');
-
-$classes = halo_merge_classes(
-    "{$baseClasses} {$variantClasses} {$radiusClass}",
-    $attributes->get('class')
-);
+$classes = halo_variants([
+    'base' => 'inline-flex items-center justify-center gap-2 font-medium rounded-halo border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+    'variants' => [
+        'variant' => [
+            'primary' => 'bg-halo-primary text-halo-primary-foreground border-transparent hover:opacity-90',
+            'secondary' => 'bg-halo-secondary text-halo-secondary-foreground border-transparent hover:opacity-90',
+            'outline' => 'bg-transparent text-halo-foreground border-halo-border hover:bg-halo-secondary',
+            'ghost' => 'bg-transparent text-halo-foreground border-transparent hover:bg-halo-secondary',
+            'danger' => 'bg-halo-danger text-halo-danger-foreground border-transparent hover:opacity-90',
+        ],
+        'size' => [
+            'sm' => 'px-3 py-1.5 text-sm',
+            'md' => 'px-4 py-2 text-base',
+            'lg' => 'px-6 py-3 text-lg',
+        ],
+    ],
+    'defaults' => ['variant' => 'primary', 'size' => 'md'],
+], compact('variant', 'size'), $attributes->get('class'));
 @endphp
 
 <button
     type="{{ $type }}"
-    {{ $attributes->merge(['class' => $classes]) }}
+    aria-busy="{{ $loading ? 'true' : 'false' }}"
     @if($disabled || $loading) disabled @endif
+    {{ $attributes->except(['variant', 'size', 'type', 'disabled', 'loading', 'icon', 'iconPosition', 'class'])->merge(['class' => $classes]) }}
 >
     @if($loading)
-        <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
+        <x-halo::spinner size="sm" aria-hidden="true" />
     @elseif($icon && $iconPosition === 'left')
-        <x-dynamic-component :component="'icon-' . config('halo.icons.set', 'halo')" :name="$icon" class="w-4 h-4" />
+        <x-halo::icon :name="$icon" size="sm" />
     @endif
 
     {{ $slot }}
 
-    @if($icon && $iconPosition === 'right' && !$loading)
-        <x-dynamic-component :component="'icon-' . config('halo.icons.set', 'halo')" :name="$icon" class="w-4 h-4" />
+    @if($icon && $iconPosition === 'right' && ! $loading)
+        <x-halo::icon :name="$icon" size="sm" />
     @endif
 </button>

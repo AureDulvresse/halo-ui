@@ -14,55 +14,44 @@ class InstallCommand extends Command
      * @var string
      */
     protected $signature = 'halo:install
-                            {components?* : Specific components to install}
-                            {--all : Install all components}
+                            {components?* : Specific components to eject}
+                            {--all : Eject all components}
                             {--force : Overwrite existing files}
-                            {--no-assets : Skip asset publishing}
-                            {--only : Install only specified components without dependencies}';
+                            {--no-assets : Skip asset publishing}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Install HaloUI components into your Laravel application';
+    protected $description = 'Eject an editable copy of HaloUI components into your Laravel application';
 
     /**
      * Filesystem instance.
      *
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var Filesystem
      */
     protected $files;
 
-    /**
-     * Create a new command instance.
-     */
     public function __construct(Filesystem $files)
     {
         parent::__construct();
         $this->files = $files;
     }
 
-    /**
-     * Execute the console command.
-     */
     public function handle(): int
     {
         $this->displayBanner();
         $this->newLine();
 
-        // Publish config
         $this->publishConfig();
 
-        // Publish assets unless skipped
         if (! $this->option('no-assets')) {
             $this->publishAssets();
         }
 
-        // Publish icons
         $this->publishIcons();
 
-        // Install components
         if ($this->option('all')) {
             $this->installAllComponents();
         } elseif ($components = $this->argument('components')) {
@@ -72,20 +61,12 @@ class InstallCommand extends Command
         }
 
         $this->newLine();
-        $this->info('HaloUI installed successfully!');
-        $this->newLine();
-        $this->line('Next steps:');
-        $this->line('  1. Include Alpine.js in your layout: <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>');
-        $this->line('  2. Include HaloUI init script: <script src="{{ asset(\'vendor/halo-ui/js/init.js\') }}"></script>');
-        $this->line('  3. Ensure Tailwind is configured to scan HaloUI components');
+        $this->info('HaloUI components ejected into resources/views/components/halo — customize freely.');
         $this->newLine();
 
         return self::SUCCESS;
     }
 
-    /**
-     * Publish configuration file.
-     */
     protected function publishConfig(): void
     {
         $this->call('vendor:publish', [
@@ -96,9 +77,6 @@ class InstallCommand extends Command
         $this->info('✓ Config published');
     }
 
-    /**
-     * Publish assets (JS + CSS).
-     */
     protected function publishAssets(): void
     {
         $this->call('vendor:publish', [
@@ -109,9 +87,6 @@ class InstallCommand extends Command
         $this->info('✓ Assets published');
     }
 
-    /**
-     * Publish icon set.
-     */
     protected function publishIcons(): void
     {
         $this->call('vendor:publish', [
@@ -123,65 +98,58 @@ class InstallCommand extends Command
     }
 
     /**
-     * Install all components.
+     * Eject every component from the package's own component tree into the
+     * consuming app. Source and destination are always different absolute
+     * paths (vendor/ vs the app's resources/), so this never overwrites itself.
      */
     protected function installAllComponents(): void
     {
-        $stubsPath = __DIR__.'/../../stubs/components';
+        $sourcePath = __DIR__.'/../../resources/views/components/halo';
         $targetPath = resource_path('views/components/halo');
 
-        if (! $this->files->isDirectory($stubsPath)) {
-            $this->error('Stubs directory not found');
+        if (! $this->files->isDirectory($sourcePath)) {
+            $this->error('Component source directory not found');
+
             return;
         }
 
-        $this->files->ensureDirectoryExists($targetPath);
+        $this->copyDirectory($sourcePath, $targetPath);
 
-        $this->copyDirectory($stubsPath, $targetPath);
-
-        $this->info('✓ All components installed');
+        $this->info('✓ All components ejected');
     }
 
-    /**
-     * Install specific components.
-     */
     protected function installSpecificComponents(array $components): void
     {
-        $stubsPath = __DIR__.'/../../stubs/components';
+        $sourcePath = __DIR__.'/../../resources/views/components/halo';
         $targetPath = resource_path('views/components/halo');
 
         $this->files->ensureDirectoryExists($targetPath);
 
         foreach ($components as $component) {
             $componentName = Str::kebab($component);
-            $sourcePath = "{$stubsPath}/{$componentName}";
-            $sourceFile = "{$stubsPath}/{$componentName}.blade.php";
-            $destinationPath = "{$targetPath}/{$componentName}";
+            $sourceDir = "{$sourcePath}/{$componentName}";
+            $sourceFile = "{$sourcePath}/{$componentName}.blade.php";
+            $destinationDir = "{$targetPath}/{$componentName}";
             $destinationFile = "{$targetPath}/{$componentName}.blade.php";
 
-            // Check if component is modular (directory) or simple (single file)
-            if ($this->files->isDirectory($sourcePath)) {
-                $this->copyDirectory($sourcePath, $destinationPath);
-                $this->info("✓ {$componentName} (modular) installed");
+            if ($this->files->isDirectory($sourceDir)) {
+                $this->copyDirectory($sourceDir, $destinationDir);
+                $this->info("✓ {$componentName} (modular) ejected");
             } elseif ($this->files->exists($sourceFile)) {
                 $this->files->copy($sourceFile, $destinationFile);
-                $this->info("✓ {$componentName} installed");
+                $this->info("✓ {$componentName} ejected");
             } else {
                 $this->warn("✗ {$componentName} not found");
             }
         }
     }
 
-    /**
-     * Copy directory recursively.
-     */
     protected function copyDirectory(string $source, string $destination): void
     {
         $this->files->ensureDirectoryExists($destination);
 
         foreach ($this->files->allFiles($source) as $file) {
-            $relativePath = $file->getRelativePathname();
-            $targetFile = $destination.'/'.$relativePath;
+            $targetFile = $destination.'/'.$file->getRelativePathname();
 
             $this->files->ensureDirectoryExists(dirname($targetFile));
 
@@ -195,10 +163,9 @@ class InstallCommand extends Command
     {
         $this->newLine();
         $this->line('╔═══════════════════════════════════════════╗');
-        $this->line('║   HaloUI v3.0 Component Installer         ║');
-        $this->line('║   Modern UI Components for Laravel        ║');
+        $this->line('║   HaloUI v4 Component Installer            ║');
+        $this->line('║   Modern UI Components for Laravel         ║');
         $this->line('╚═══════════════════════════════════════════╝');
         $this->newLine();
     }
-
 }

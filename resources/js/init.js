@@ -1,294 +1,261 @@
 /**
- * HaloUI v3.0.0 — Alpine.js Initialization
+ * HaloUI — Alpine.js registration.
  *
- * Provides composable Alpine.js factories for interactive components.
- * All components use clean, predictable patterns for state management.
+ * Interactive components register a named Alpine.data() factory here and
+ * are invoked in Blade as x-data="haloX()". Global, cross-component state
+ * (like the active theme, or the toast queue) is registered as an
+ * Alpine.store() instead.
  */
 
-window.HaloUI = {
-    /**
-     * Modal component
-     */
-    modal(config = {}) {
-        return {
-            open: config.open || false,
+import Alpine from 'alpinejs';
 
-            show() {
-                this.open = true;
-                document.body.style.overflow = 'hidden';
-                this.$nextTick(() => this.$refs.modal?.focus());
-            },
+const THEMES = ['halo', 'aurora', 'eclipse'];
+const STORAGE_KEY = 'halo-theme';
 
-            hide() {
-                this.open = false;
-                document.body.style.overflow = '';
-            },
+// Elements a focus trap / roving tabindex should consider stoppable points.
+const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-            toggle() {
-                this.open ? this.hide() : this.show();
-            },
+document.addEventListener('alpine:init', () => {
+    Alpine.store('haloTheme', {
+        available: THEMES,
+        current: localStorage.getItem(STORAGE_KEY) || 'halo',
 
-            handleEscape(e) {
-                if (e.key === 'Escape' && this.open) {
-                    this.hide();
-                }
+        set(name) {
+            if (!THEMES.includes(name)) {
+                return;
             }
-        };
-    },
 
-    /**
-     * Dropdown component
-     */
-    dropdown(config = {}) {
-        return {
-            open: false,
+            this.current = name;
+            document.documentElement.setAttribute('data-theme', name);
+            localStorage.setItem(STORAGE_KEY, name);
+        },
 
-            toggle() {
-                this.open = !this.open;
-            },
+        init() {
+            document.documentElement.setAttribute('data-theme', this.current);
+        },
+    });
 
-            close() {
-                this.open = false;
-            },
+    // Modal: identified by name, opened/closed from anywhere via
+    // $dispatch('open-modal', 'name') / $dispatch('close-modal', 'name').
+    // A missing detail on close-modal closes every open modal. Traps focus
+    // inside the panel while open and returns it to whatever triggered the
+    // modal on close, per the WAI-ARIA dialog pattern.
+    Alpine.data('haloModal', (name) => ({
+        name,
+        open: false,
+        previouslyFocused: null,
 
-            handleClickOutside(e) {
-                if (!this.$el.contains(e.target)) {
+        init() {
+            window.addEventListener('open-modal', (event) => {
+                if (event.detail === this.name) {
+                    this.show();
+                }
+            });
+
+            window.addEventListener('close-modal', (event) => {
+                if (!event.detail || event.detail === this.name) {
                     this.close();
                 }
-            },
+            });
+        },
 
-            handleKeydown(e) {
-                if (e.key === 'Escape') {
-                    this.close();
-                }
+        show() {
+            this.previouslyFocused = document.activeElement;
+            this.open = true;
+            this.$nextTick(() => this.focusFirst());
+        },
 
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    const items = this.$refs.menu?.querySelectorAll('[role="menuitem"]');
-                    items?.[0]?.focus();
-                }
+        close() {
+            if (!this.open) {
+                return;
             }
-        };
-    },
 
-    /**
-     * Tabs component
-     */
-    tabs(config = {}) {
-        return {
-            activeTab: config.defaultTab || 0,
+            this.open = false;
 
-            setActive(index) {
-                this.activeTab = index;
-            },
-
-            isActive(index) {
-                return this.activeTab === index;
+            if (this.previouslyFocused instanceof HTMLElement) {
+                this.previouslyFocused.focus();
             }
-        };
-    },
 
-    /**
-     * Accordion component
-     */
-    accordion(config = {}) {
-        return {
-            openItems: config.multiple ? [] : null,
+            this.previouslyFocused = null;
+        },
 
-            toggle(index) {
-                if (config.multiple) {
-                    const pos = this.openItems.indexOf(index);
-                    if (pos > -1) {
-                        this.openItems.splice(pos, 1);
-                    } else {
-                        this.openItems.push(index);
-                    }
-                } else {
-                    this.openItems = this.openItems === index ? null : index;
-                }
-            },
+        focusFirst() {
+            const panel = this.$refs.panel;
 
-            isOpen(index) {
-                return config.multiple
-                    ? this.openItems.includes(index)
-                    : this.openItems === index;
+            if (!panel) {
+                return;
             }
-        };
-    },
 
-    /**
-     * Toast/Notification system
-     */
-    toast() {
-        return {
-            notifications: [],
+            const focusable = panel.querySelectorAll(FOCUSABLE_SELECTOR);
 
-            add(notification) {
-                const id = Date.now();
-                this.notifications.push({ id, ...notification });
+            (focusable[0] ?? panel).focus();
+        },
 
-                if (notification.timeout !== false) {
-                    setTimeout(() => this.remove(id), notification.timeout || 5000);
-                }
+        trapFocus(event) {
+            const panel = this.$refs.panel;
 
-                return id;
-            },
-
-            remove(id) {
-                this.notifications = this.notifications.filter(n => n.id !== id);
-            },
-
-            clear() {
-                this.notifications = [];
+            if (!panel) {
+                return;
             }
-        };
-    },
 
-    /**
-     * Tooltip component
-     */
-    tooltip(config = {}) {
-        return {
-            show: false,
+            const focusable = Array.from(panel.querySelectorAll(FOCUSABLE_SELECTOR));
 
-            mouseEnter() {
-                this.show = true;
-            },
-
-            mouseLeave() {
-                this.show = false;
+            if (!focusable.length) {
+                return;
             }
-        };
-    },
 
-    /**
-     * Popover component
-     */
-    popover(config = {}) {
-        return {
-            open: false,
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
 
-            toggle() {
-                this.open = !this.open;
-            },
-
-            close() {
-                this.open = false;
-            },
-
-            handleClickOutside(e) {
-                if (!this.$el.contains(e.target)) {
-                    this.close();
-                }
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
             }
-        };
-    },
+        },
+    }));
 
-    /**
-     * Drawer/Sidebar component
-     */
-    drawer(config = {}) {
-        return {
-            open: config.open || false,
+    // Dropdown: local open/closed state, closed on escape, on clicking
+    // outside, or on selecting an item. Arrow keys move focus between
+    // items (WAI-ARIA menu pattern); focus returns to the trigger on close.
+    Alpine.data('haloDropdown', () => ({
+        open: false,
+        previouslyFocused: null,
 
-            show() {
-                this.open = true;
-                document.body.style.overflow = 'hidden';
-            },
+        toggle() {
+            this.open ? this.close() : this.openMenu();
+        },
 
-            hide() {
-                this.open = false;
-                document.body.style.overflow = '';
-            },
+        openMenu() {
+            this.previouslyFocused = document.activeElement;
+            this.open = true;
+            this.$nextTick(() => this.focusFirstItem());
+        },
 
-            toggle() {
-                this.open ? this.hide() : this.show();
+        close() {
+            if (!this.open) {
+                return;
             }
-        };
-    },
 
-    /**
-     * Command palette / Combobox
-     */
-    command(config = {}) {
-        return {
-            open: false,
-            query: '',
-            selected: 0,
+            this.open = false;
 
-            show() {
-                this.open = true;
-                this.query = '';
-                this.selected = 0;
-                this.$nextTick(() => this.$refs.input?.focus());
-            },
-
-            hide() {
-                this.open = false;
-                this.query = '';
-            },
-
-            handleKeydown(e) {
-                if (e.key === 'Escape') {
-                    this.hide();
-                }
-
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    this.selected++;
-                }
-
-                if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    this.selected = Math.max(0, this.selected - 1);
-                }
-
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    this.selectItem();
-                }
-            },
-
-            selectItem() {
-                // Emit custom event or call callback
-                this.$dispatch('item-selected', { index: this.selected });
+            if (this.previouslyFocused instanceof HTMLElement) {
+                this.previouslyFocused.focus();
             }
-        };
-    },
 
-    /**
-     * File upload component
-     */
-    fileUpload(config = {}) {
-        return {
-            files: [],
+            this.previouslyFocused = null;
+        },
 
-            handleFiles(e) {
-                const newFiles = Array.from(e.target.files || e.dataTransfer.files);
-
-                if (config.multiple) {
-                    this.files = [...this.files, ...newFiles];
-                } else {
-                    this.files = newFiles.slice(0, 1);
-                }
-
-                this.$dispatch('files-changed', this.files);
-            },
-
-            removeFile(index) {
-                this.files.splice(index, 1);
-                this.$dispatch('files-changed', this.files);
-            },
-
-            clear() {
-                this.files = [];
-                this.$dispatch('files-changed', this.files);
+        closeOnItemClick(event) {
+            if (event.target.closest('[role="menuitem"]')) {
+                this.close();
             }
-        };
-    }
-};
+        },
 
-// Export for module systems
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = window.HaloUI;
+        menuItems() {
+            return Array.from(this.$refs.panel?.querySelectorAll('[role="menuitem"]') ?? []);
+        },
+
+        focusFirstItem() {
+            this.menuItems()[0]?.focus();
+        },
+
+        focusNext() {
+            const items = this.menuItems();
+
+            if (!items.length) {
+                return;
+            }
+
+            const index = items.indexOf(document.activeElement);
+
+            (items[index + 1] ?? items[0]).focus();
+        },
+
+        focusPrevious() {
+            const items = this.menuItems();
+
+            if (!items.length) {
+                return;
+            }
+
+            const index = items.indexOf(document.activeElement);
+
+            (items[index - 1] ?? items[items.length - 1]).focus();
+        },
+    }));
+
+    // Tabs: single active tab tracked by an arbitrary string key. Arrow keys
+    // roam between triggers (WAI-ARIA tabs pattern).
+    Alpine.data('haloTabs', (active = null) => ({
+        active,
+
+        select(tab) {
+            this.active = tab;
+        },
+
+        isActive(tab) {
+            return this.active === tab;
+        },
+
+        focusSibling(event, direction) {
+            const tabs = Array.from(this.$root.querySelectorAll('[role="tab"]'));
+            const index = tabs.indexOf(event.target);
+            const next = tabs[index + direction] ?? (direction > 0 ? tabs[0] : tabs[tabs.length - 1]);
+
+            next.focus();
+            next.click();
+        },
+    }));
+
+    // Accordion: tracks which item(s) are open by an arbitrary string key.
+    // `multiple` allows more than one open at once; otherwise opening an
+    // item closes any other.
+    Alpine.data('haloAccordion', (multiple = false) => ({
+        multiple,
+        openItems: [],
+
+        isOpen(name) {
+            return this.openItems.includes(name);
+        },
+
+        toggle(name) {
+            if (this.isOpen(name)) {
+                this.openItems = this.openItems.filter((item) => item !== name);
+
+                return;
+            }
+
+            this.openItems = this.multiple ? [...this.openItems, name] : [name];
+        },
+    }));
+
+    // Toast: a single global queue rendered by <x-halo::toast/>. Push from
+    // anywhere with $store.haloToast.push('Saved!', 'success').
+    Alpine.store('haloToast', {
+        items: [],
+
+        push(message, variant = 'info', duration = 4000) {
+            const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+            this.items.push({ id, message, variant });
+
+            if (duration) {
+                setTimeout(() => this.remove(id), duration);
+            }
+
+            return id;
+        },
+
+        remove(id) {
+            this.items = this.items.filter((item) => item.id !== id);
+        },
+    });
+});
+
+if (typeof window !== 'undefined' && !window.Alpine) {
+    window.Alpine = Alpine;
+    Alpine.start();
 }

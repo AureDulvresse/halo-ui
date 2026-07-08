@@ -1,3 +1,7 @@
-<div {{ $attributes->merge(['class' => 'px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white']) }}>
+@php
+$classes = halo_merge_classes('px-6 py-4 border-b border-halo-border font-semibold', $attributes->get('class'));
+@endphp
+
+<div {{ $attributes->except(['class'])->merge(['class' => $classes]) }}>
     {{ $slot }}
 </div>

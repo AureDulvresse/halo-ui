@@ -1,41 +1,29 @@
 @props([
-    'label' => null,
-    'description' => null,
-    'error' => null,
+    'id' => null,
     'disabled' => false,
 ])
 
 @php
-$baseClasses = 'w-4 h-4 border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
-$radiusClass = theme('radius.sm', 'rounded');
+$checkboxId = $id ?? $attributes->get('name') ?? uniqid('halo-checkbox-');
 
-$classes = halo_merge_classes("{$baseClasses} {$radiusClass}", $attributes->get('class'));
+$boxClasses = halo_merge_classes(
+    'w-4 h-4 rounded-[0.25rem] border-halo-border accent-halo-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-ring disabled:opacity-50 disabled:cursor-not-allowed',
+    $attributes->get('class'),
+);
 @endphp
 
-<div class="flex items-start gap-2">
-    <div class="flex items-center h-5">
-        <input
-            type="checkbox"
-            {{ $attributes->merge(['class' => $classes]) }}
-            @if($disabled) disabled @endif
-        />
-    </div>
+<label
+    for="{{ $checkboxId }}"
+    class="inline-flex items-center gap-2 {{ $disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' }}"
+>
+    <input
+        type="checkbox"
+        id="{{ $checkboxId }}"
+        @if($disabled) disabled @endif
+        {{ $attributes->except(['id', 'disabled', 'class'])->merge(['class' => $boxClasses]) }}
+    />
 
-    @if($label || $description)
-        <div class="flex-1">
-            @if($label)
-                <label class="text-sm font-medium text-slate-900 cursor-pointer">
-                    {{ $label }}
-                </label>
-            @endif
-
-            @if($description)
-                <p class="text-sm text-slate-500">{{ $description }}</p>
-            @endif
-
-            @if($error)
-                <p class="mt-1 text-sm text-red-600">{{ $error }}</p>
-            @endif
-        </div>
+    @if(trim((string) $slot) !== '')
+        <span class="text-sm text-halo-foreground">{{ $slot }}</span>
     @endif
-</div>
+</label>

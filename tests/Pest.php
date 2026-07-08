@@ -1,64 +1,35 @@
 <?php
 
 use Halo\UI\Tests\TestCase;
+use Illuminate\View\ComponentAttributeBag;
 
 uses(TestCase::class)->in(__DIR__);
 
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| Custom expectations for testing Blade components.
-|
-*/
-
-expect()->extend('toRenderComponent', function (string $component) {
-    $view = $this->value;
-
-    expect($view)->toBeInstanceOf(\Illuminate\View\View::class);
-    expect((string) $view)->toContain($component);
-
-    return $this;
-});
-
 expect()->extend('toHaveClass', function (string $class) {
-    $html = (string) $this->value;
-
-    expect($html)->toContain("class=\"");
-    expect($html)->toContain($class);
+    expect((string) $this->value)->toContain($class);
 
     return $this;
 });
 
-expect()->extend('toHaveAttribute', function (string $attribute, ?string $value = null) {
+expect()->extend('toContainAttribute', function (string $attribute, ?string $value = null) {
     $html = (string) $this->value;
 
-    if ($value === null) {
-        expect($html)->toContain($attribute);
-    } else {
-        expect($html)->toContain("{$attribute}=\"{$value}\"");
-    }
+    expect($html)->toContain($value === null ? $attribute : "{$attribute}=\"{$value}\"");
 
     return $this;
 });
-
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| Test helper functions.
-|
-*/
 
 function renderComponent(string $component, array $props = []): string
 {
-    $propsString = collect($props)
-        ->map(fn($value, $key) => is_bool($value)
-            ? ($value ? ":{$key}=\"true\"" : ":{$key}=\"false\"")
-            : ":{$key}=\"'{$value}'\"")
-        ->join(' ');
+    // Mirror what real component rendering (<x-halo::x>...</x-halo::x>) does
+    // automatically: build $attributes from every passed prop before the
+    // view's @props() strips out the declared ones, and always provide
+    // $slot (even empty) since components reference it unconditionally.
+    $slot = $props['slot'] ?? '';
+    unset($props['slot']);
 
-    return (string) view()->make('halo::components.halo.' . $component, $props);
+    $props['attributes'] = new ComponentAttributeBag($props);
+    $props['slot'] = $slot;
+
+    return (string) view("halo::components.halo.{$component}", $props)->render();
 }

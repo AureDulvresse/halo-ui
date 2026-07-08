@@ -1,31 +1,33 @@
 @props([
-    'name' => '',
-    'title' => '',
+    'title',
+    'name' => null,
 ])
 
-<div class="border-b border-gray-200 last:border-b-0">
+@php
+$itemName = $name ?? uniqid('halo-accordion-item-');
+@endphp
+
+<div {{ $attributes->except(['title', 'name', 'class'])->merge(['class' => halo_merge_classes($attributes->get('class'))]) }}>
     <button
         type="button"
-        @click="toggle('{{ $name }}')"
-        class="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-gray-50 transition-colors"
+        @click="toggle('{{ $itemName }}')"
+        :aria-expanded="isOpen('{{ $itemName }}') ? 'true' : 'false'"
+        class="flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium text-halo-foreground hover:bg-halo-secondary"
     >
-        <span class="font-medium text-gray-900">{{ $title }}</span>
-        <svg
-            class="h-5 w-5 text-gray-500 transition-transform duration-200"
-            :class="isOpen('{{ $name }}') ? 'rotate-180' : ''"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-        >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-        </svg>
+        {{ $title }}
+        {{-- ::style (double colon) is required here, not :style — <x-halo::icon> is a
+             real Blade component tag, so a single-colon attribute is evaluated as PHP
+             immediately (and "isOpen" isn't a PHP function). The double colon tells
+             Blade to emit it as a literal attribute instead, so Alpine binds it client-side. --}}
+        <x-halo::icon
+            name="chevron-down"
+            size="sm"
+            class="shrink-0 transition-transform"
+            ::style="isOpen('{{ $itemName }}') ? 'transform: rotate(180deg)' : ''"
+        />
     </button>
-    
-    <div
-        x-show="isOpen('{{ $name }}')"
-        x-collapse
-        class="px-4 py-3 text-sm text-gray-600"
-    >
+
+    <div x-show="isOpen('{{ $itemName }}')" x-transition class="px-4 py-3 text-sm text-halo-foreground/80">
         {{ $slot }}
     </div>
 </div>

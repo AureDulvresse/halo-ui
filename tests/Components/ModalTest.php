@@ -1,65 +1,48 @@
 <?php
 
-it('renders a modal component', function () {
-    $html = renderComponent('modal.index', ['slot' => 'Modal content']);
+it('renders a dialog wired to its name via haloModal', function () {
+    $html = renderComponent('modal.index', ['name' => 'user-modal', 'slot' => 'Content']);
 
-    expect($html)->toContain('role="dialog"');
-    expect($html)->toContain('aria-modal="true"');
-    expect($html)->toContain('Modal content');
+    expect($html)
+        ->toContain("haloModal('user-modal')")
+        ->toContainAttribute('role', 'dialog')
+        ->toContainAttribute('aria-modal', 'true')
+        ->toContain('Content');
 });
 
-it('applies size classes correctly', function () {
-    $html = renderComponent('modal.index', [
-        'size' => 'lg',
-        'slot' => 'Large modal'
-    ]);
-
-    expect($html)->toContain('max-w-2xl');
+it('is hidden until opened', function () {
+    expect(renderComponent('modal.index', ['name' => 'x']))->toContain('style="display: none;"');
 });
 
-it('includes Alpine.js data', function () {
-    $html = renderComponent('modal.index', ['slot' => 'Content']);
-
-    expect($html)->toContain('x-data');
-    expect($html)->toContain('window.HaloUI.modal');
+it('applies the correct size class', function () {
+    expect(renderComponent('modal.index', ['name' => 'x', 'size' => 'lg']))->toHaveClass('max-w-2xl');
 });
 
-it('has backdrop with blur by default', function () {
-    $html = renderComponent('modal.index', ['slot' => 'Content']);
-
-    expect($html)->toContain('backdrop-blur');
+it('renders a close button', function () {
+    expect(renderComponent('modal.index', ['name' => 'x']))->toContain('aria-label="Close"');
 });
 
-it('can disable backdrop blur', function () {
-    $html = renderComponent('modal.index', [
-        'backdrop' => 'solid',
-        'slot' => 'Content'
-    ]);
+it('traps focus within the panel on tab and is itself focusable as a fallback', function () {
+    $html = renderComponent('modal.index', ['name' => 'x']);
 
-    expect($html)->not->toContain('backdrop-blur');
+    expect($html)
+        ->toContain('trapFocus($event)')
+        ->toContainAttribute('tabindex', '-1');
 });
 
-it('has close button when closeable', function () {
-    $headerHtml = renderComponent('modal.header', [
-        'closeable' => true,
-        'slot' => 'Modal Title'
-    ]);
-
-    expect($headerHtml)->toContain('hide()');
-    expect($headerHtml)->toContain('Close');
+it('renders a header with a bottom border and room for the close button', function () {
+    expect(renderComponent('modal.header', ['slot' => 'Title']))
+        ->toContain('Title')
+        ->toHaveClass('border-b')
+        ->toHaveClass('pr-12');
 });
 
-it('renders modal body with padding', function () {
-    $bodyHtml = renderComponent('modal.body', ['slot' => 'Body content']);
-
-    expect($bodyHtml)->toContain('p-6');
-    expect($bodyHtml)->toContain('Body content');
+it('renders a body', function () {
+    expect(renderComponent('modal.body', ['slot' => 'Body content']))->toContain('Body content');
 });
 
-it('renders modal footer with actions', function () {
-    $footerHtml = renderComponent('modal.footer', ['slot' => 'Footer actions']);
-
-    expect($footerHtml)->toContain('flex');
-    expect($footerHtml)->toContain('justify-end');
-    expect($footerHtml)->toContain('Footer actions');
+it('renders a footer with actions aligned to the end', function () {
+    expect(renderComponent('modal.footer', ['slot' => 'Actions']))
+        ->toContain('Actions')
+        ->toHaveClass('justify-end');
 });

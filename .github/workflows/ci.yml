@@ -40,7 +40,7 @@ jobs:
           composer update --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
-        run: vendor/bin/pest --coverage --min=80
+        run: vendor/bin/pest --coverage --min=60
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

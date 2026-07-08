@@ -7,15 +7,47 @@ This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/
 
 ## [Unreleased]
 
-### Planned for v3.1.0
+## [4.0.0] — v4 rebuild (in progress)
 
-- Form validation component with real-time feedback
-- Notification center with history
-- Mobile-first responsive improvements
-- RTL (Right-to-Left) language support
-- i18n integration for multi-language apps
-- WebSocket integration for real-time components
-- Advanced chart types (Gantt, Funnel, Radar)
+### Why
+
+v3 accumulated real problems that this changelog previously didn't disclose: 71 PHP component classes with no logic that weren't even wired up as Blade components, two divergent copies of the component templates (`stubs/` vs `resources/views`), a theme system whose config was never actually read by any component, and a component (`icon-halo.blade.php`) that crashed the process with infinite recursion the moment any component passed an `icon` prop. v4 is a from-scratch rebuild rather than a patch, with one rule: nothing is documented here until it's real, tested, and themed correctly.
+
+### Added
+
+**20 components**, anonymous Blade components only (no PHP classes):
+
+- **Form**: Button, Input, Textarea, Label, Checkbox, Radio, Select
+- **Display**: Icon, Badge, Avatar, Spinner, Divider, Card (+ Header/Body/Footer)
+- **Feedback**: Alert
+- **Overlays**: Modal (+ Header/Body/Footer), Dropdown (+ Item), Toast
+- **Navigation**: Tabs (+ List/Trigger/Panel), Accordion (+ Item), Breadcrumb (+ Item)
+
+- Real runtime theming: `--halo-*` CSS custom properties scoped to `[data-theme]`, mapped into Tailwind v4 utilities via `@theme`. Three themes ship: **Halo** (default), **Aurora**, **Eclipse**. Switching is an attribute change, not a rebuild — a real fix for v3's theme config that never did anything.
+- `Alpine.data()`/`Alpine.store()` registry in `resources/js/init.js`: `haloTheme` (theme switching + persistence), `haloModal` (named, event-driven open/close, focus trap), `haloDropdown` (roving-focus menu), `haloTabs` (roving-focus tabs), `haloAccordion` (single- or multi-open), `haloToast` (global queue).
+- **Modal traps focus** while open (Tab/Shift+Tab cycle within the panel) and returns focus to whatever triggered it on close, per the WAI-ARIA dialog pattern — the gap flagged in `docs/modal.md` last session.
+- **Dropdown supports arrow-key navigation** between items (WAI-ARIA menu pattern), closes on selecting an item, and returns focus to its trigger on close — the gap flagged in `docs/dropdown.md` last session.
+- `halo_variants()` / `halo_merge_classes()` CVA-style helpers in `src/helpers.php`, replacing the old config-driven `halo_classes()`.
+- Components work immediately after `composer require` (via `Blade::anonymousComponentPath()`); `php artisan halo:install` is now an optional **eject** for full customization, not a required setup step.
+- 141 Pest tests, one render test file per component plus dedicated regression tests for the bugs below, including a data-driven check across all components for the class-duplication bug.
+
+### Fixed
+
+- **Infinite recursion crash on any icon**: the old icon resolver built its target component name from the icon *set* instead of the icon *name*, so it resolved back to itself and crashed with a stack overflow / OOM. `icon.blade.php` now resolves `<x-dynamic-component :component="'halo-' . $name">` — the icon's own name, never the set.
+- **Every component with a `class` prop rendered it twice**: each component reads `$attributes->get('class')` to fold a consumer's class into its own computed classes, then calls `$attributes->merge(['class' => $computed])` — but Laravel's `ComponentAttributeBag::merge()` appends whatever `class` is still sitting in the bag on top of that, so the consumer's class ended up in the output twice. Affected all 17 components. Fixed by excluding `class` from `$attributes` before every such `merge()` call.
+- **Every button rendered with an unstyled text color**: `halo_variants()` bucketed `text-{color}` (from a component's `variant`) and `text-{size}` (from its `size`) into the same dedup family, so `<x-halo::button>`'s own `text-halo-primary-foreground` was silently overwritten by its `text-base` — on every variant, every size, since Button always sets both. Caught while re-verifying the demo preview against the actual helper output rather than hand-authored markup. Fixed with the same exclusion mechanism as the border/rounded fix below, extended to `text-{size}` and `text-{align}`.
+- **`halo_merge_classes()` conflated unrelated Tailwind axes** more broadly: `border-b`/`border-t` (side/width) and `rounded-t`/`rounded-tl` (corner) were bucketed into the same dedup family as `border-{color}` and `rounded-{radius}`, so a component's own color/radius class could silently delete a consumer's side/corner class (caught via `Card`'s header/footer borders). Fixed with an explicit exclusion for the side/width/corner forms.
+- Blade Icons' component registration raced with this package's own icon set registration in some boot orders, silently dropping every `<x-halo-{icon}/>` component. Icons are now registered directly against the package's own SVG directory instead of relying on Blade Icons' shared, memoized manifest.
+
+### Changed
+
+- `stubs/` (the old, divergent publish-only template tree) is gone. `resources/views/components/halo/` is the only component source, both for runtime use and for `halo:install` to eject from.
+- CI coverage floor lowered from 80% to 60% to be realistic for this stage; will rise as coverage grows with the component count.
+
+### Removed
+
+- 71 unused PHP component classes in `src/Components/` — none contained real logic, and none were reachable (the service provider no longer registers a class-component namespace).
+- The v3 8-theme config (`default`, `glass`, `sunset`, `iron`, `ocean`, `forest`, `neon`, `neutral`) — its color config was never read by any component; replaced by the three real themes above.
 
 ---
 
