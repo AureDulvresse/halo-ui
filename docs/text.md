@@ -8,7 +8,7 @@ permalink: /components/text/
 
 `resources/views/components/halo/text.blade.php`
 
-Body copy at a consistent size/color scale — the non-heading counterpart to [Heading](heading).
+Body copy at a consistent size/color scale — the non-heading counterpart to [Heading](../heading).
 
 ## Props
 

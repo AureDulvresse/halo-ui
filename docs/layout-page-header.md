@@ -8,7 +8,7 @@ permalink: /layout-page-header/
 
 `resources/views/components/halo/layout/page-header.blade.php`
 
-A reusable page title + description + actions row — pairs well with [Breadcrumb](breadcrumb) above it. No JavaScript.
+A reusable page title + description + actions row — pairs well with [Breadcrumb](../components/breadcrumb) above it. No JavaScript.
 
 ## Props
 

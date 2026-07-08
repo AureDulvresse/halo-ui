@@ -8,7 +8,7 @@ permalink: /components/image-upload/
 
 `resources/views/components/halo/image-upload.blade.php`
 
-Like [File Upload](file-upload), but restricted to images (`accept="image/*"`) and rendering a thumbnail grid with live previews instead of a file-name list.
+Like [File Upload](../file-upload), but restricted to images (`accept="image/*"`) and rendering a thumbnail grid with live previews instead of a file-name list.
 
 ## Props
 

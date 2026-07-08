@@ -8,7 +8,7 @@ permalink: /components/popover/
 
 `resources/views/components/halo/popover.blade.php`
 
-An overlay panel for arbitrary rich content — forms, previews, secondary actions — triggered by a click. Structurally similar to [Dropdown](dropdown), but without `role="menu"`/arrow-key roving focus, since its content isn't a list of commands.
+An overlay panel for arbitrary rich content — forms, previews, secondary actions — triggered by a click. Structurally similar to [Dropdown](../dropdown), but without `role="menu"`/arrow-key roving focus, since its content isn't a list of commands.
 
 ## Props
 

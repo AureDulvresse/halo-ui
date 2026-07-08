@@ -8,7 +8,7 @@ permalink: /components/tooltip/
 
 `resources/views/components/halo/tooltip.blade.php`
 
-A short text hint shown on hover or keyboard focus of its trigger. For interactive content (forms, buttons, links inside the panel) use [Popover](popover) instead — a tooltip is announced text, not a focusable region.
+A short text hint shown on hover or keyboard focus of its trigger. For interactive content (forms, buttons, links inside the panel) use [Popover](../popover) instead — a tooltip is announced text, not a focusable region.
 
 ## Props
 
