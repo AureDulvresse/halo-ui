@@ -124,6 +124,61 @@
     --halo-radius: 0.5rem;
 }
 
+/* Luma — light, warm coral/pink accent, aggressively rounded corners — the
+   shadcn "rounded-full" aesthetic. Every component shares one --halo-radius
+   token (see @theme below), so it can't be tuned per component size. 1.75rem
+   is deliberately chosen, not 9999px: on small elements (button, badge,
+   input — all well under 3.5rem tall) it still exceeds half their height,
+   so the browser's corner-radius clamping renders them as true pills. On a
+   large surface like Card, an unclamped 9999px instead produced a
+   degenerate stadium/lens shape that sliced through the content — 1.75rem
+   keeps those generously rounded without the self-intersecting look. */
+[data-theme='luma'] {
+    --halo-primary: #fb3a5d;
+    --halo-primary-foreground: #ffffff;
+    --halo-secondary: #fdf1f0; /* soft warm off-white, not pure gray */
+    --halo-secondary-foreground: #4a1420;
+    --halo-success: #16a34a;
+    --halo-success-foreground: #ffffff;
+    --halo-danger: #dc2626;
+    --halo-danger-foreground: #ffffff;
+    --halo-warning: #d97706;
+    --halo-warning-foreground: #451a03;
+    --halo-info: #0284c7;
+    --halo-info-foreground: #ffffff;
+
+    --halo-background: #fffaf9;
+    --halo-foreground: #1f1315;
+    --halo-border: #f3d9de;
+    --halo-ring: #fb3a5d;
+
+    --halo-radius: 1.75rem;
+}
+
+/* Flint — light, monochrome slate accent, sharp square corners — the
+   deliberate opposite of Luma's soft rounded pill shape. */
+[data-theme='flint'] {
+    --halo-primary: #1e293b; /* slate-800 */
+    --halo-primary-foreground: #ffffff;
+    --halo-secondary: #f1f5f9; /* slate-100 */
+    --halo-secondary-foreground: #1e293b;
+    --halo-success: #16a34a;
+    --halo-success-foreground: #ffffff;
+    --halo-danger: #dc2626;
+    --halo-danger-foreground: #ffffff;
+    --halo-warning: #d97706;
+    --halo-warning-foreground: #451a03;
+    --halo-info: #0284c7;
+    --halo-info-foreground: #ffffff;
+
+    --halo-background: #ffffff;
+    --halo-foreground: #0f172a;
+    --halo-border: #cbd5e1; /* slate-300 — a bolder border for a crisper, more defined edge */
+    --halo-ring: #1e293b;
+
+    --halo-radius: 0px;
+}
+
 @theme {
     --color-halo-primary: var(--halo-primary);
     --color-halo-primary-foreground: var(--halo-primary-foreground);

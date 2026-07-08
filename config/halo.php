@@ -22,7 +22,7 @@ return [
 
     'theme' => [
         'default' => 'halo',
-        'available' => ['halo', 'aurora', 'eclipse', 'ember', 'nocturne'],
+        'available' => ['halo', 'aurora', 'eclipse', 'ember', 'nocturne', 'luma', 'flint'],
         'radius' => 'rounded-halo',
     ],
 

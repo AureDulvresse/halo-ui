@@ -36,6 +36,8 @@ Every component's Blade file uses `bg-halo-primary`, `text-halo-foreground`, `ro
 | **Eclipse** | `eclipse` | Dark background, blue accent |
 | **Ember** | `ember` | Light, warm orange accent, sharper corners (0.375rem) |
 | **Nocturne** | `nocturne` | Dark, near-black background, emerald accent — distinct from Eclipse's blue-tinted dark |
+| **Luma** | `luma` | Light, warm coral/pink accent, aggressively rounded corners (1.75rem) — reads as fully pill-shaped on buttons/badges/inputs, generously rounded on larger surfaces like Card |
+| **Flint** | `flint` | Light, monochrome slate accent, sharp square corners (`0px` radius) — the deliberate opposite of Luma |
 
 ## Switching themes
 

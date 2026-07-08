@@ -7,6 +7,20 @@ This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/
 
 ## [Unreleased]
 
+## [4.4.0] — 2026-07-08
+
+### Added
+
+- Two new themes: **Luma** (warm coral/pink accent, aggressively rounded corners) and **Flint** (monochrome slate accent, sharp square corners) — the deliberate opposite of each other.
+
+### Changed
+
+- **Select** is now a custom-styled trigger button + `role="listbox"` panel of `select.item` options (`resources/views/components/halo/select/{index,item}.blade.php`), instead of a native `<select>`. A browser's native option popup can't be restyled to match a themed, rounded field — under Luma's pill-shaped inputs it stayed a plain square system dropdown. A hidden input mirrors the selected value for form submission. **Breaking**: `<x-halo::select>` no longer accepts raw `<option>` tags in its slot — use `<x-halo::select.item value="...">` instead (or the unchanged `options` prop, which now renders `select.item` children internally).
+
+### Fixed
+
+- Luma's radius started at `9999px`, which renders as a clean pill on small elements (button, badge, input) but produced a degenerate stadium/lens shape on larger surfaces like Card, since every component shares one `--halo-radius` token. Lowered to `1.75rem`, which still exceeds half the height of every small interactive element (so they stay true pills after the browser's corner-radius clamping) while staying proportionate on larger containers.
+
 ## [4.3.0] — 2026-07-08
 
 ### Added
