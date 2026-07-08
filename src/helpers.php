@@ -1,130 +1,22 @@
 <?php
 
-if (!function_exists('halo_classes')) {
+if (! function_exists('theme')) {
     /**
-     * Generate component classes based on variant, size, and extra classes.
-     * Now supports gradient and glass morphism variants.
-     *
-     * @param  string  $component
-     * @param  string|null  $variant
-     * @param  string|null  $size
-     * @param  string  $extra
-     * @param  array  $options  Additional options like gradient, glass, glow
-     * @return string
+     * Retrieve a theme value from config.
      */
-    function halo_classes(string $component, ?string $variant = null, ?string $size = null, string $extra = '', array $options = []): string
+    function theme(?string $key = null, mixed $default = null): mixed
     {
-        $classes = [];
-        
-        // Get variant base classes
-        if ($variant) {
-            $variantClasses = config("halo.variants.{$component}.{$variant}");
-            if ($variantClasses) {
-                $classes[] = $variantClasses;
-            }
+        if ($key === null) {
+            return config('halo.theme');
         }
 
-        // Add gradient if requested
-        if (!empty($options['gradient'])) {
-            $gradientClasses = config("halo.theme.colors.gradients.{$variant}", '');
-            if ($gradientClasses) {
-                $classes[] = "bg-gradient-to-r {$gradientClasses}";
-            }
-        }
-
-        // Add glass effect if requested
-        if (!empty($options['glass'])) {
-            $glassClasses = config("halo.theme.colors.glass." . ($options['dark'] ? 'dark' : 'light'));
-            if ($glassClasses) {
-                $classes[] = $glassClasses;
-            }
-        }
-
-        // Add glow effect if requested
-        if (!empty($options['glow'])) {
-            $glowClasses = config("halo.theme.shadows.glow.{$variant}", '');
-            if ($glowClasses) {
-                $classes[] = $glowClasses;
-            }
-        }
-
-        // Get size classes
-        if ($size) {
-            $sizeClasses = config("halo.sizes.{$component}.{$size}");
-            if ($sizeClasses) {
-                $classes[] = $sizeClasses;
-            }
-        }
-
-        // Add animation classes if specified
-        if (!empty($options['animate'])) {
-            $classes[] = match ($options['animate']) {
-                'fade' => 'animate-fade-in',
-                'scale' => 'animate-scale-in',
-                'slide' => 'animate-slide-up',
-                default => ''
-            };
-        }
-
-        // Add extra classes
-        if ($extra) {
-            $classes[] = $extra;
-        }
-
-        return implode(' ', array_filter($classes));
-    }
-}
-
-if (!function_exists('halo_theme')) {
-    /**
-     * Get a theme configuration value.
-     *
-     * @param  string  $key
-     * @param  mixed  $default
-     * @return mixed
-     */
-    function halo_theme(string $key, mixed $default = null): mixed
-    {
         return config("halo.theme.{$key}", $default);
     }
 }
 
-if (!function_exists('halo_variant_classes')) {
+if (! function_exists('halo_default')) {
     /**
-     * Get variant classes for a specific component.
-     *
-     * @param  string  $component
-     * @param  string  $variant
-     * @return string
-     */
-    function halo_variant_classes(string $component, string $variant): string
-    {
-        return config("halo.variants.{$component}.{$variant}", '');
-    }
-}
-
-if (!function_exists('halo_size_classes')) {
-    /**
-     * Get size classes for a specific component.
-     *
-     * @param  string  $component
-     * @param  string  $size
-     * @return string
-     */
-    function halo_size_classes(string $component, string $size): string
-    {
-        return config("halo.sizes.{$component}.{$size}", '');
-    }
-}
-
-if (!function_exists('halo_default')) {
-    /**
-     * Get default configuration for a component property.
-     *
-     * @param  string  $component
-     * @param  string  $property
-     * @param  mixed  $default
-     * @return mixed
+     * Get default config value for a component property.
      */
     function halo_default(string $component, string $property, mixed $default = null): mixed
     {
@@ -132,15 +24,87 @@ if (!function_exists('halo_default')) {
     }
 }
 
-if (!function_exists('halo_merge_classes')) {
+if (! function_exists('halo_merge_classes')) {
     /**
-     * Merge multiple class strings intelligently.
-     *
-     * @param  string  ...$classes
-     * @return string
+     * Merge class strings, keeping only the last occurrence of any utility
+     * within a tracked family (bg-, text-, border-, rounded-, p{x,y,t,r,b,l}-,
+     * w-, h-, gap-) so a caller-supplied class reliably overrides a
+     * component's own default for that family. Everything else passes
+     * through unchanged, in order.
      */
-    function halo_merge_classes(string ...$classes): string
+    function halo_merge_classes(?string ...$classGroups): string
     {
-        return implode(' ', array_filter($classes));
+        $family = '/^(bg|text|border|rounded|p[xytrbl]?|w|h|gap)-/';
+
+        // Tailwind overloads several prefixes for unrelated axes that must
+        // never be deduped against each other: border-{color} vs
+        // border-{side/width} (border-b, border-2, ...), rounded-{radius}
+        // vs rounded-{corner} (rounded-t, rounded-tl, ...), and text-{color}
+        // vs text-{size}/text-{align} (text-sm, text-lg, text-center, ...).
+        // Only the color/radius axis should be deduped against a caller's
+        // override; the others must always pass through untouched — this is
+        // what keeps, say, a button's variant text color from being
+        // silently dropped by its own size class.
+        $excluded = '/^(border|rounded)-([trblxy]|tl|tr|bl|br|\d+)$|^text-(xs|sm|base|lg|\d*xl|left|center|right|justify)$/';
+
+        $tracked = [];
+        $passthrough = [];
+
+        foreach ($classGroups as $group) {
+            if (! $group) {
+                continue;
+            }
+
+            foreach (preg_split('/\s+/', trim($group)) as $class) {
+                if ($class === '') {
+                    continue;
+                }
+
+                if (preg_match($family, $class, $matches) && ! preg_match($excluded, $class)) {
+                    $tracked[$matches[1]][] = $class;
+                } else {
+                    $passthrough[] = $class;
+                }
+            }
+        }
+
+        $resolved = [];
+        foreach ($tracked as $classes) {
+            $resolved[] = end($classes);
+        }
+
+        return implode(' ', array_merge($resolved, $passthrough));
+    }
+}
+
+if (! function_exists('halo_variants')) {
+    /**
+     * Resolve a component's classes from a small CVA-style recipe.
+     *
+     * $config shape:
+     * [
+     *     'base' => 'inline-flex items-center ...',
+     *     'variants' => [
+     *         'variant' => ['primary' => '...', 'secondary' => '...'],
+     *         'size' => ['sm' => '...', 'md' => '...'],
+     *     ],
+     *     'defaults' => ['variant' => 'primary', 'size' => 'md'],
+     * ]
+     */
+    function halo_variants(array $config, array $props = [], ?string $class = null): string
+    {
+        $classes = [$config['base'] ?? ''];
+
+        foreach ($config['variants'] ?? [] as $key => $map) {
+            $selected = $props[$key] ?? $config['defaults'][$key] ?? null;
+
+            if ($selected !== null && isset($map[$selected])) {
+                $classes[] = $map[$selected];
+            }
+        }
+
+        $classes[] = $class;
+
+        return halo_merge_classes(...$classes);
     }
 }

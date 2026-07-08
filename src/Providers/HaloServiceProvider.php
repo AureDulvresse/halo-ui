@@ -2,40 +2,35 @@
 
 namespace Halo\UI\Providers;
 
-use Halo\UI\Commands\InstallCommand;
+use BladeUI\Icons\Components\Svg as SvgComponent;
+use BladeUI\Icons\Factory;
+use Halo\UI\Console\InstallCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use BladeUI\Icons\Factory as IconFactory;
 
 class HaloServiceProvider extends ServiceProvider
 {
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__.'/../../config/halo.php', 'halo');
+    }
+
     /**
      * Bootstrap any application services.
      */
     public function boot(): void
     {
         $this->registerCommands();
-        $this->registerComponents();
-        $this->registerPublishables();
-        $this->registerViews();
-        $this->registerDirectives();
+        $this->registerPublishing();
+        $this->registerBladeComponents();
         $this->registerBladeIcons();
     }
 
     /**
-     * Register any application services.
-     */
-    public function register(): void
-    {
-        // Merge package config located in package config/ folder
-        $this->mergeConfigFrom(
-            __DIR__ . '/../../config/halo.php',
-            'halo'
-        );
-    }
-
-    /**
-     * Register Artisan commands.
+     * Register artisan commands.
      */
     protected function registerCommands(): void
     {
@@ -47,106 +42,68 @@ class HaloServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register Blade components.
-     */
-    protected function registerComponents(): void
-    {
-        Blade::componentNamespace('Halo\\UI\\Components', 'halo');
-
-        // Register component aliases for convenience (short names like <x-halo-btn />)
-        $this->registerComponentAliases();
-    }
-
-    /**
-     * Register component aliases.
-     */
-    protected function registerComponentAliases(): void
-    {
-        $aliases = [
-            'btn' => 'button',
-            'txt' => 'input',
-            'sel' => 'select',
-        ];
-
-        foreach ($aliases as $alias => $component) {
-            // Register a simple alias such as <x-halo-btn /> that points to the class-based component
-            // Second argument must be a valid component tag name (no double-colon here).
-            Blade::component("Halo\\UI\\Components\\" . ucfirst($component), "halo-{$alias}");
-        }
-    }
-
-    /**
      * Register publishable resources.
      */
-    protected function registerPublishables(): void
+    protected function registerPublishing(): void
     {
         if ($this->app->runningInConsole()) {
-            // Config
             $this->publishes([
-                __DIR__ . '/../../config/halo.php' => config_path('halo.php'),
+                __DIR__.'/../../config/halo.php' => config_path('halo.php'),
             ], 'halo-config');
 
-            // Stubs
             $this->publishes([
-                __DIR__ . '/../../stubs/components' => resource_path('views/components/halo'),
-            ], 'halo-components');
+                __DIR__.'/../../resources/icons' => resource_path('icons'),
+            ], 'halo-icons');
 
-            // JavaScript & CSS
             $this->publishes([
-                __DIR__ . '/../../resources/js' => public_path('vendor/halo-ui/js'),
-                __DIR__ . '/../../resources/css' => public_path('vendor/halo-ui/css'),
+                __DIR__.'/../../public/js' => public_path('vendor/halo-ui/js'),
+                __DIR__.'/../../public/css' => public_path('vendor/halo-ui/css'),
             ], 'halo-assets');
 
-            // Templates
             $this->publishes([
-                __DIR__ . '/../../templates' => resource_path('views/halo-templates'),
-            ], 'halo-templates');
-
-            // Icons
-            $this->publishes([
-                __DIR__ . '/../../resources/icons' => public_path('vendor/halo-ui/icons'),
-            ], 'halo-icons');
+                __DIR__.'/../../config/halo.php' => config_path('halo.php'),
+                __DIR__.'/../../resources/icons' => resource_path('icons'),
+                __DIR__.'/../../public/js' => public_path('vendor/halo-ui/js'),
+                __DIR__.'/../../public/css' => public_path('vendor/halo-ui/css'),
+            ], 'halo');
         }
     }
 
     /**
-     * Register views.
+     * Register Blade components. Components work out of the box via this
+     * anonymous component path — running `halo:install` is only needed to
+     * eject an editable copy into the consuming app.
      */
-    protected function registerViews(): void
+    protected function registerBladeComponents(): void
     {
-        $this->loadViewsFrom(__DIR__ . '/../../stubs/components', 'halo');
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'halo');
+
+        Blade::anonymousComponentPath(__DIR__.'/../../resources/views/components/halo', 'halo');
     }
 
     /**
-     * Register custom Blade directives.
-     */
-    protected function registerDirectives(): void
-    {
-        // @haloIcon directive for easy icon usage
-        Blade::directive('haloIcon', function ($expression) {
-            // Render the anonymous/icon view with the provided name expression.
-            // Use View::make so we can render a view from the package namespace.
-            return "<?php echo \View::make('halo::icon', ['name' => {$expression}])->render(); ?>";
-        });
-
-        // @haloTheme directive to get theme colors
-        Blade::directive('haloTheme', function ($expression) {
-            // Return a color array or fallback to the raw expression. Use data_get for safety.
-            return "<?php echo data_get(config('halo.design.colors'), {$expression}, {$expression}); ?>";
-        });
-    }
-
-    /**
-     * Register Blade Icons set with Blade UI Icons factory.
+     * Register the Blade Icons set and its <x-halo-{icon}/> components.
+     *
+     * Components are registered directly here (rather than relying on
+     * BladeUI\Icons\Factory::registerComponents()) because that method reads
+     * through a shared, memoized manifest that can be primed with an empty
+     * result before this package gets a chance to add its icon set —
+     * whichever package's view factory resolves first wins the cache.
+     * Scanning our own icons directory sidesteps that shared cache entirely.
      */
     protected function registerBladeIcons(): void
     {
-        // Register icons when the icon factory is available. This allows packages like
-        // Blade UI Kit to collect SVG files placed in resources/icons.
-            $this->app->afterResolving(IconFactory::class, function (IconFactory $factory) {
-                $iconsPath = __DIR__ . '/../../resources/icons';
-                // Factory expects array of paths
-                $factory->add('halo', [$iconsPath]);
-            });
+        $this->callAfterResolving(Factory::class, function (Factory $factory) {
+            $path = __DIR__.'/../../resources/icons/halo';
+
+            $factory->add('halo', [
+                'path' => $path,
+                'prefix' => 'halo',
+            ]);
+
+            foreach (glob($path.'/*.svg') as $svg) {
+                Blade::component(SvgComponent::class, basename($svg, '.svg'), 'halo');
+            }
+        });
     }
 }

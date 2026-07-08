@@ -1,26 +1,35 @@
 <?php
 
-use Tests\TestCase;
+use Halo\UI\Tests\TestCase;
+use Illuminate\View\ComponentAttributeBag;
 
-uses(TestCase::class)->in('Feature', 'Unit');
+uses(TestCase::class)->in(__DIR__);
 
-function render_component($name, $data = [])
+expect()->extend('toHaveClass', function (string $class) {
+    expect((string) $this->value)->toContain($class);
+
+    return $this;
+});
+
+expect()->extend('toContainAttribute', function (string $attribute, ?string $value = null) {
+    $html = (string) $this->value;
+
+    expect($html)->toContain($value === null ? $attribute : "{$attribute}=\"{$value}\"");
+
+    return $this;
+});
+
+function renderComponent(string $component, array $props = []): string
 {
-    return test()->renderComponent($name, $data);
-}
+    // Mirror what real component rendering (<x-halo::x>...</x-halo::x>) does
+    // automatically: build $attributes from every passed prop before the
+    // view's @props() strips out the declared ones, and always provide
+    // $slot (even empty) since components reference it unconditionally.
+    $slot = $props['slot'] ?? '';
+    unset($props['slot']);
 
-// Helpers pour les tests
-function assertHasClass($html, $class)
-{
-    test()->assertStringContainsString($class, $html);
-}
+    $props['attributes'] = new ComponentAttributeBag($props);
+    $props['slot'] = $slot;
 
-function assertComponentRenders($expected, $template, $data = [])
-{
-    $blade = test()->blade($template, $data);
-
-    test()->assertSame(
-        trim($expected),
-        trim($blade)
-    );
+    return (string) view("halo::components.halo.{$component}", $props)->render();
 }

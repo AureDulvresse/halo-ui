@@ -1,7 +1,7 @@
 # GitHub Pages Configuration for HaloUI Documentation
 
 title: HaloUI Documentation
-description: A beautiful, modular UI component library for Laravel
+description: A modern, composable Blade UI component library for Laravel
 baseurl: "/halo-ui"
 url: "https://AureDulvresse.github.io"
 
@@ -35,53 +35,56 @@ defaults:
     values:
       layout: "component"
 
+# Only components that actually exist in resources/views/components/halo/
+# are listed here. Add an entry (and its docs/{name}.md) when a component
+# ships — not before.
 navigation:
   - title: Home
     url: /
   - title: Installation
     url: /installation
-  - title: Configuration
-    url: /configuration
+  - title: Theming
+    url: /theming
   - title: Components
     url: /components/
     children:
-      - title: Alert
-        url: /components/alert
-      - title: Badge
-        url: /components/badge
-      - title: Breadcrumb
-        url: /components/breadcrumb
+      - title: Icon
+        url: /components/icon
       - title: Button
         url: /components/button
-      - title: Card
-        url: /components/card
-      - title: Checkbox
-        url: /components/checkbox
-      - title: Dropdown
-        url: /components/dropdown
       - title: Input
         url: /components/input
-      - title: Modal
-        url: /components/modal
-      - title: Navbar
-        url: /components/navbar
-      - title: Pagination
-        url: /components/pagination
+      - title: Textarea
+        url: /components/textarea
+      - title: Label
+        url: /components/label
+      - title: Checkbox
+        url: /components/checkbox
       - title: Radio
         url: /components/radio
       - title: Select
         url: /components/select
-      - title: Sidebar
-        url: /components/sidebar
+      - title: Badge
+        url: /components/badge
+      - title: Avatar
+        url: /components/avatar
       - title: Spinner
         url: /components/spinner
-      - title: Tab
-        url: /components/tab
-      - title: Table
-        url: /components/table
-      - title: Textarea
-        url: /components/textarea
+      - title: Divider
+        url: /components/divider
+      - title: Card
+        url: /components/card
+      - title: Alert
+        url: /components/alert
+      - title: Modal
+        url: /components/modal
+      - title: Dropdown
+        url: /components/dropdown
       - title: Toast
         url: /components/toast
-      - title: Tooltip
-        url: /components/tooltip
+      - title: Tabs
+        url: /components/tabs
+      - title: Accordion
+        url: /components/accordion
+      - title: Breadcrumb
+        url: /components/breadcrumb
