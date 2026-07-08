@@ -52,6 +52,8 @@ navigation:
         url: /components/accordion
       - title: Alert
         url: /components/alert
+      - title: Alert Dialog
+        url: /components/alert-dialog
       - title: Avatar
         url: /components/avatar
       - title: Badge
@@ -64,10 +66,14 @@ navigation:
         url: /components/card
       - title: Checkbox
         url: /components/checkbox
+      - title: Combobox
+        url: /components/combobox
       - title: Divider
         url: /components/divider
       - title: Dropdown
         url: /components/dropdown
+      - title: Empty State
+        url: /components/empty-state
       - title: File Upload
         url: /components/file-upload
       - title: Heading
@@ -78,20 +84,40 @@ navigation:
         url: /components/image-upload
       - title: Input
         url: /components/input
+      - title: Input Group
+        url: /components/input-group
+      - title: Kbd
+        url: /components/kbd
       - title: Label
         url: /components/label
       - title: Modal
         url: /components/modal
+      - title: Navigation Menu
+        url: /components/navigation-menu
+      - title: Pagination
+        url: /components/pagination
       - title: Popover
         url: /components/popover
       - title: Progress
         url: /components/progress
       - title: Radio
         url: /components/radio
+      - title: Rating
+        url: /components/rating
+      - title: Scroll Area
+        url: /components/scroll-area
       - title: Select
         url: /components/select
+      - title: Skeleton
+        url: /components/skeleton
+      - title: Slider
+        url: /components/slider
       - title: Spinner
         url: /components/spinner
+      - title: Stat Card
+        url: /components/stat-card
+      - title: Stepper
+        url: /components/stepper
       - title: Switch
         url: /components/switch
       - title: Table
@@ -102,8 +128,14 @@ navigation:
         url: /components/text
       - title: Textarea
         url: /components/textarea
+      - title: Timeline
+        url: /components/timeline
       - title: Toast
         url: /components/toast
+      - title: Toggle
+        url: /components/toggle
+      - title: Toggle Group
+        url: /components/toggle-group
       - title: Tooltip
         url: /components/tooltip
   - title: Layouts

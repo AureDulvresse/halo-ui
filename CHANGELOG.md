@@ -7,6 +7,10 @@ This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/
 
 ## [Unreleased]
 
+### Added
+
+- 16 new components: Alert Dialog, Combobox, Empty State, Input Group, Kbd, Navigation Menu, Pagination, Rating, Scroll Area, Skeleton, Slider, Stat Card, Stepper, Timeline, Toggle, and Toggle Group — each with a Pest test suite and English/French documentation.
+
 ### Fixed
 
 - CI's Laravel 12 matrix leg couldn't install: it paired `laravel/framework: 12.*` with `orchestra/testbench: 9.*`, but every testbench 9.x release requires Laravel 11 — composer could never resolve it. Laravel 12 now pairs with testbench 10.x, which `composer.json` already allowed but CI never actually exercised.

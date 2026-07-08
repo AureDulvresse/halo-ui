@@ -37,3 +37,67 @@
         animation-duration: 1.5s;
     }
 }
+
+/* Slider: theme the native range thumb, since ::-webkit-slider-thumb /
+   ::-moz-range-thumb can't be reached with Tailwind utilities. */
+.halo-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 0.5rem;
+    border-radius: var(--halo-radius);
+    background: var(--halo-secondary);
+}
+
+.halo-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 9999px;
+    background: var(--halo-primary);
+    cursor: pointer;
+}
+
+.halo-slider::-moz-range-thumb {
+    width: 1rem;
+    height: 1rem;
+    border: none;
+    border-radius: 9999px;
+    background: var(--halo-primary);
+    cursor: pointer;
+}
+
+.halo-slider:disabled::-webkit-slider-thumb {
+    background: var(--halo-border);
+    cursor: not-allowed;
+}
+
+.halo-slider:disabled::-moz-range-thumb {
+    background: var(--halo-border);
+    cursor: not-allowed;
+}
+
+/* ScrollArea: a thin, themed scrollbar instead of the browser default —
+   Tailwind utilities can't target ::-webkit-scrollbar or the Firefox
+   scrollbar-* properties, so this is genuinely custom CSS. */
+.halo-scroll-area {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--halo-foreground) 20%, transparent) transparent;
+}
+
+.halo-scroll-area::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.halo-scroll-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.halo-scroll-area::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, var(--halo-foreground) 20%, transparent);
+    border-radius: 9999px;
+}
+
+.halo-scroll-area::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in srgb, var(--halo-foreground) 35%, transparent);
+}

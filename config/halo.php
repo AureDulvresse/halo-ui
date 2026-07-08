@@ -69,6 +69,19 @@ return [
         'popover' => [
             'align' => 'left',
         ],
+
+        'toggle' => [
+            'variant' => 'default',
+            'size' => 'md',
+        ],
+
+        'skeleton' => [
+            'variant' => 'rectangle',
+        ],
+
+        'combobox' => [
+            'placeholder' => 'Select...',
+        ],
     ],
 
     /*
