@@ -7,6 +7,8 @@ This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/
 
 ## [Unreleased]
 
+## [4.1.0]
+
 ### Added
 
 - **2 new themes**: Ember (light, warm orange accent, sharper 0.375rem radius) and Nocturne (dark, near-black zinc-950 background, emerald accent — distinct from Eclipse's blue-tinted dark). 5 themes total. Both new primaries pair a vivid color with a dark (rather than white) foreground text, the same contrast strategy used to fix `--halo-warning-foreground` earlier in this changelog — white text on either theme's primary would fall short of WCAG AA (~3.5–3.7:1).
@@ -39,7 +41,7 @@ This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/
 - Added `active:` pressed-state feedback to Button, Accordion's trigger, and Dropdown's item — previously a click gave no visual feedback beyond the eventual state change.
 - **`--halo-warning-foreground` was white-on-`#d97706`**, a ~2.4:1 contrast ratio that fails WCAG AA (4.5:1) if that token pairing were ever used as solid text-on-background — changed to a dark amber (`#451a03`) in the Halo and Aurora themes (Eclipse already used a dark foreground here).
 
-## [4.0.0] — v4 rebuild (in progress)
+## [4.0.0] — v4 rebuild
 
 ### Why
 
@@ -104,17 +106,17 @@ HaloUI v3.0.0 is a **complete rewrite** featuring 70+ production-ready component
   - Authentication flows (2FA, Password reset)
   - Error pages (404, 500, 503)
   - Email templates (Welcome, Invoice, Newsletter)
-  
+
 - **Template Installer CLI**
 
   ```bash
   # Install free templates
   php artisan halo:template login-form
   php artisan halo:template dashboard-sidebar
-  
+
   # Install premium templates (requires license key)
   php artisan halo:template:premium admin-dashboard --key=YOUR_LICENSE_KEY
-  
+
   # List all available templates
   php artisan halo:template:list
   php artisan halo:template:list --premium
