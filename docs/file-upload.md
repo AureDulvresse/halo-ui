@@ -1,3 +1,9 @@
+---
+layout: default
+title: File Upload
+permalink: /components/file-upload/
+---
+
 # File Upload
 
 `resources/views/components/halo/file-upload.blade.php`

@@ -1,3 +1,9 @@
+---
+layout: default
+title: Breadcrumb
+permalink: /components/breadcrumb/
+---
+
 # Breadcrumb
 
 `resources/views/components/halo/breadcrumb/{index,item}.blade.php`

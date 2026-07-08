@@ -1,3 +1,9 @@
+---
+layout: default
+title: Layout: Page Header
+permalink: /layout-page-header/
+---
+
 # Layout: Page Header
 
 `resources/views/components/halo/layout/page-header.blade.php`

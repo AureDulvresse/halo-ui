@@ -1,3 +1,9 @@
+---
+layout: default
+title: Select
+permalink: /components/select/
+---
+
 # Select
 
 `resources/views/components/halo/select.blade.php`

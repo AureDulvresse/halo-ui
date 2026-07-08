@@ -1,3 +1,9 @@
+---
+layout: default
+title: Switch
+permalink: /components/switch/
+---
+
 # Switch
 
 `resources/views/components/halo/switch.blade.php`

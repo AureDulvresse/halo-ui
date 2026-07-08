@@ -1,3 +1,9 @@
+---
+layout: default
+title: Modal
+permalink: /components/modal/
+---
+
 # Modal
 
 `resources/views/components/halo/modal/{index,header,body,footer}.blade.php`

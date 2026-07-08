@@ -1,3 +1,9 @@
+---
+layout: default
+title: Layout: Base
+permalink: /layout-base/
+---
+
 # Layout: Base
 
 `resources/views/components/halo/layout/base.blade.php`

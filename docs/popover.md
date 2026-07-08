@@ -1,3 +1,9 @@
+---
+layout: default
+title: Popover
+permalink: /components/popover/
+---
+
 # Popover
 
 `resources/views/components/halo/popover.blade.php`

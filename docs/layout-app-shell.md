@@ -1,3 +1,9 @@
+---
+layout: default
+title: Layout: App Shell
+permalink: /layout-app-shell/
+---
+
 # Layout: App Shell
 
 `resources/views/components/halo/layout/app-shell.blade.php`

@@ -1,3 +1,9 @@
+---
+layout: default
+title: Heading
+permalink: /components/heading/
+---
+
 # Heading
 
 `resources/views/components/halo/heading.blade.php`

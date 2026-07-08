@@ -1,3 +1,9 @@
+---
+layout: default
+title: Toast
+permalink: /components/toast/
+---
+
 # Toast
 
 `resources/views/components/halo/toast.blade.php`

@@ -1,3 +1,9 @@
+---
+layout: default
+title: Table
+permalink: /components/table/
+---
+
 # Table
 
 `resources/views/components/halo/table/{index,row,head,cell}.blade.php`

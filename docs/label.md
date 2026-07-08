@@ -1,3 +1,9 @@
+---
+layout: default
+title: Label
+permalink: /components/label/
+---
+
 # Label
 
 `resources/views/components/halo/label.blade.php`

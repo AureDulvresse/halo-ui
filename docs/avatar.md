@@ -1,3 +1,9 @@
+---
+layout: default
+title: Avatar
+permalink: /components/avatar/
+---
+
 # Avatar
 
 `resources/views/components/halo/avatar.blade.php`

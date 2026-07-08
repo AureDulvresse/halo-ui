@@ -1,3 +1,9 @@
+---
+layout: default
+title: Textarea
+permalink: /components/textarea/
+---
+
 # Textarea
 
 `resources/views/components/halo/textarea.blade.php`

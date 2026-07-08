@@ -1,3 +1,9 @@
+---
+layout: default
+title: Divider
+permalink: /components/divider/
+---
+
 # Divider
 
 `resources/views/components/halo/divider.blade.php`

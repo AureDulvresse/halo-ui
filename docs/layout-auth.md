@@ -1,3 +1,9 @@
+---
+layout: default
+title: Layout: Auth
+permalink: /layout-auth/
+---
+
 # Layout: Auth
 
 `resources/views/components/halo/layout/auth.blade.php`

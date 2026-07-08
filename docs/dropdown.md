@@ -1,3 +1,9 @@
+---
+layout: default
+title: Dropdown
+permalink: /components/dropdown/
+---
+
 # Dropdown
 
 `resources/views/components/halo/dropdown/{index,item}.blade.php`

@@ -1,3 +1,9 @@
+---
+layout: default
+title: Spinner
+permalink: /components/spinner/
+---
+
 # Spinner
 
 `resources/views/components/halo/spinner.blade.php`

@@ -1,3 +1,9 @@
+---
+layout: default
+title: Alert
+permalink: /components/alert/
+---
+
 # Alert
 
 `resources/views/components/halo/alert.blade.php`

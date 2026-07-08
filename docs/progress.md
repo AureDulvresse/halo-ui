@@ -1,3 +1,9 @@
+---
+layout: default
+title: Progress
+permalink: /components/progress/
+---
+
 # Progress
 
 `resources/views/components/halo/progress.blade.php`

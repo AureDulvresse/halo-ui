@@ -1,3 +1,9 @@
+---
+layout: default
+title: Checkbox
+permalink: /components/checkbox/
+---
+
 # Checkbox
 
 `resources/views/components/halo/checkbox.blade.php`

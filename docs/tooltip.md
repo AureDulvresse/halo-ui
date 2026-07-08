@@ -1,3 +1,9 @@
+---
+layout: default
+title: Tooltip
+permalink: /components/tooltip/
+---
+
 # Tooltip
 
 `resources/views/components/halo/tooltip.blade.php`

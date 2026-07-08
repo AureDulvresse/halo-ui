@@ -1,3 +1,9 @@
+---
+layout: default
+title: Icon
+permalink: /components/icon/
+---
+
 # Icon
 
 `resources/views/components/halo/icon.blade.php`

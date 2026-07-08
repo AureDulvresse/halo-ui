@@ -1,3 +1,9 @@
+---
+layout: default
+title: Text
+permalink: /components/text/
+---
+
 # Text
 
 `resources/views/components/halo/text.blade.php`

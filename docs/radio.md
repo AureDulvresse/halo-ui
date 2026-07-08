@@ -1,3 +1,9 @@
+---
+layout: default
+title: Radio
+permalink: /components/radio/
+---
+
 # Radio
 
 `resources/views/components/halo/radio.blade.php`

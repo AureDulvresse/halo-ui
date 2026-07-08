@@ -1,3 +1,9 @@
+---
+layout: default
+title: Card
+permalink: /components/card/
+---
+
 # Card
 
 `resources/views/components/halo/card/{index,header,body,footer}.blade.php`

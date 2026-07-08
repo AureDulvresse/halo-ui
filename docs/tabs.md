@@ -1,3 +1,9 @@
+---
+layout: default
+title: Tabs
+permalink: /components/tabs/
+---
+
 # Tabs
 
 `resources/views/components/halo/tabs/{index,list,trigger,panel}.blade.php`

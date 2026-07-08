@@ -1,3 +1,9 @@
+---
+layout: default
+title: Layout: Container
+permalink: /layout-container/
+---
+
 # Layout: Container
 
 `resources/views/components/halo/layout/container.blade.php`

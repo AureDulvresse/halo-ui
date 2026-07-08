@@ -1,3 +1,9 @@
+---
+layout: default
+title: Accordion
+permalink: /components/accordion/
+---
+
 # Accordion
 
 `resources/views/components/halo/accordion/{index,item}.blade.php`

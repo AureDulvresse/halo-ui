@@ -1,3 +1,9 @@
+---
+layout: default
+title: Input
+permalink: /components/input/
+---
+
 # Input
 
 `resources/views/components/halo/input.blade.php`

@@ -1,3 +1,9 @@
+---
+layout: default
+title: Button
+permalink: /components/button/
+---
+
 # Button
 
 `resources/views/components/halo/button.blade.php`

@@ -1,3 +1,9 @@
+---
+layout: default
+title: Badge
+permalink: /components/badge/
+---
+
 # Badge
 
 `resources/views/components/halo/badge.blade.php`

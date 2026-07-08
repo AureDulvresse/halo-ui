@@ -1,3 +1,9 @@
+---
+layout: default
+title: Theming
+permalink: /theming/
+---
+
 # Theming
 
 HaloUI's theme is a set of CSS custom properties, not a config array. This is deliberate: an earlier version had a config-driven "active theme" that never actually changed anything rendered, because the component classes were hardcoded Tailwind utilities that never read the config. v4 fixes that by making the tokens the single source of truth that both the config *and* the components point to.

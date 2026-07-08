@@ -1,3 +1,9 @@
+---
+layout: default
+title: Layout: Two Column
+permalink: /layout-two-column/
+---
+
 # Layout: Two Column
 
 `resources/views/components/halo/layout/two-column.blade.php`

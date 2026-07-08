@@ -1,3 +1,9 @@
+---
+layout: default
+title: Image Upload
+permalink: /components/image-upload/
+---
+
 # Image Upload
 
 `resources/views/components/halo/image-upload.blade.php`
