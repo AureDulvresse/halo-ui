@@ -1,23 +1,23 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "ironflow/halo-ui",
-    "description": "Modern, composable Blade UI component library for Laravel — elegant as shadcn, native as Blade.",
+    "description": "A modern, accessible and customizable Blade UI component library for Laravel.",
     "keywords": [
         "laravel",
         "blade",
         "ui",
         "components",
-        "tailwind",
-        "alpine",
-        "blade-icons",
-        "halo-ui"
+        "tailwindcss",
+        "alpinejs",
+        "design-system",
+        "blade-components"
     ],
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Aure Dulvresse",
-            "email": "ironflow.framework@gmail.com"
+            "email": "marrow.framework@gmail.com"
         }
     ],
     "require": {
@@ -25,13 +25,13 @@
         "illuminate/support": "^11.0 || ^12.0 || ^13.0",
         "illuminate/view": "^11.0 || ^12.0 || ^13.0",
         "illuminate/console": "^11.0 || ^12.0 || ^13.0",
-        "blade-ui-kit/blade-icons": "^1.6"
+        "blade-ui-kit/blade-icons": "^1.10"
     },
     "require-dev": {
         "orchestra/testbench": "^9.0 || ^10.0 || ^11.0",
-        "pestphp/pest": "^3.0 || ^5.0",
-        "pestphp/pest-plugin-laravel": "^3.0 || ^5.0",
-        "phpunit/phpunit": "^11.0 || ^13.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "phpunit/phpunit": "^11.5 || ^12.0 || ^13.0",
         "laravel/pint": "^1.13"
     },
     "autoload": {
@@ -56,14 +56,15 @@
     },
     "scripts": {
         "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage"
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint",
+        "format:test": "vendor/bin/pint --test"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "config": {
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
-    }
+    },
+    "prefer-stable": true
 }
