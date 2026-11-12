@@ -1,45 +1,11 @@
 # Changelog
 
 All notable changes to **HaloUI** are documented in this file.
-
 This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
 ## [Unreleased]
-
-## [5.0.0] — 2026-11-09
-
-### Breaking Changes
-
-- **Laravel 11 support dropped:** HaloUI no longer supports Laravel 11.
-- **Minimum Laravel version raised to 12:** Laravel 12 is now the minimum supported version.
-- Applications running Laravel 11 must upgrade to Laravel 12 or later before upgrading to HaloUI v5.0.0.
-
-### Changed
-
-- Updated the CI configuration to test only Laravel 12 and Laravel 13.
-- Removed Laravel 11 from the GitHub Actions compatibility matrix.
-- Maintained compatibility with Laravel 12 and Laravel 13.
-- PHP 8.2+ support remains unchanged.
-
-### Compatibility
-
-| Dependency | Supported versions |
-| --- | --- |
-| PHP | 8.2+ |
-| Laravel | 12.x, 13.x |
-
-### Upgrade Guide
-
-If you are upgrading from v4.x:
-
-1. Ensure your application runs Laravel 12 or Laravel 13.
-2. Update HaloUI to `v5.0.0`.
-3. Run `composer update`.
-4. Run your test suite to verify compatibility.
-
----
 
 ## [4.5.0] — 2026-09-11
 
@@ -58,8 +24,6 @@ If you are upgrading from v4.x:
 - `tailwindcss`/`@tailwindcss/vite` bumped to 4.3.3, `alpinejs` to 3.17.2. `vite` intentionally left on 5.x — the 8.x major is a separate, riskier bundler migration, not a routine dependency bump. `npm audit` reports one known moderate `esbuild` advisory (dev-server request forgery, GHSA-67mh-4wv8-2f99) with no fix available short of that same vite 8.x jump; it doesn't affect production builds.
 - `package.json` version bumped from the stale `4.0.0-dev` to `4.5.0-dev`.
 
----
-
 ## [4.4.0] — 2026-07-08
 
 ### Added
@@ -74,8 +38,6 @@ If you are upgrading from v4.x:
 
 - Luma's radius started at `9999px`, which renders as a clean pill on small elements (button, badge, input) but produced a degenerate stadium/lens shape on larger surfaces like Card, since every component shares one `--halo-radius` token. Lowered to `1.75rem`, which still exceeds half the height of every small interactive element (so they stay true pills after the browser's corner-radius clamping) while staying proportionate on larger containers.
 
----
-
 ## [4.3.0] — 2026-07-08
 
 ### Added
@@ -87,17 +49,12 @@ If you are upgrading from v4.x:
 - Rating's stars used `role="radio"` paired with `aria-pressed`, an invalid ARIA combination — radio semantics require `aria-checked`.
 - CI's Laravel 12 matrix leg couldn't install: it paired `laravel/framework: 12.*` with `orchestra/testbench: 9.*`, but every testbench 9.x release requires Laravel 11 — composer could never resolve it. Laravel 12 now pairs with testbench 10.x, which `composer.json` already allowed but CI never actually exercised.
 
----
-
 ## [4.2.1] — 2026-07-08
 
 ### Fixed
 
 - **`halo:install` silently overwrote customized single-file components on every run, regardless of `--force`.** `installSpecificComponents()`'s directory (modular) branch correctly checked `--force`/file-existence before copying, but its single-file branch (used by the majority of components — Button, Input, Badge, and anything else that isn't a `{component}/index.blade.php` directory) called `File::copy()` unconditionally. Ejecting a component, customizing it, then re-running `halo:install button` (e.g. as part of ejecting a second component) would silently discard the edit. Found while writing the first tests for `InstallCommand`, which had 0% coverage until this release.
-
 - CI code coverage was failing its 60% floor (52.6%) because `InstallCommand` (a real, user-facing command) had no tests at all, and `helpers.php`'s `theme()`/`halo_default()` fallback paths were untested. Added full command coverage (default eject, `--all`, named components, modular vs. single-file components, unknown-component warning, `--force`, `--no-assets`) and the missing helper branches.
-
----
 
 ## [4.2.0] — 2026-07-08
 
@@ -115,8 +72,6 @@ If you are upgrading from v4.x:
 ### Known limitation
 
 - `docs/_config.yml`'s custom `navigation` key isn't rendered by `jekyll-theme-cayman`'s default layout — Cayman is a single-page-style theme with no built-in sidebar/nav. Pages currently cross-link manually from `index.md`. A real multi-page navigation menu would need a custom `_layouts/default.html`.
-
----
 
 ## [4.1.0]
 
@@ -198,15 +153,15 @@ v3 accumulated real problems that this changelog previously didn't disclose: 71 
 
 ## [3.0.0] — 2025-11-04
 
-### Major Release — Complete Rewrite
+### 🎉 Major Release — Complete Rewrite
 
 HaloUI v3.0.0 is a **complete rewrite** featuring 70+ production-ready components, dark mode support, 8 modern themes, and a revolutionary template system.
 
 ### Added
 
-#### Template System
+#### Template System (NEW!)
 
-- **Free Templates Library** — 15+ production-ready templates:
+- **Free Templates Library** — 15+ production-ready templates
   - Login/Register pages with animations
   - Dashboard layouts (Sidebar, Topbar, Mixed)
   - E-commerce pages (Product listing, Cart, Checkout)
@@ -217,130 +172,218 @@ HaloUI v3.0.0 is a **complete rewrite** featuring 70+ production-ready component
   - Authentication flows (2FA, Password reset)
   - Error pages (404, 500, 503)
   - Email templates (Welcome, Invoice, Newsletter)
+
 - **Template Installer CLI**
-  - `php artisan halo:template login-form`
-  - `php artisan halo:template dashboard-sidebar`
-  - `php artisan halo:template:premium admin-dashboard --key=YOUR_LICENSE_KEY`
-  - `php artisan halo:template:list`
-  - `php artisan halo:template:list --premium`
-- **Template Categories**: Authentication, Dashboard, E-commerce, Landing, Admin, Blog, Marketing and Error pages.
+
+  ```bash
+  # Install free templates
+  php artisan halo:template login-form
+  php artisan halo:template dashboard-sidebar
+
+  # Install premium templates (requires license key)
+  php artisan halo:template:premium admin-dashboard --key=YOUR_LICENSE_KEY
+
+  # List all available templates
+  php artisan halo:template:list
+  php artisan halo:template:list --premium
+  ```
+
+- **Template Categories**
+  - Authentication (Login, Register, 2FA, Password reset)
+  - Dashboard (Sidebar, Topbar, Analytics)
+  - E-commerce (Product pages, Cart, Checkout)
+  - Landing (Hero sections, Pricing tables, CTA)
+  - Admin (User management, Settings, Reports)
+  - Blog (Post listing, Single post, Author page)
+  - Marketing (Email campaigns, Newsletter signup)
+  - Error pages (Custom 404, 500, Maintenance)
 
 #### Core Features
 
-- 70+ components.
-- Dark mode support across all components with `dark:` variants.
-- 8 modern themes: Default, Neutral, Glass, Sunset, Iron, Ocean, Forest and Neon.
-- Copy-and-own architecture for flexible customization.
-- Automatic service provider registration and configuration.
-- CLI installer with selective installation.
-- Helper functions: `theme()`, `halo_classes()`, `halo_default()` and `halo_merge_classes()`.
-- Blade Icons integration.
+- **70+ Components** — Complete UI component library
+- **Dark Mode Support** — Full dark mode on all components with `dark:` variants
+- **8 Modern Themes** — Default, Neutral, Glass, Sunset, Iron, Ocean, Forest, Neon
+- **Copy-and-Own Architecture** — Publish and customize without limitations
+- **Service Provider** — Automatic registration and configuration
+- **CLI Installer** — `php artisan halo:install` command with selective installation
+- **Helper Functions** — `theme()`, `halo_classes()`, `halo_default()`, `halo_merge_classes()`
+- **Blade Icons Integration** — Seamless icon system with any icon set
 
-#### Base Components
+#### Base Components (12)
 
-- Button, Input, Textarea, Select, Checkbox, Radio, Switch, Range, FileUpload, ColorPicker, DatePicker and Combobox.
+- Button — Multi-variant with icons, loading states, sizes
+- Input — Text inputs with icons, validation, hints
+- Textarea — Resizable with auto-grow support
+- Select — Custom styled dropdowns
+- Checkbox — With labels and descriptions
+- Radio — Radio button groups
+- Switch — Alpine.js powered toggle
+- Range — Slider with live value display
+- FileUpload — Drag & drop with preview
+- ColorPicker — Color palette selector
+- DatePicker — Calendar date selection
+- Combobox — Search and select with autocomplete
 
-#### Layout Components
+#### Layout Components (20)
 
-- Card, Modal, Dropdown, Tabs, Accordion, Table, Sidebar, Navbar, Breadcrumb, Pagination, Container, Stack, Grid, Divider, Spacer, Drawer, Dialog, CommandPalette, SplitPane and TreeView.
+- Card — Modular with Header, Body, Footer
+- Modal — Sizes, backdrop blur, closeable
+- Dropdown — Contextual menus with items
+- Tabs — Line, pills, enclosed variants
+- Accordion — Single or multiple expand
+- Table — Advanced with Header, Row, Cell, Footer
+- Sidebar — Navigation sidebar with items
+- Navbar — Top navigation with items
+- Breadcrumb — Navigation path with items
+- Pagination — Laravel paginator integration
+- Container — Responsive containers (sm, md, lg, xl, full)
+- Stack — Vertical/horizontal flex layout
+- Grid — Responsive grid system
+- Divider — Horizontal/vertical with optional text
+- Spacer — Fixed height spacer utility
+- Drawer — Slide-out panel (4 positions)
+- Dialog — Alternative modal component
+- CommandPalette — Cmd+K search interface
+- SplitPane — Resizable horizontal/vertical panels
+- TreeView — Hierarchical navigation tree
 
-#### Feedback Components
+#### Feedback Components (18)
 
-- Alert, Toast, Spinner, Skeleton, Badge, Tooltip, Popover, Progress, Stepper, Timeline, Rating, Avatar, AvatarGroup, Tag, EmptyState, Stats, ContextMenu and A11yChecker.
+- Alert — Info, success, warning, danger variants
+- Toast — Temporal notifications system
+- Spinner — Loading animations (5 sizes)
+- Skeleton — Content placeholders
+- Badge — Labels and pills with variants
+- Tooltip — Hover tooltips (4 positions)
+- Popover — Click popovers with content
+- Progress — Linear progress bars
+- Stepper — Multi-step wizard
+- Timeline — Vertical timeline with items
+- Rating — Star rating system
+- Avatar — User avatars with status indicators
+- AvatarGroup — Stacked avatars
+- Tag — Removable tags
+- EmptyState — No data placeholders
+- Stats — Metric cards with trends
+- ContextMenu — Right-click contextual menu
+- A11yChecker — Accessibility validator tool
 
-#### Advanced Components
+#### Advanced Components (15)
 
-- DataTable, DateRangePicker, KanbanBoard, RichTextEditor, Calendar, Carousel, VideoPlayer, Chart, ImageGallery, TreeView, ContextMenu, SplitPane, Multiselect, MarkdownEditor and A11yChecker.
+- **DataTable** — Advanced data table with sorting, filtering, search, selection, CSV export
+- **DateRangePicker** — Date range selector with dual calendar and quick presets
+- **KanbanBoard** — Drag & drop task board with columns and priorities
+- **RichTextEditor** — WYSIWYG editor with full formatting toolbar
+- **Calendar** — Full calendar with event display and navigation
+- **Carousel** — Image/content slider with autoplay and transitions
+- **VideoPlayer** — Custom video player with full controls
+- **Chart** — Chart.js wrapper for line, bar, pie charts
+- **ImageGallery** — Lightbox gallery with keyboard navigation
+- **TreeView** — Hierarchical tree with expandable nodes
+- **ContextMenu** — Right-click menu with custom actions
+- **SplitPane** — Resizable panels (horizontal/vertical)
+- **Multiselect** — Multi-tag input with search
+- **MarkdownEditor** — Markdown editor with live preview
+- **A11yChecker** — Accessibility validator with issue detection
 
 #### Theming System
 
-- 8 built-in themes.
-- Runtime theme switching through configuration.
-- Custom theme creation.
-- CSS variable-based theme configuration in `config/halo.php`.
+- **8 Built-in Themes:**
+  - Default — Classic blue theme
+  - Neutral — Monochrome elegance
+  - Glass — Glassmorphism with backdrop blur
+  - Sunset — Warm orange gradient
+  - Iron — Industrial metallic
+  - Ocean — Deep blue theme
+  - Forest — Natural green
+  - Neon — Vibrant with glow effects
+- **Theme Switching** — Runtime theme changes via config
+- **Custom Themes** — Easy theme creation with config
+- **Config-Driven** — All theme settings in `config/halo.php`
 
 #### Dark Mode
 
-- Class-based dark mode strategy using `dark:` variants.
-- Media query support.
-- Automatic color adaptation.
-- Dark mode toggle support with localStorage.
+- Class-based dark mode strategy (`dark:` variants)
+- Media query support option
+- All components with automatic dark variants
+- Seamless color adaptation
+- Dark mode toggle support with localStorage
 
 #### Alpine.js Integration
 
-- Modal factory with show/hide/toggle.
-- Dropdown factory with keyboard navigation.
-- Tabs factory with state management.
-- Accordion factory with single/multiple mode.
-- Toast factory with add/remove/clear.
-- Tooltip factory with positioning.
-- Popover factory with click handling.
-- Drawer factory with animations.
-- Command factory with keyboard shortcuts.
-- FileUpload factory with drag and drop.
+- Modal factory with show/hide/toggle
+- Dropdown factory with keyboard navigation
+- Tabs factory with state management
+- Accordion factory with single/multiple mode
+- Toast factory with add/remove/clear
+- Tooltip factory with positioning
+- Popover factory with click handling
+- Drawer factory with animations
+- Command factory with keyboard shortcuts (Cmd+K)
+- FileUpload factory with drag & drop
 
 #### Developer Experience
 
-- PHP 8.2+ type hints and attributes.
-- Pest test suite with custom expectations.
-- GitHub Actions CI/CD workflow.
-- Component classes for all 70+ components.
-- Helper functions for common tasks.
-- Comprehensive inline documentation.
-- Storybook for interactive component documentation.
-- Example demo application.
+- PHP 8.2+ type hints and attributes
+- Pest test suite with custom expectations
+- GitHub Actions CI/CD workflow
+- Component classes for all 70+ components
+- Helper functions for common tasks
+- Comprehensive inline documentation
+- Storybook for interactive component docs
+- Example demo application included
 
 #### Documentation
 
-- Component documentation.
-- Usage examples.
-- Theme customization guide.
-- Dark mode implementation guide.
-- Template installation guide.
-- Testing guide with Pest examples.
-- Contributing guidelines.
-- Storybook setup guide.
+- Complete component documentation (70+ files)
+- Usage examples for all components
+- Theme customization guide
+- Dark mode implementation guide
+- Template installation guide
+- Testing guide with Pest examples
+- Contributing guidelines
+- Storybook setup guide
 
 #### Testing
 
-- Pest test framework integration.
-- Component rendering tests.
-- Props validation tests.
-- Alpine.js interaction tests.
-- Accessibility tests.
-- CI/CD pipeline with multiple PHP/Laravel versions.
+- Pest test framework integration
+- Component rendering tests
+- Props validation tests
+- Alpine.js interaction tests
+- Accessibility (a11y) tests
+- CI/CD pipeline with multiple PHP/Laravel versions
 
-### Changed
+### 🔧 Changed
 
-- Complete rewrite from v2.x.
-- Migrated from Vue.js to Alpine.js for better Laravel integration.
-- Simplified component architecture for easier customization.
-- Improved performance (50% faster rendering).
-- Enhanced accessibility (WCAG 2.1 AA compliant).
-- Better TypeScript support in Storybook.
-- Updated dependencies (Laravel 12+, PHP 8.2+).
+- Complete rewrite from v2.x
+- Migrated from Vue.js to Alpine.js for better Laravel integration
+- Simplified component architecture for easier customization
+- Improved performance (50% faster rendering)
+- Enhanced accessibility (WCAG 2.1 AA compliant)
+- Better TypeScript support in Storybook
+- Updated dependencies (Laravel 12+, PHP 8.2+)
 
 ### Removed
 
-- Vue.js dependency (replaced with Alpine.js).
-- Old theme system (replaced with new config-driven system).
-- Legacy component names (use the new `halo::` namespace).
+- Vue.js dependency (replaced with Alpine.js)
+- Old theme system (replaced with new config-driven system)
+- Legacy component names (use new namespace `halo::`)
 
 ### Breaking Changes
 
-- Namespace changed from `ui::` to `halo::`.
-- Component props standardized.
-- Theme configuration moved to `config/halo.php`.
-- Alpine.js required instead of Vue.js.
-- Minimum PHP version increased to 8.2.
-- Minimum Laravel version increased to 11.0.
+- Namespace changed from `ui::` to `halo::`
+- Component props standardized (see upgrade guide)
+- Theme configuration moved to `config/halo.php`
+- Alpine.js required instead of Vue.js
+- Minimum PHP version increased to 8.2
+- Minimum Laravel version increased to 11.0
 
 ### Security
 
-- Updated dependencies to secure versions.
-- Added CSRF token support in forms.
-- XSS protection in user inputs.
-- SQL injection prevention in data table filters.
+- Updated all dependencies to latest secure versions
+- Added CSRF token support in all forms
+- XSS protection in all user inputs
+- SQL injection prevention in data table filters
 
 ---
 
@@ -348,20 +391,38 @@ HaloUI v3.0.0 is a **complete rewrite** featuring 70+ production-ready component
 
 ### Added
 
-- Initial public release of HaloUI.
-- Over 20 production-ready Blade components.
-- Laravel 11+ support.
-- PHP 8.2+ compatibility.
-- Tailwind CSS 3.x and Alpine.js integration.
-- Copy-and-own architecture.
-- CLI installer: `halo:install`.
-- Theme customization and configuration system.
-- Complete component documentation.
-- Documentation site published on GitHub Pages.
+- **Initial public release** of HaloUI
+- Over **20 production-ready Blade components**
+- Full support for **Laravel 11+**
+- **PHP 8.2+** compatibility
+- Integrated **TailwindCSS 3.x** and **Alpine.js**
+- Copy-and-own architecture for flexible customization
+- CLI installer: `halo:install`
+- Theme customization and configuration system
+- Complete component documentation
+- Published documentation site on GitHub Pages
 
 #### Components Included
 
-- Alert, Badge, Breadcrumb, Button, Card, Checkbox, Dropdown, Input, Modal, Navbar, Pagination, Radio, Select, Sidebar, Spinner, Tabs, Table, Textarea and Toast.
+- Alert (variants + dismissible)
+- Badge (multiple sizes & variants)
+- Breadcrumb
+- Button (8 variants, 5 sizes)
+- Card (header, body, footer)
+- Checkbox
+- Dropdown
+- Input (with validation states)
+- Modal (animated)
+- Navbar (responsive)
+- Pagination (Laravel paginator support)
+- Radio
+- Select
+- Sidebar
+- Spinner
+- Tabs
+- Table (rows and cells)
+- Textarea
+- Toast notification system
 
 ---
 
@@ -369,35 +430,32 @@ HaloUI v3.0.0 is a **complete rewrite** featuring 70+ production-ready component
 
 ### Added
 
-- Initial framework scaffolding for HaloUI.
-- Introduced `HaloUIServiceProvider` for publishing assets and components.
-- Added CLI command `halo:install` supporting stub folders and single files.
-- Implemented base components: Button, Input, Textarea, Select, SelectItem, Modal, Dropdown and Card.
-- Initial documentation with usage examples.
-- Alpine.js hooks prepared for Modal, Dropdown, Toast, Tooltip and Popover.
-- Theme customization via CSS variables.
-- Test scaffolding for unit and snapshot tests.
+- **Initial framework scaffolding** for HaloUI
+- Introduced `HaloUIServiceProvider` for publishing assets and components
+- Added CLI command `halo:install` supporting stub folders and single files
+- Implemented base components:
+  - Button, Input, Textarea
+  - Select & SelectItem
+  - Modal
+  - Dropdown
+  - Card
+- Initial documentation with usage examples
+- Alpine.js hooks prepared for Modal, Dropdown, Toast, Tooltip, and Popover
+- Theme customization via CSS variables
+- Test scaffolding for unit and snapshot tests
 
 ### Notes
 
-- Some planned components (Tabs, Accordion, Toast, Tooltip, BadgeShield, etc.) were deferred.
-- v1.0.0 serves as the stable foundation for the initial Packagist release.
+- Some planned components (Tabs, Accordion, Toast, Tooltip, BadgeShield, etc.) were deferred
+- v1.0.0 serves as the **stable foundation** for the initial Packagist release
 
 ---
 
 ## Release References
 
-| Version | Description | Link |
-| --- | --- | --- |
-| [Unreleased] | Compare latest changes with `main` | [Compare](https://github.com/ironflow-framework/halo-ui/compare/v5.0.0...HEAD) |
-| [5.0.0] | Drop Laravel 11 support; require Laravel 12+ | [Diff](https://github.com/ironflow-framework/halo-ui/compare/v4.5.0...v5.0.0) |
-| [4.5.0] | 10 new components and Laravel 13 support | [Diff](https://github.com/ironflow-framework/halo-ui/compare/v4.4.0...v4.5.0) |
-| [4.4.0] | Luma and Flint themes | [Diff](https://github.com/ironflow-framework/halo-ui/compare/v4.3.0...v4.4.0) |
-| [4.3.0] | 16 new components | [Diff](https://github.com/ironflow-framework/halo-ui/compare/v4.2.1...v4.3.0) |
-| [4.2.1] | Installation command fixes and test coverage improvements | [Diff](https://github.com/ironflow-framework/halo-ui/compare/v4.2.0...v4.2.1) |
-| [4.2.0] | Documentation, GitHub Pages and security improvements | [Diff](https://github.com/ironflow-framework/halo-ui/compare/v4.1.0...v4.2.0) |
-| [4.1.0] | New themes, components and UI/UX improvements | [Diff](https://github.com/ironflow-framework/halo-ui/compare/v4.0.0...v4.1.0) |
-| [4.0.0] | Complete v4 rebuild | [Diff](https://github.com/ironflow-framework/halo-ui/compare/v3.0.0...v4.0.0) |
-| [3.0.0] | Major release with templates | [Diff](https://github.com/ironflow-framework/halo-ui/compare/v2.0.0...v3.0.0) |
-| [2.0.0] | Public release | [Diff](https://github.com/ironflow-framework/halo-ui/compare/v1.0.0...v2.0.0) |
-| [1.0.0] | Initial release | [View Tag](https://github.com/ironflow-framework/halo-ui/releases/tag/v1.0.0) |
+| Version      | Description                        | Link                                                                              |
+| ------------ | ---------------------------------- | --------------------------------------------------------------------------------- |
+| [Unreleased] | Compare latest changes with `main` | [🔗 Compare](https://github.com/ironflow-framework/halo-ui/compare/v3.0.0...HEAD) |
+| [3.0.0]      | Major release with templates       | [🔗 Diff](https://github.com/ironflow-framework/halo-ui/compare/v2.0.0...v3.0.0)  |
+| [2.0.0]      | Public release                     | [🔗 Diff](https://github.com/ironflow-framework/halo-ui/compare/v1.0.0...v2.0.0)  |
+| [1.0.0]      | Initial release                    | [🔗 View Tag](https://github.com/ironflow-framework/halo-ui/releases/tag/v1.0.0)  |
